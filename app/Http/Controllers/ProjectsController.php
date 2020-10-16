@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 
 class ProjectsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['auth'])->except(['index', 'show']);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -43,7 +48,7 @@ class ProjectsController extends Controller
             'description' => ['required'],
         ]);
         //persist
-        $project = Project::query()->create($data);
+        auth('web')->user()->projects()->create($data);
 
         //redirect
         return redirect()->route('projects.index');

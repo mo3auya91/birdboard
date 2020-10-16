@@ -14,4 +14,10 @@ class ProjectTest extends TestCase
      * in unit test there is no access to database and faker
      * if test needs to deal with database or faler, then move it to feature test
      */
+
+    /** @test */
+    public function basic_test()
+    {
+        $this->assertTrue(true);
+    }
 }
