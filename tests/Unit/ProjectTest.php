@@ -2,13 +2,13 @@
 
 namespace Tests\Unit;
 
-use App\Models\Project;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use PHPUnit\Framework\TestCase;
+//use Tests\TestCase;
 
 class ProjectTest extends TestCase
 {
+    use RefreshDatabase;
     /**
      * NOTE
      * in unit test there is no access to database and faker

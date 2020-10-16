@@ -14,6 +14,7 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property string $title
  * @property string $description
+ * @property int $owner_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property string|null $deleted_at
@@ -37,6 +38,12 @@ class Project extends Model
 
     public function path()
     {
-        return "/projects/{$this->id}";
+        return route('projects.show', ['project' => $this->id]);
+        //return "/projects/{$this->id}";
+    }
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
     }
 }

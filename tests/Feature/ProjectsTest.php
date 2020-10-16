@@ -21,18 +21,19 @@ class ProjectsTest extends TestCase
         $this->actingAs(User::factory()->create());
 
         $attributes = Project::factory()->raw();
-        $this->post('/projects', $attributes)->assertRedirect('/projects');
+        $this->post(route('projects.store'), $attributes)->assertRedirect(route('projects.index'));
 
         $this->assertDatabaseHas('projects', $attributes);
 
-        $this->get('/projects')->assertSee($attributes['title']);
+        $this->get(route('projects.index'))->assertSee($attributes['title']);
     }
 
     /** @test */
-    public function a_user_can_view_a_project()
+    public function a_user_can_view_their_project()
     {
-        $this->withoutExceptionHandling();
         $user = User::factory()->create();
+        $this->be($user);
+        $this->withoutExceptionHandling();
         $project = Project::factory()->create(['owner_id' => $user->id]);
         $this->get($project->path())
             ->assertSee($project->title)
@@ -46,7 +47,7 @@ class ProjectsTest extends TestCase
 
         $attributes = Project::factory()->raw(['title' => '']);
 
-        $this->post('/projects', $attributes)->assertSessionHasErrors('title');
+        $this->post(route('projects.store'), $attributes)->assertSessionHasErrors('title');
     }
 
     /** @test */
@@ -55,7 +56,7 @@ class ProjectsTest extends TestCase
         $this->actingAs(User::factory()->create());
 
         $attributes = Project::factory()->raw(['description' => '']);
-        $this->post('/projects', $attributes)->assertSessionHasErrors('description');
+        $this->post(route('projects.store'), $attributes)->assertSessionHasErrors('description');
     }
 
     /** @test */
@@ -63,14 +64,47 @@ class ProjectsTest extends TestCase
     {
         $user = User::factory()->create();
         $project = Project::factory()->create(['owner_id' => $user->id]);
-        $this->assertEquals('/projects/' . $project->id, $project->path());
+        $this->assertEquals(route('projects.show', ['project' => $project->id]), $project->path());
     }
 
     /** @test */
-    public function only_authenticated_users_can_create_a_project()
+    public function a_model_belongs_to_a_user()
+    {
+        $user = User::factory()->create();
+        $project = Project::factory()->create(['owner_id' => $user->id]);
+        $this->assertInstanceOf(User::class, $project->owner);
+    }
+
+    /** @test */
+    public function guests_cannot_create_a_project()
     {
         //$this->withoutExceptionHandling();
         $attributes = Project::factory()->raw();
-        $this->post('/projects', $attributes)->assertRedirect(route('login'));
+        $this->post(route('projects.store'), $attributes)->assertRedirect(route('login'));
+    }
+
+    /** @test */
+    public function guests_cannot_view_projects()
+    {
+        $this->get(route('projects.index'))->assertRedirect(route('login'));
+    }
+
+    /** @test */
+
+    public function guests_cannot_view_a_project()
+    {
+        $user = User::factory()->create();
+        $project = Project::factory()->create(['owner_id' => $user->id]);
+        $this->get($project->path())->assertRedirect(route('login'));
+    }
+
+    /** @test */
+
+    public function an_authenticated_user_cannot_view_others_projects()
+    {
+        $this->be($user = User::factory()->create());
+        $other_user = User::factory()->create();
+        $project = Project::factory()->create(['owner_id' => $other_user->id]);
+        $this->get($project->path())->assertStatus(403);
     }
 }

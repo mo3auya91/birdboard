@@ -3,16 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
 class ProjectsController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(['auth'])->except(['index', 'show']);
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -62,6 +58,10 @@ class ProjectsController extends Controller
      */
     public function show(Project $project): View
     {
+        $user = auth('web')->user();
+        /** @var User $user */
+        abort_if($user->isNot($project->owner), 403);
+        //abort_if(auth('web')->id() != $project->owner_id, 403);
         return view('projects.show', ['project' => $project]);
     }
 
