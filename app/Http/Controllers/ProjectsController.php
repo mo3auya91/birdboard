@@ -16,7 +16,7 @@ class ProjectsController extends Controller
      */
     public function index(): View
     {
-        $projects = Project::query()->paginate(10);
+        $projects = auth('web')->user()->projects;
         return view('projects.index', ['projects' => $projects]);
     }
 
@@ -25,9 +25,9 @@ class ProjectsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
-        //
+        return view('projects.create');
     }
 
     /**
@@ -61,7 +61,6 @@ class ProjectsController extends Controller
         $user = auth('web')->user();
         /** @var User $user */
         abort_if($user->isNot($project->owner), 403);
-        //abort_if(auth('web')->id() != $project->owner_id, 403);
         return view('projects.show', ['project' => $project]);
     }
 

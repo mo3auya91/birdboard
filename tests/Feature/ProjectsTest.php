@@ -6,6 +6,7 @@ use App\Models\Project;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\Response;
 use Tests\TestCase;
 
 class ProjectsTest extends TestCase
@@ -20,6 +21,9 @@ class ProjectsTest extends TestCase
 
         $this->actingAs(User::factory()->create());
 
+        $this->get(route('projects.create'))
+            ->assertStatus(Response::HTTP_OK)
+            ->assertViewIs('projects.create');
         $attributes = Project::factory()->raw();
         $this->post(route('projects.store'), $attributes)->assertRedirect(route('projects.index'));
 
@@ -76,30 +80,18 @@ class ProjectsTest extends TestCase
     }
 
     /** @test */
-    public function guests_cannot_create_a_project()
-    {
-        //$this->withoutExceptionHandling();
-        $attributes = Project::factory()->raw();
-        $this->post(route('projects.store'), $attributes)->assertRedirect(route('login'));
-    }
-
-    /** @test */
-    public function guests_cannot_view_projects()
-    {
-        $this->get(route('projects.index'))->assertRedirect(route('login'));
-    }
-
-    /** @test */
-
-    public function guests_cannot_view_a_project()
+    public function guests_cannot_control_a_project()
     {
         $user = User::factory()->create();
         $project = Project::factory()->create(['owner_id' => $user->id]);
+
+        $this->get(route('projects.create'))->assertRedirect(route('login'));
+        $this->post(route('projects.store'), $project->toArray())->assertRedirect(route('login'));
+        $this->get(route('projects.index'))->assertRedirect(route('login'));
         $this->get($project->path())->assertRedirect(route('login'));
     }
 
     /** @test */
-
     public function an_authenticated_user_cannot_view_others_projects()
     {
         $this->be($user = User::factory()->create());
