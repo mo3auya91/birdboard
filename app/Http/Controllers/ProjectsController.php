@@ -6,28 +6,32 @@ use App\Models\Project;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class ProjectsController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return View
+     * @return Response
      */
-    public function index(): View
+    public function index(): Response
     {
         $projects = auth('web')->user()->projects;
-        return view('projects.index', ['projects' => $projects]);
+        //return view('projects.index', ['projects' => $projects]);
+        return Inertia::render('Project/Home', ['projects' => $projects]);
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function create(): View
+    public function create(): Response
     {
-        return view('projects.create');
+        return Inertia::render('Project/Create');
+        //return view('projects.create');
     }
 
     /**
@@ -54,14 +58,15 @@ class ProjectsController extends Controller
      * Display the specified resource.
      *
      * @param Project $project
-     * @return View
+     * @return Response
      */
-    public function show(Project $project): View
+    public function show(Project $project): Response
     {
         $user = auth('web')->user();
         /** @var User $user */
         abort_if($user->isNot($project->owner), 403);
-        return view('projects.show', ['project' => $project]);
+        return Inertia::render('Project/Show',['project' => $project]);
+        //return view('projects.show', ['project' => $project]);
     }
 
     /**

@@ -21,6 +21,8 @@
     import Welcome from './../Jetstream/Welcome'
 
     export default {
+        props: ['user'],
+
         components: {
             AppLayout,
             Welcome,
