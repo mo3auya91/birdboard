@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProjectsController;
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\HomeController;
 
 Route::get('/', function () {
@@ -12,4 +13,5 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
 
     Route::resource('projects', ProjectsController::class);
+    Route::resource('projects.tasks', TaskController::class);
 });

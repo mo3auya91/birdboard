@@ -65,7 +65,8 @@ class ProjectsController extends Controller
         $user = auth('web')->user();
         /** @var User $user */
         abort_if($user->isNot($project->owner), 403);
-        return Inertia::render('Project/Show',['project' => $project]);
+        $project = Project::with('tasks')->findOrFail($project->id);
+        return Inertia::render('Project/Show', ['project' => $project]);
         //return view('projects.show', ['project' => $project]);
     }
 

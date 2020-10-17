@@ -19,11 +19,10 @@ class ProjectsTest extends TestCase
     {
         //$this->withoutExceptionHandling();
 
-        $this->actingAs(User::factory()->create());
+        $this->signIn();
 
         $this->get(route('projects.create'))
-            ->assertStatus(Response::HTTP_OK)
-            ->assertViewIs('projects.create');
+            ->assertStatus(Response::HTTP_OK);
         $attributes = Project::factory()->raw();
         $this->post(route('projects.store'), $attributes)->assertRedirect(route('projects.index'));
 
@@ -36,7 +35,7 @@ class ProjectsTest extends TestCase
     public function a_user_can_view_their_project()
     {
         $user = User::factory()->create();
-        $this->be($user);
+        $this->signIn($user);
         $this->withoutExceptionHandling();
         $project = Project::factory()->create(['owner_id' => $user->id]);
         $this->get($project->path())
@@ -47,7 +46,7 @@ class ProjectsTest extends TestCase
     /** @test */
     public function a_project_requires_a_title()
     {
-        $this->actingAs(User::factory()->create());
+        $this->signIn();
 
         $attributes = Project::factory()->raw(['title' => '']);
 
@@ -57,8 +56,7 @@ class ProjectsTest extends TestCase
     /** @test */
     public function a_project_requires_a_description()
     {
-        $this->actingAs(User::factory()->create());
-
+        $this->signIn();
         $attributes = Project::factory()->raw(['description' => '']);
         $this->post(route('projects.store'), $attributes)->assertSessionHasErrors('description');
     }
@@ -80,6 +78,16 @@ class ProjectsTest extends TestCase
     }
 
     /** @test */
+    public function a_model_can_add_a_task()
+    {
+        $user = User::factory()->create();
+        $project = Project::factory()->create(['owner_id' => $user->id]);
+        $task = $project->addTask(['body' => 'Test Task']);
+        $this->assertCount(1, $project->tasks);
+        $this->assertTrue($project->tasks->contains($task));
+    }
+
+    /** @test */
     public function guests_cannot_control_a_project()
     {
         $user = User::factory()->create();
@@ -94,7 +102,7 @@ class ProjectsTest extends TestCase
     /** @test */
     public function an_authenticated_user_cannot_view_others_projects()
     {
-        $this->be($user = User::factory()->create());
+        $this->signIn();
         $other_user = User::factory()->create();
         $project = Project::factory()->create(['owner_id' => $other_user->id]);
         $this->get($project->path())->assertStatus(403);

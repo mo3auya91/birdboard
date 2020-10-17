@@ -16,10 +16,9 @@
           <div class="mb-8">
             <h2 class="text-gray font-normal text-lg mb-3">Tasks</h2>
             <!--tasks-->
-            <div class="card mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab aliquam commodi conse</div>
-            <div class="card mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab aliquam commodi conse</div>
-            <div class="card mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab aliquam commodi conse</div>
-            <div class="card">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab aliquam commodi conse</div>
+            <div class="card mb-3"
+                 v-for="task in project.tasks">{{ task.body }}
+            </div>
           </div>
           <div>
             <h2 class="text-gray font-normal text-lg">General Notes</h2>
