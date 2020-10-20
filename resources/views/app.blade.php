@@ -17,6 +17,9 @@
         @routes
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment.min.js"></script>
         <script src="{{ mix('js/app.js') }}" defer></script>
+        <link rel="icon" type="image/png" sizes="96x96" href="{{asset('assets/images/favicon-96x96.png')}}">
+        <link rel="icon" type="image/png" sizes="96x96" href="{{asset('assets/images/favicon-32×32.png')}}">
+        <link rel="icon" type="image/png" sizes="96x96" href="{{asset('assets/images/favicon-16×16.png')}}">
     </head>
     <body class="font-sans antialiased">
         @inertia

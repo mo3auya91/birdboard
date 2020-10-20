@@ -3,9 +3,7 @@
     <template #header>
       <div class="flex justify-between items-end w-full">
         <h2 class="text-sm text-gray font-normal">My Projects</h2>
-        <inertia-link :href="route('projects.create')"
-                      class="button">Add Project
-        </inertia-link>
+        <inertia-link :href="route('projects.create')" class="button">Add Project</inertia-link>
 <!--        <a :href="route('projects.create')" class="button">Add Project</a>-->
       </div>
     </template>

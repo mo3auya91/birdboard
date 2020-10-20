@@ -3,12 +3,15 @@
     <template #header>
       <div class="flex justify-between items-end w-full">
         <p class="text-sm text-gray font-normal">
-          <a :href="route('projects.index')"
-             class="text-sm text-gray font-normal no-underline">My Projects</a> / {{ project.title }}
+          <inertia-link :href="route('projects.index')" class="text-sm text-gray font-normal no-underline">My Projects
+          </inertia-link>
+          / {{ project.title }}
         </p>
         <a :href="route('projects.create')" class="button">Add Project</a>
       </div>
     </template>
+    <inertia-link :href="route('projects.show', {'project':project.id})" id="reload-btn" class="hidden">reload
+    </inertia-link>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="lg:flex -mx-3">
@@ -16,9 +19,14 @@
           <div class="mb-8">
             <h2 class="text-gray font-normal text-lg mb-3">Tasks</h2>
             <!--tasks-->
-            <div class="card mb-3"
-                 v-for="task in project.tasks">
-              {{ task.body }}
+            <div class="card mb-3" v-for="task in project.tasks" :key="task.id">
+              <form method="post" @submit.prevent="updateTask(task.id,$event)" :id="'update_task_'+task.id">
+                <div class="flex">
+                  <input type="text" class="w-full" name="body" :value="task.body">
+                  <input type="checkbox" name="is_completed" :checked="task.is_completed"
+                         v-on:change="updateTask(task.id)">
+                </div>
+              </form>
             </div>
 
             <div class="card mb-3">
@@ -61,6 +69,7 @@ import Card from './../../Pages/Project/Card'
 export default {
   props: {
     errors: Object,
+    updateErrors: Object,
     project: Object
   },
   components: {
@@ -69,28 +78,46 @@ export default {
   },
   data() {
     return {
+      selectedTask: null,
       form: {
         body: null,
+        is_completed: null,
+      },
+      updateForm: {
+        body: null,
+        is_completed: null,
       },
     }
   },
-  // mounted() {
-  //   console.log('mount')
-  //   this.form = {
-  //     body: null,
-  //   }
-  // },
-  // created() {
-  //   console.log('created')
-  //   this.form = {
-  //     body: null,
-  //   }
-  // },
   methods: {
     createTask() {
       this.$inertia.post(route('projects.tasks.store', {'project': this.project.id}), this.form)
-      //this.form.body = null
     },
+    updateTask(id, e) {
+      let _form = document.getElementById('update_task_' + id)
+      let form = new FormData(_form)
+      axios.patch(route('projects.tasks.update', {'project': this.project.id, 'task': id}),
+          {
+            'body': form.get('body'),
+            'is_completed': form.get('is_completed'),
+          },
+          {
+            'accept': 'application/json',
+          })
+          .then(response => {
+            //todo show success message toast
+            document.getElementById('reload-btn').click()
+          })
+          .catch(error => {
+            //todo show error message toast
+            console.log(error)
+          })
+    },
+    updateSelectedTask(id) {
+      this.selectedTask = this.project.tasks.find((item) => {
+        return parseInt(item.id) === parseInt(id)
+      })
+    }
   },
 }
 </script>

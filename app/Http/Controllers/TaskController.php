@@ -78,13 +78,25 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param Project $project
      * @param Task $task
+     * @param Request $request
      * @return Response
+     * @throws ValidationException
      */
-    public function update(Project $project, Task $task, Request $request)
+    public function update(Project $project, Task $task, Request $request)//: RedirectResponse
     {
-        //
+        $user = auth('web')->user();
+        /** @var User $user */
+        abort_if($user->isNot($project->owner), 403);
+        $data = $this->validate($request, [
+            'body' => ['required'],
+            'is_completed' => ['nullable'],
+        ]);
+        $data['is_completed'] = $request->filled('is_completed') ? 1 : 0;
+        $task->update($data);
+        //return redirect($project->path());
+        return response()->noContent();
     }
 
     /**

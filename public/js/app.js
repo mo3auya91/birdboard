@@ -4425,8 +4425,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -4506,11 +4504,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     errors: Object,
+    updateErrors: Object,
     project: Object
   },
   components: {
@@ -4519,28 +4526,47 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
+      selectedTask: null,
       form: {
-        body: null
+        body: null,
+        is_completed: null
+      },
+      updateForm: {
+        body: null,
+        is_completed: null
       }
     };
   },
-  // mounted() {
-  //   console.log('mount')
-  //   this.form = {
-  //     body: null,
-  //   }
-  // },
-  // created() {
-  //   console.log('created')
-  //   this.form = {
-  //     body: null,
-  //   }
-  // },
   methods: {
     createTask: function createTask() {
       this.$inertia.post(route('projects.tasks.store', {
         'project': this.project.id
-      }), this.form); //this.form.body = null
+      }), this.form);
+    },
+    updateTask: function updateTask(id, e) {
+      var _form = document.getElementById('update_task_' + id);
+
+      var form = new FormData(_form);
+      axios.patch(route('projects.tasks.update', {
+        'project': this.project.id,
+        'task': id
+      }), {
+        'body': form.get('body'),
+        'is_completed': form.get('is_completed')
+      }, {
+        'accept': 'application/json'
+      }).then(function (response) {
+        //todo show success message toast
+        document.getElementById('reload-btn').click();
+      })["catch"](function (error) {
+        //todo show error message toast
+        console.log(error);
+      });
+    },
+    updateSelectedTask: function updateSelectedTask(id) {
+      this.selectedTask = this.project.tasks.find(function (item) {
+        return parseInt(item.id) === parseInt(id);
+      });
     }
   }
 });
@@ -28362,7 +28388,7 @@ var render = function() {
                       staticClass: "button",
                       attrs: { href: _vm.route("projects.create") }
                     },
-                    [_vm._v("Add Project\n        ")]
+                    [_vm._v("Add Project")]
                   )
                 ],
                 1
@@ -28442,18 +28468,25 @@ var render = function() {
                 "div",
                 { staticClass: "flex justify-between items-end w-full" },
                 [
-                  _c("p", { staticClass: "text-sm text-gray font-normal" }, [
-                    _c(
-                      "a",
-                      {
-                        staticClass:
-                          "text-sm text-gray font-normal no-underline",
-                        attrs: { href: _vm.route("projects.index") }
-                      },
-                      [_vm._v("My Projects")]
-                    ),
-                    _vm._v(" / " + _vm._s(_vm.project.title) + "\n      ")
-                  ]),
+                  _c(
+                    "p",
+                    { staticClass: "text-sm text-gray font-normal" },
+                    [
+                      _c(
+                        "inertia-link",
+                        {
+                          staticClass:
+                            "text-sm text-gray font-normal no-underline",
+                          attrs: { href: _vm.route("projects.index") }
+                        },
+                        [_vm._v("My Projects\n        ")]
+                      ),
+                      _vm._v(
+                        "\n        / " + _vm._s(_vm.project.title) + "\n      "
+                      )
+                    ],
+                    1
+                  ),
                   _vm._v(" "),
                   _c(
                     "a",
@@ -28473,6 +28506,18 @@ var render = function() {
     },
     [
       _vm._v(" "),
+      _c(
+        "inertia-link",
+        {
+          staticClass: "hidden",
+          attrs: {
+            href: _vm.route("projects.show", { project: _vm.project.id }),
+            id: "reload-btn"
+          }
+        },
+        [_vm._v("reload\n  ")]
+      ),
+      _vm._v(" "),
       _c("main", { staticClass: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" }, [
         _c("div", { staticClass: "lg:flex -mx-3" }, [
           _c("div", { staticClass: "lg:w-3/4 px-3" }, [
@@ -28487,9 +28532,37 @@ var render = function() {
                 ),
                 _vm._v(" "),
                 _vm._l(_vm.project.tasks, function(task) {
-                  return _c("div", { staticClass: "card mb-3" }, [
-                    _vm._v(
-                      "\n            " + _vm._s(task.body) + "\n          "
+                  return _c("div", { key: task.id, staticClass: "card mb-3" }, [
+                    _c(
+                      "form",
+                      {
+                        attrs: { method: "post", id: "update_task_" + task.id },
+                        on: {
+                          submit: function($event) {
+                            $event.preventDefault()
+                            return _vm.updateTask(task.id, $event)
+                          }
+                        }
+                      },
+                      [
+                        _c("div", { staticClass: "flex" }, [
+                          _c("input", {
+                            staticClass: "w-full",
+                            attrs: { type: "text", name: "body" },
+                            domProps: { value: task.body }
+                          }),
+                          _vm._v(" "),
+                          _c("input", {
+                            attrs: { type: "checkbox", name: "is_completed" },
+                            domProps: { checked: task.is_completed },
+                            on: {
+                              change: function($event) {
+                                return _vm.updateTask(task.id)
+                              }
+                            }
+                          })
+                        ])
+                      ]
                     )
                   ])
                 }),
@@ -28577,7 +28650,8 @@ var render = function() {
           )
         ])
       ])
-    ]
+    ],
+    1
   )
 }
 var staticRenderFns = []
@@ -43301,6 +43375,7 @@ window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common['X-CSRF-TOKEN'] = document.head.querySelector('meta[name="csrf-token"]').content;
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting

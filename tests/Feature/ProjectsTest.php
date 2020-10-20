@@ -25,7 +25,9 @@ class ProjectsTest extends TestCase
             ->assertStatus(Response::HTTP_OK);
         $attributes = Project::factory()->raw();
         unset($attributes['owner_id']);
-        $this->post(route('projects.store'), $attributes)->assertRedirect(route('projects.index'));
+        //assume database is empty and the project id is 1
+        $this->post(route('projects.store'), $attributes)
+            ->assertRedirect(route('projects.show', ['project' => 1]));
 
         $this->assertDatabaseHas('projects', $attributes);
 
