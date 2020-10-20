@@ -22,7 +22,8 @@
             <div class="card mb-3" v-for="task in project.tasks" :key="task.id">
               <form method="post" @submit.prevent="updateTask(task.id,$event)" :id="'update_task_'+task.id">
                 <div class="flex">
-                  <input type="text" class="w-full" name="body" :value="task.body">
+                  <input type="text" class="w-full" name="body" :value="task.body"
+                         :class="task.is_completed ? 'text-gray-400 italic' : ''">
                   <input type="checkbox" name="is_completed" :checked="task.is_completed"
                          v-on:change="updateTask(task.id)">
                 </div>

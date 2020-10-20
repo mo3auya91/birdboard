@@ -13,6 +13,7 @@ use Illuminate\Support\Carbon;
  *
  * @property int $id
  * @property int $project_id
+ * @property boolean $is_completed
  * @property string $body
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -31,4 +32,17 @@ class Task extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
+
+    public function path()
+    {
+        return route('projects.tasks.show', [
+            'project' => $this->project_id,
+            'task' => $this->id,
+        ]);
+    }
 }

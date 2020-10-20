@@ -4512,6 +4512,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -28548,6 +28549,9 @@ var render = function() {
                         _c("div", { staticClass: "flex" }, [
                           _c("input", {
                             staticClass: "w-full",
+                            class: task.is_completed
+                              ? "text-gray-400 italic"
+                              : "",
                             attrs: { type: "text", name: "body" },
                             domProps: { value: task.body }
                           }),

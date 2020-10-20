@@ -5,12 +5,14 @@ namespace Tests\Feature;
 use App\Models\Project;
 use App\Models\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Response;
 use Tests\TestCase;
 
 class ProjectTasksTest extends TestCase
 {
     use RefreshDatabase;
+    use WithFaker;
 
     /** @test */
     public function guests_cannot_control_a_task()
@@ -37,6 +39,23 @@ class ProjectTasksTest extends TestCase
     }
 
     /** @test */
+    public function only_the_project_owner_can_update_a_task()
+    {
+        $this->signIn();
+        $project = Project::factory()->create();
+        $attributes = Task::factory()->raw();
+        $task = $project->addTask($attributes);
+        $new_task_body = $this->faker->sentence;
+        $attributes['body'] = $new_task_body;
+        $this->patch(route('projects.tasks.update', [
+            'project' => $project->id,
+            'task' => $task->id,
+        ]), ['body' => $new_task_body])
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->assertDatabaseMissing('tasks', $attributes);
+    }
+
+    /** @test */
     public function a_project_can_have_tasks()
     {
         $this->withoutExceptionHandling();
@@ -58,15 +77,22 @@ class ProjectTasksTest extends TestCase
         $project = auth('web')->user()->projects()->create(Project::factory()->raw());
         $attributes = Task::factory()->raw();
         $task = $project->addTask($attributes);
+
+        $new_task_body = $this->faker->sentence;
+
         $this->patch(route('projects.tasks.update', [
             'project' => $project->id,
             'task' => $task->id,
-            'body' => 'new updated body',
+            'body' => $new_task_body,
             'is_completed' => 1,
-        ]));
-        $attributes['is_completed'] = 1;
-        $attributes['body'] = 'new updated body';
-        $this->assertDatabaseHas('tasks', $attributes);
+        ]))->assertStatus(Response::HTTP_NO_CONTENT);
+
+        $this->assertDatabaseHas('tasks', [
+            'body' => $new_task_body,
+            'is_completed' => 1,
+            'project_id' => $project->id,
+            'id' => $task->id,
+        ]);
     }
 
     /** @test */
