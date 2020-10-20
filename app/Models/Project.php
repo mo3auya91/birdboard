@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -28,6 +29,10 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Project whereTitle($value)
  * @method static Builder|Project whereUpdatedAt($value)
  * @mixin Eloquent
+ * @property-read User $owner
+ * @property-read Collection|Task[] $tasks
+ * @property-read int|null $tasks_count
+ * @method static Builder|Project whereOwnerId($value)
  */
 class Project extends Model
 {

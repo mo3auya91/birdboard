@@ -48,10 +48,11 @@ class ProjectsController extends Controller
             'description' => ['required'],
         ]);
         //persist
-        auth('web')->user()->projects()->create($data);
+        $project = auth('web')->user()->projects()->create($data);
 
         //redirect
-        return redirect()->route('projects.index');
+        return redirect($project->path());
+        //return redirect()->route('projects.show', ['project' => $project->id]);
     }
 
     /**

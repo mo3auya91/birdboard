@@ -5,11 +5,36 @@ namespace Tests\Feature;
 use App\Models\Project;
 use App\Models\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Response;
 use Tests\TestCase;
 
 class ProjectTasksTest extends TestCase
 {
     use RefreshDatabase;
+
+    /** @test */
+    public function guests_cannot_control_a_task()
+    {
+        $project = Project::factory()->create();
+        $attributes = Task::factory()->raw();
+        $this->post(route('projects.tasks.store', [
+            'project' => $project->id
+        ]), $attributes)->assertRedirect(route('login'));
+    }
+
+    /** @test */
+    public function only_the_project_owner_can_add_a_task()
+    {
+        $this->signIn();
+        //$project = auth('web')->user()->projects()->create(Project::factory()->raw());
+        $project = Project::factory()->create();
+        $attributes = Task::factory()->raw();
+        $this->post(route('projects.tasks.store', [
+            'project' => $project->id
+        ]), $attributes)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->assertDatabaseMissing('tasks', $attributes);
+    }
 
     /** @test */
     public function a_project_can_have_tasks()

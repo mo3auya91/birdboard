@@ -4289,6 +4289,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['project'],
   name: "Card"
@@ -4359,13 +4362,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: [],
+  props: {
+    errors: Object
+  },
+  data: function data() {
+    return {
+      form: {
+        title: null,
+        description: null
+      }
+    };
+  },
   components: {
     AppLayout: _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  methods: {
+    createProject: function createProject() {
+      this.$inertia.post(route('projects.store'), this.form);
+    }
   }
 });
 
@@ -4382,6 +4398,9 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../../Layouts/AppLayout */ "./resources/js/Layouts/AppLayout.vue");
 /* harmony import */ var _Pages_Project_Card__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./../../Pages/Project/Card */ "./resources/js/Pages/Project/Card.vue");
+//
+//
+//
 //
 //
 //
@@ -4478,13 +4497,51 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['project'],
+  props: {
+    errors: Object,
+    project: Object
+  },
   components: {
     AppLayout: _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__["default"],
     Card: _Pages_Project_Card__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  data: function data() {
+    return {
+      form: {
+        body: null
+      }
+    };
+  },
+  // mounted() {
+  //   console.log('mount')
+  //   this.form = {
+  //     body: null,
+  //   }
+  // },
+  // created() {
+  //   console.log('created')
+  //   this.form = {
+  //     body: null,
+  //   }
+  // },
+  methods: {
+    createTask: function createTask() {
+      this.$inertia.post(route('projects.tasks.store', {
+        'project': this.project.id
+      }), this.form); //this.form.body = null
+    }
   }
 });
 
@@ -28039,16 +28096,17 @@ var render = function() {
       },
       [
         _c(
-          "a",
+          "inertia-link",
           {
             staticClass: "text-black no-underline",
             attrs: {
               href: _vm.route("projects.show", { project: _vm.project.id })
             }
           },
-          [_vm._v(_vm._s(_vm.project.title))]
+          [_vm._v(_vm._s(_vm.project.title) + "\n    ")]
         )
-      ]
+      ],
+      1
     ),
     _vm._v(" "),
     _c("div", { staticClass: "truncate w-20 text-gray-description" }, [
@@ -28111,89 +28169,148 @@ var render = function() {
                 "bg-white overflow-hidden shadow-xl sm:rounded-lg rounded px-8 pt-6 pb-8 mb-4 flex flex-col my-2"
             },
             [
-              _c("div", { staticClass: "-mx-3 md:flex mb-6" }, [
-                _c("div", { staticClass: "md:w-full px-3" }, [
-                  _c(
-                    "label",
-                    {
-                      staticClass:
-                        "block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2",
-                      attrs: { for: "title" }
-                    },
-                    [_vm._v("\n              Title\n            ")]
-                  ),
-                  _vm._v(" "),
-                  _c("input", {
-                    staticClass:
-                      "block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3",
-                    attrs: {
-                      id: "title",
-                      type: "text",
-                      placeholder: "project title"
+              _c(
+                "form",
+                {
+                  attrs: { method: "post" },
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      return _vm.createProject($event)
                     }
-                  }),
+                  }
+                },
+                [
+                  _c("div", { staticClass: "-mx-3 md:flex mb-6" }, [
+                    _c("div", { staticClass: "md:w-full px-3" }, [
+                      _c(
+                        "label",
+                        {
+                          staticClass:
+                            "block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2",
+                          attrs: { for: "title" }
+                        },
+                        [_vm._v("Title")]
+                      ),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.form.title,
+                            expression: "form.title"
+                          }
+                        ],
+                        staticClass:
+                          "block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3",
+                        attrs: {
+                          id: "title",
+                          type: "text",
+                          placeholder: "project title"
+                        },
+                        domProps: { value: _vm.form.title },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.form, "title", $event.target.value)
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _vm.errors.title
+                        ? _c("p", { staticClass: "text-red text-xs italic" }, [
+                            _vm._v(_vm._s(_vm.errors.title[0]))
+                          ])
+                        : _vm._e()
+                    ])
+                  ]),
                   _vm._v(" "),
-                  _c("p", { staticClass: "text-grey-dark text-xs italic" }, [
-                    _vm._v("validation error here")
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "-mx-3 md:flex mb-6" }, [
-                _c("div", { staticClass: "md:w-full px-3" }, [
+                  _c("div", { staticClass: "-mx-3 md:flex mb-6" }, [
+                    _c("div", { staticClass: "md:w-full px-3" }, [
+                      _c(
+                        "label",
+                        {
+                          staticClass:
+                            "block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2",
+                          attrs: { for: "description" }
+                        },
+                        [_vm._v("Description")]
+                      ),
+                      _vm._v(" "),
+                      _c("textarea", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.form.description,
+                            expression: "form.description"
+                          }
+                        ],
+                        staticClass:
+                          "block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3",
+                        attrs: {
+                          id: "description",
+                          cols: "30",
+                          rows: "10",
+                          placeholder: "description"
+                        },
+                        domProps: { value: _vm.form.description },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.form,
+                              "description",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _vm.errors.description
+                        ? _c("p", { staticClass: "text-red text-xs italic" }, [
+                            _vm._v(_vm._s(_vm.errors.description[0]))
+                          ])
+                        : _vm._e()
+                    ])
+                  ]),
+                  _vm._v(" "),
                   _c(
-                    "label",
-                    {
-                      staticClass:
-                        "block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2",
-                      attrs: { for: "description" }
-                    },
-                    [_vm._v("\n              Description\n            ")]
-                  ),
-                  _vm._v(" "),
-                  _c("textarea", {
-                    staticClass:
-                      "block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3",
-                    attrs: {
-                      name: "description",
-                      id: "description",
-                      cols: "30",
-                      rows: "10",
-                      placeholder: "description"
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "text-grey-dark text-xs italic" }, [
-                    _vm._v("validation error here")
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "-mx-3 md:flex mb-6 md:items-center" }, [
-                _c("div", { staticClass: "md:w-1/3" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass:
-                        "shadow bg-teal-400 hover:bg-teal-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded",
-                      attrs: { type: "button" }
-                    },
-                    [_vm._v("\n              Send\n            ")]
+                    "div",
+                    { staticClass: "-mx-3 md:flex mb-6 md:items-center" },
+                    [
+                      _c("div", { staticClass: "md:w-1/3" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass:
+                              "shadow bg-teal-400 hover:bg-teal-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded",
+                            attrs: { type: "submit" }
+                          },
+                          [_vm._v("\n                Send\n              ")]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "md:w-2/3" }, [
+                        _c(
+                          "a",
+                          {
+                            staticClass:
+                              "shadow bg-teal-400 hover:bg-teal-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded",
+                            attrs: { href: _vm.route("projects.index") }
+                          },
+                          [_vm._v("\n                Cancel\n              ")]
+                        )
+                      ])
+                    ]
                   )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "md:w-2/3" }, [
-                  _c(
-                    "a",
-                    {
-                      staticClass:
-                        "shadow bg-teal-400 hover:bg-teal-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded",
-                      attrs: { href: _vm.route("projects.index") }
-                    },
-                    [_vm._v("\n              Cancel\n            ")]
-                  )
-                ])
-              ])
+                ]
+              )
             ]
           )
         ])
@@ -28240,14 +28357,15 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c(
-                    "a",
+                    "inertia-link",
                     {
                       staticClass: "button",
                       attrs: { href: _vm.route("projects.create") }
                     },
-                    [_vm._v("Add Project")]
+                    [_vm._v("Add Project\n        ")]
                   )
-                ]
+                ],
+                1
               )
             ]
           },
@@ -28370,9 +28488,57 @@ var render = function() {
                 _vm._v(" "),
                 _vm._l(_vm.project.tasks, function(task) {
                   return _c("div", { staticClass: "card mb-3" }, [
-                    _vm._v(_vm._s(task.body) + "\n          ")
+                    _vm._v(
+                      "\n            " + _vm._s(task.body) + "\n          "
+                    )
                   ])
-                })
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "card mb-3" }, [
+                  _c(
+                    "form",
+                    {
+                      attrs: { method: "post" },
+                      on: {
+                        submit: function($event) {
+                          $event.preventDefault()
+                          return _vm.createTask($event)
+                        }
+                      }
+                    },
+                    [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.form.body,
+                            expression: "form.body"
+                          }
+                        ],
+                        staticClass: "w-full py-2 px-1 text-lg",
+                        attrs: { type: "text", placeholder: "add new task" },
+                        domProps: { value: _vm.form.body },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.form, "body", $event.target.value)
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _vm.errors.body
+                        ? _c(
+                            "div",
+                            { staticClass: "text-red text-xs italic" },
+                            [_vm._v(_vm._s(_vm.errors.body[0]))]
+                          )
+                        : _vm._e()
+                    ]
+                  )
+                ])
               ],
               2
             ),

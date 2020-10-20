@@ -24,6 +24,7 @@ class ProjectsTest extends TestCase
         $this->get(route('projects.create'))
             ->assertStatus(Response::HTTP_OK);
         $attributes = Project::factory()->raw();
+        unset($attributes['owner_id']);
         $this->post(route('projects.store'), $attributes)->assertRedirect(route('projects.index'));
 
         $this->assertDatabaseHas('projects', $attributes);
@@ -37,7 +38,7 @@ class ProjectsTest extends TestCase
         $user = User::factory()->create();
         $this->signIn($user);
         $this->withoutExceptionHandling();
-        $project = Project::factory()->create(['owner_id' => $user->id]);
+        $project = auth('web')->user()->projects()->create(Project::factory()->raw());
         $this->get($project->path())
             ->assertSee($project->title)
             ->assertSee($project->description);
@@ -65,7 +66,7 @@ class ProjectsTest extends TestCase
     public function a_model_has_path()
     {
         $user = User::factory()->create();
-        $project = Project::factory()->create(['owner_id' => $user->id]);
+        $project = $user->projects()->create(Project::factory()->raw());
         $this->assertEquals(route('projects.show', ['project' => $project->id]), $project->path());
     }
 
@@ -81,7 +82,7 @@ class ProjectsTest extends TestCase
     public function a_model_can_add_a_task()
     {
         $user = User::factory()->create();
-        $project = Project::factory()->create(['owner_id' => $user->id]);
+        $project = $user->projects()->create(Project::factory()->raw());
         $task = $project->addTask(['body' => 'Test Task']);
         $this->assertCount(1, $project->tasks);
         $this->assertTrue($project->tasks->contains($task));
@@ -91,7 +92,7 @@ class ProjectsTest extends TestCase
     public function guests_cannot_control_a_project()
     {
         $user = User::factory()->create();
-        $project = Project::factory()->create(['owner_id' => $user->id]);
+        $project = $user->projects()->create(Project::factory()->raw());
 
         $this->get(route('projects.create'))->assertRedirect(route('login'));
         $this->post(route('projects.store'), $project->toArray())->assertRedirect(route('login'));
@@ -104,7 +105,7 @@ class ProjectsTest extends TestCase
     {
         $this->signIn();
         $other_user = User::factory()->create();
-        $project = Project::factory()->create(['owner_id' => $other_user->id]);
+        $project = $other_user->projects()->create(Project::factory()->raw());
         $this->get($project->path())->assertStatus(403);
     }
 }

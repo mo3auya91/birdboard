@@ -17,7 +17,16 @@
             <h2 class="text-gray font-normal text-lg mb-3">Tasks</h2>
             <!--tasks-->
             <div class="card mb-3"
-                 v-for="task in project.tasks">{{ task.body }}
+                 v-for="task in project.tasks">
+              {{ task.body }}
+            </div>
+
+            <div class="card mb-3">
+              <form method="post" @submit.prevent="createTask">
+                <input type="text" v-model="form.body" placeholder="add new task"
+                       class="w-full py-2 px-1 text-lg">
+                <div v-if="errors.body" class="text-red text-xs italic">{{ errors.body[0] }}</div>
+              </form>
             </div>
           </div>
           <div>
@@ -50,10 +59,38 @@ import AppLayout from './../../Layouts/AppLayout'
 import Card from './../../Pages/Project/Card'
 
 export default {
-  props: ['project'],
+  props: {
+    errors: Object,
+    project: Object
+  },
   components: {
     AppLayout,
     Card,
+  },
+  data() {
+    return {
+      form: {
+        body: null,
+      },
+    }
+  },
+  // mounted() {
+  //   console.log('mount')
+  //   this.form = {
+  //     body: null,
+  //   }
+  // },
+  // created() {
+  //   console.log('created')
+  //   this.form = {
+  //     body: null,
+  //   }
+  // },
+  methods: {
+    createTask() {
+      this.$inertia.post(route('projects.tasks.store', {'project': this.project.id}), this.form)
+      //this.form.body = null
+    },
   },
 }
 </script>

@@ -23,9 +23,9 @@ class ProjectFactory extends Factory
     public function definition()
     {
         return [
-//            'owner_id' => function () {
-//                return User::factory()->create()->id;
-//            },
+            'owner_id' => function () {
+                return User::factory()->create()->id;
+            },
             'title' => $this->faker->sentence(4),
             'description' => $this->faker->sentence(4),
         ];

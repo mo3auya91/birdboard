@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -41,11 +42,15 @@ class TaskController extends Controller
      */
     public function store(Project $project, Request $request): RedirectResponse
     {
+        $user = auth('web')->user();
+        /** @var User $user */
+        abort_if($user->isNot($project->owner), 403);
         $data = $this->validate($request, [
             'body' => ['required']
         ]);
         $project->addTask($data);
-        return redirect($project->path());
+        //return redirect($project->path());
+        return redirect(route('projects.index'));
     }
 
     /**
