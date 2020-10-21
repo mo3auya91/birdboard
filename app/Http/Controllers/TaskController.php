@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -37,10 +38,10 @@ class TaskController extends Controller
      *
      * @param Project $project
      * @param Request $request
-     * @return RedirectResponse
+     * @return JsonResponse
      * @throws ValidationException
      */
-    public function store(Project $project, Request $request): RedirectResponse
+    public function store(Project $project, Request $request): JsonResponse
     {
         $user = auth('web')->user();
         /** @var User $user */
@@ -48,9 +49,8 @@ class TaskController extends Controller
         $data = $this->validate($request, [
             'body' => ['required']
         ]);
-        $project->addTask($data);
-        //return redirect($project->path());
-        return redirect(route('projects.index'));
+        $task = $project->addTask($data);
+        return response()->json($task);
     }
 
     /**
@@ -81,22 +81,21 @@ class TaskController extends Controller
      * @param Project $project
      * @param Task $task
      * @param Request $request
-     * @return Response
+     * @return JsonResponse
      * @throws ValidationException
      */
-    public function update(Project $project, Task $task, Request $request)//: RedirectResponse
+    public function update(Project $project, Task $task, Request $request): JsonResponse
     {
         $user = auth('web')->user();
         /** @var User $user */
-        abort_if($user->isNot($project->owner), 403);
+        abort_if($user->isNot($task->project->owner), 403);
         $data = $this->validate($request, [
             'body' => ['required'],
             'is_completed' => ['nullable'],
         ]);
         $data['is_completed'] = $request->filled('is_completed') ? 1 : 0;
         $task->update($data);
-        //return redirect($project->path());
-        return response()->noContent();
+        return response()->json($task);
     }
 
     /**

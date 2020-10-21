@@ -26,12 +26,15 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Task whereProjectId($value)
  * @method static Builder|Task whereUpdatedAt($value)
  * @mixin Eloquent
+ * @property-read Project $project
  */
 class Task extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
+
+    protected $touches = ['project'];
 
     public function project()
     {

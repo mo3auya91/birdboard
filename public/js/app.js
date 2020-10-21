@@ -4511,14 +4511,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     errors: Object,
-    updateErrors: Object,
     project: Object
   },
   components: {
@@ -4529,25 +4526,42 @@ __webpack_require__.r(__webpack_exports__);
     return {
       selectedTask: null,
       form: {
-        body: null,
-        is_completed: null
-      },
-      updateForm: {
-        body: null,
-        is_completed: null
+        body: null
       }
     };
   },
   methods: {
     createTask: function createTask() {
-      this.$inertia.post(route('projects.tasks.store', {
+      var _this = this;
+
+      axios.post(route('projects.tasks.store', {
         'project': this.project.id
-      }), this.form);
+      }), {
+        'body': this.form.body
+      }, {
+        headers: {
+          'accept': 'application/json'
+        }
+      }).then(function (response) {
+        //todo show success message toast
+        _this.project.tasks.push(response.data);
+
+        _this.form.body = null;
+      })["catch"](function (error) {
+        //todo show error message toast
+        console.log(error);
+      });
     },
-    updateTask: function updateTask(id, e) {
+    updateTask: function updateTask(id) {
+      var _this2 = this;
+
       var _form = document.getElementById('update_task_' + id);
 
       var form = new FormData(_form);
+      var data = {
+        'body': form.get('body'),
+        'is_completed': form.get('is_completed')
+      };
       axios.patch(route('projects.tasks.update', {
         'project': this.project.id,
         'task': id
@@ -4555,18 +4569,21 @@ __webpack_require__.r(__webpack_exports__);
         'body': form.get('body'),
         'is_completed': form.get('is_completed')
       }, {
-        'accept': 'application/json'
-      }).then(function (response) {
+        headers: {
+          'accept': 'application/json'
+        }
+      }).then(function () {
         //todo show success message toast
-        document.getElementById('reload-btn').click();
+        var item = _this2.project.tasks.find(function (item) {
+          return parseInt(item.id) === parseInt(id);
+        });
+
+        item.body = data.body;
+        item.is_completed = data.is_completed;
+        document.getElementById("task_".concat(id, "_body")).blur(); //document.getElementById('reload-btn').click()
       })["catch"](function (error) {
         //todo show error message toast
         console.log(error);
-      });
-    },
-    updateSelectedTask: function updateSelectedTask(id) {
-      this.selectedTask = this.project.tasks.find(function (item) {
-        return parseInt(item.id) === parseInt(id);
       });
     }
   }
@@ -28507,18 +28524,6 @@ var render = function() {
     },
     [
       _vm._v(" "),
-      _c(
-        "inertia-link",
-        {
-          staticClass: "hidden",
-          attrs: {
-            href: _vm.route("projects.show", { project: _vm.project.id }),
-            id: "reload-btn"
-          }
-        },
-        [_vm._v("reload\n  ")]
-      ),
-      _vm._v(" "),
       _c("main", { staticClass: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" }, [
         _c("div", { staticClass: "lg:flex -mx-3" }, [
           _c("div", { staticClass: "lg:w-3/4 px-3" }, [
@@ -28541,7 +28546,7 @@ var render = function() {
                         on: {
                           submit: function($event) {
                             $event.preventDefault()
-                            return _vm.updateTask(task.id, $event)
+                            return _vm.updateTask(task.id)
                           }
                         }
                       },
@@ -28552,7 +28557,11 @@ var render = function() {
                             class: task.is_completed
                               ? "text-gray-400 italic"
                               : "",
-                            attrs: { type: "text", name: "body" },
+                            attrs: {
+                              type: "text",
+                              name: "body",
+                              id: "task_" + task.id + "_body"
+                            },
                             domProps: { value: task.body }
                           }),
                           _vm._v(" "),
@@ -28575,7 +28584,7 @@ var render = function() {
                   _c(
                     "form",
                     {
-                      attrs: { method: "post" },
+                      attrs: { method: "post", id: "createTaskForm" },
                       on: {
                         submit: function($event) {
                           $event.preventDefault()
@@ -28654,8 +28663,7 @@ var render = function() {
           )
         ])
       ])
-    ],
-    1
+    ]
   )
 }
 var staticRenderFns = []

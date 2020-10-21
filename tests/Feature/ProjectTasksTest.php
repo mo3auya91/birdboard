@@ -85,7 +85,11 @@ class ProjectTasksTest extends TestCase
             'task' => $task->id,
             'body' => $new_task_body,
             'is_completed' => 1,
-        ]))->assertStatus(Response::HTTP_NO_CONTENT);
+        ]))->assertStatus(Response::HTTP_OK)
+        ->assertJson([
+            'body' => $new_task_body,
+            'is_completed' => 1
+        ]);
 
         $this->assertDatabaseHas('tasks', [
             'body' => $new_task_body,

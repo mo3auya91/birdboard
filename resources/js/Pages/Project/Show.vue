@@ -10,9 +10,7 @@
         <a :href="route('projects.create')" class="button">Add Project</a>
       </div>
     </template>
-    <inertia-link :href="route('projects.show', {'project':project.id})" id="reload-btn" class="hidden">reload
-    </inertia-link>
-
+    <!--<inertia-link :href="route('projects.show', {'project':project.id})" id="reload-btn" class="hidden">reload</inertia-link>-->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="lg:flex -mx-3">
         <div class="lg:w-3/4 px-3">
@@ -20,9 +18,9 @@
             <h2 class="text-gray font-normal text-lg mb-3">Tasks</h2>
             <!--tasks-->
             <div class="card mb-3" v-for="task in project.tasks" :key="task.id">
-              <form method="post" @submit.prevent="updateTask(task.id,$event)" :id="'update_task_'+task.id">
+              <form method="post" @submit.prevent="updateTask(task.id)" :id="'update_task_'+task.id">
                 <div class="flex">
-                  <input type="text" class="w-full" name="body" :value="task.body"
+                  <input type="text" class="w-full" name="body" :value="task.body" :id="`task_${task.id}_body`"
                          :class="task.is_completed ? 'text-gray-400 italic' : ''">
                   <input type="checkbox" name="is_completed" :checked="task.is_completed"
                          v-on:change="updateTask(task.id)">
@@ -31,7 +29,7 @@
             </div>
 
             <div class="card mb-3">
-              <form method="post" @submit.prevent="createTask">
+              <form method="post" @submit.prevent="createTask" id="createTaskForm">
                 <input type="text" v-model="form.body" placeholder="add new task"
                        class="w-full py-2 px-1 text-lg">
                 <div v-if="errors.body" class="text-red text-xs italic">{{ errors.body[0] }}</div>
@@ -70,7 +68,6 @@ import Card from './../../Pages/Project/Card'
 export default {
   props: {
     errors: Object,
-    updateErrors: Object,
     project: Object
   },
   components: {
@@ -82,42 +79,52 @@ export default {
       selectedTask: null,
       form: {
         body: null,
-        is_completed: null,
-      },
-      updateForm: {
-        body: null,
-        is_completed: null,
       },
     }
   },
   methods: {
     createTask() {
-      this.$inertia.post(route('projects.tasks.store', {'project': this.project.id}), this.form)
-    },
-    updateTask(id, e) {
-      let _form = document.getElementById('update_task_' + id)
-      let form = new FormData(_form)
-      axios.patch(route('projects.tasks.update', {'project': this.project.id, 'task': id}),
-          {
-            'body': form.get('body'),
-            'is_completed': form.get('is_completed'),
-          },
-          {
-            'accept': 'application/json',
-          })
+      axios.post(route('projects.tasks.store', {'project': this.project.id}),
+          {'body': this.form.body},
+          {headers: {'accept': 'application/json'}})
           .then(response => {
             //todo show success message toast
-            document.getElementById('reload-btn').click()
+            this.project.tasks.push(response.data)
+            this.form.body = null
           })
           .catch(error => {
             //todo show error message toast
             console.log(error)
           })
     },
-    updateSelectedTask(id) {
-      this.selectedTask = this.project.tasks.find((item) => {
-        return parseInt(item.id) === parseInt(id)
-      })
+    updateTask(id) {
+      let _form = document.getElementById('update_task_' + id)
+      let form = new FormData(_form)
+      let data = {
+        'body': form.get('body'),
+        'is_completed': form.get('is_completed'),
+      }
+      axios.patch(route('projects.tasks.update', {'project': this.project.id, 'task': id}),
+          {
+            'body': form.get('body'),
+            'is_completed': form.get('is_completed'),
+          },
+          {headers: {'accept': 'application/json'}},
+      )
+          .then(() => {
+            //todo show success message toast
+            let item = this.project.tasks.find((item) => {
+              return parseInt(item.id) === parseInt(id)
+            })
+            item.body = data.body
+            item.is_completed = data.is_completed
+            document.getElementById(`task_${id}_body`).blur()
+            //document.getElementById('reload-btn').click()
+          })
+          .catch(error => {
+            //todo show error message toast
+            console.log(error)
+          })
     }
   },
 }
