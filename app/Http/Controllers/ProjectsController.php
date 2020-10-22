@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -19,7 +21,6 @@ class ProjectsController extends Controller
     public function index(): Response
     {
         $projects = auth('web')->user()->projects;
-        //return view('projects.index', ['projects' => $projects]);
         return Inertia::render('Project/Home', ['projects' => $projects]);
     }
 
@@ -31,14 +32,13 @@ class ProjectsController extends Controller
     public function create(): Response
     {
         return Inertia::render('Project/Create');
-        //return view('projects.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function store(Request $request)
     {
@@ -46,6 +46,7 @@ class ProjectsController extends Controller
         $data = $request->validate([
             'title' => ['required'],
             'description' => ['required'],
+            'notes' => ['nullable'],
         ]);
         //persist
         $project = auth('web')->user()->projects()->create($data);
@@ -60,12 +61,11 @@ class ProjectsController extends Controller
      *
      * @param Project $project
      * @return Response
+     * @throws AuthorizationException
      */
     public function show(Project $project): Response
     {
-        $user = auth('web')->user();
-        /** @var User $user */
-        abort_if($user->isNot($project->owner), 403);
+        $this->authorize('update', $project);
         $project = Project::with('tasks')->findOrFail($project->id);
         return Inertia::render('Project/Show', ['project' => $project]);
         //return view('projects.show', ['project' => $project]);
@@ -74,7 +74,7 @@ class ProjectsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Models\Project $project
+     * @param Project $project
      * @return \Illuminate\Http\Response
      */
     public function edit(Project $project)
@@ -85,19 +85,30 @@ class ProjectsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Project $project
-     * @return \Illuminate\Http\Response
+     * @param Project $project
+     * @param Request $request
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
-    public function update(Request $request, Project $project)
+    public function update(Project $project, Request $request): RedirectResponse
     {
-        //
+        $this->authorize('update', $project);
+        //validate
+        $data = $request->validate([
+            'title' => ['nullable'],
+            'description' => ['nullable'],
+            'notes' => ['nullable'],
+        ]);
+        //persist
+        $project->update($data);
+        //redirect
+        return redirect($project->path());
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\Project $project
+     * @param Project $project
      * @return \Illuminate\Http\Response
      */
     public function destroy(Project $project)

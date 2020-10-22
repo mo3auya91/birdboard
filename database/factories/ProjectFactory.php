@@ -28,6 +28,7 @@ class ProjectFactory extends Factory
             },
             'title' => $this->faker->sentence(4),
             'description' => $this->faker->sentence(4),
+            'notes' => $this->faker->sentence,
         ];
     }
 }

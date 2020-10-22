@@ -39,11 +39,17 @@
           <div>
             <h2 class="text-gray font-normal text-lg">General Notes</h2>
             <!--General Notes-->
+            <!--<form @submit.prevent="updateProject">-->
             <textarea
                 id="general_note"
-                name="general_note"
-                class="card w-full"
-                style="height: 200px;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab aliquam commodi conse</textarea>
+                name="notes"
+                class="card w-full mb-4" v-model="notes"
+                style="height: 200px;" v-html="notes"></textarea>
+            <inertia-link :href="route('projects.update',{'project':project.id})"
+                          method="patch" :data="{notes:notes}"
+                          class="button">Update
+            </inertia-link>
+            <!--</form>-->
           </div>
         </div>
 
@@ -76,7 +82,7 @@ export default {
   },
   data() {
     return {
-      selectedTask: null,
+      notes: this.project.notes,
       form: {
         body: null,
       },

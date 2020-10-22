@@ -4511,6 +4511,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -4524,7 +4530,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      selectedTask: null,
+      notes: this.project.notes,
       form: {
         body: null
       }
@@ -28629,25 +28635,53 @@ var render = function() {
               2
             ),
             _vm._v(" "),
-            _c("div", [
-              _c("h2", { staticClass: "text-gray font-normal text-lg" }, [
-                _vm._v("General Notes")
-              ]),
-              _vm._v(" "),
-              _c(
-                "textarea",
-                {
-                  staticClass: "card w-full",
+            _c(
+              "div",
+              [
+                _c("h2", { staticClass: "text-gray font-normal text-lg" }, [
+                  _vm._v("General Notes")
+                ]),
+                _vm._v(" "),
+                _c("textarea", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.notes,
+                      expression: "notes"
+                    }
+                  ],
+                  staticClass: "card w-full mb-4",
                   staticStyle: { height: "200px" },
-                  attrs: { id: "general_note", name: "general_note" }
-                },
-                [
-                  _vm._v(
-                    "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab aliquam commodi conse"
-                  )
-                ]
-              )
-            ])
+                  attrs: { id: "general_note", name: "notes" },
+                  domProps: { value: _vm.notes, innerHTML: _vm._s(_vm.notes) },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.notes = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "inertia-link",
+                  {
+                    staticClass: "button",
+                    attrs: {
+                      href: _vm.route("projects.update", {
+                        project: _vm.project.id
+                      }),
+                      method: "patch",
+                      data: { notes: _vm.notes }
+                    }
+                  },
+                  [_vm._v("Update\n          ")]
+                )
+              ],
+              1
+            )
           ]),
           _vm._v(" "),
           _c(

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -40,12 +41,11 @@ class TaskController extends Controller
      * @param Request $request
      * @return JsonResponse
      * @throws ValidationException
+     * @throws AuthorizationException
      */
     public function store(Project $project, Request $request): JsonResponse
     {
-        $user = auth('web')->user();
-        /** @var User $user */
-        abort_if($user->isNot($project->owner), 403);
+        $this->authorize('update', $project);
         $data = $this->validate($request, [
             'body' => ['required']
         ]);
@@ -82,13 +82,12 @@ class TaskController extends Controller
      * @param Task $task
      * @param Request $request
      * @return JsonResponse
+     * @throws AuthorizationException
      * @throws ValidationException
      */
     public function update(Project $project, Task $task, Request $request): JsonResponse
     {
-        $user = auth('web')->user();
-        /** @var User $user */
-        abort_if($user->isNot($task->project->owner), 403);
+        $this->authorize('update', $project);
         $data = $this->validate($request, [
             'body' => ['required'],
             'is_completed' => ['nullable'],

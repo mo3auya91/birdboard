@@ -17,7 +17,7 @@ class ProjectsTest extends TestCase
     /** @test */
     public function a_user_can_creat_a_project()
     {
-        //$this->withoutExceptionHandling();
+        $this->withoutExceptionHandling();
 
         $this->signIn();
 
@@ -32,7 +32,40 @@ class ProjectsTest extends TestCase
 
         $this->assertDatabaseHas('projects', $attributes);
 
-        $this->get(route('projects.index'))->assertSee($attributes['title']);
+        //$this->get(route('projects.index'))->assertSee($attributes['title']);
+        $this->get($project->path())
+            ->assertSee($attributes['title'])
+            ->assertSee($attributes['description'])
+            ->assertSee($attributes['notes']);
+    }
+
+    /** @test */
+    public function a_user_can_update_a_project()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->signIn();
+
+        $this->get(route('projects.create'))
+            ->assertStatus(Response::HTTP_OK);
+
+        $attributes = Project::factory()->raw();
+        unset($attributes['owner_id']);
+        $project = auth('web')->user()->projects()->create($attributes);
+
+        $updated_attributes = [
+            'notes' => $this->faker->sentence,
+            'description' => $this->faker->sentence,
+        ];
+
+        $this->patch($project->path(), $updated_attributes)->assertRedirect($project->path());
+
+        $this->assertDatabaseHas('projects', $updated_attributes);
+
+//        $this->get($project->path())
+//            ->assertSee($attributes['title'])
+//            ->assertSee($attributes['description'])
+//            ->assertSee($attributes['notes']);
     }
 
     /** @test */
@@ -107,8 +140,15 @@ class ProjectsTest extends TestCase
     public function an_authenticated_user_cannot_view_others_projects()
     {
         $this->signIn();
-        $other_user = User::factory()->create();
-        $project = $other_user->projects()->create(Project::factory()->raw());
+        $project = Project::factory()->create();
         $this->get($project->path())->assertStatus(403);
+    }
+
+    /** @test */
+    public function an_authenticated_user_cannot_update_others_projects()
+    {
+        $this->signIn();
+        $project = Project::factory()->create();
+        $this->patch($project->path(), ['notes' => 'new note'])->assertStatus(403);
     }
 }
