@@ -7,7 +7,7 @@
           </inertia-link>
           / {{ project.title }}
         </p>
-        <a :href="route('projects.create')" class="button">Add Project</a>
+        <inertia-link :href="route('projects.edit',{'project':project.id})" class="button">Edit Project</inertia-link>
       </div>
     </template>
     <!--<inertia-link :href="route('projects.show', {'project':project.id})" id="reload-btn" class="hidden">reload</inertia-link>-->
@@ -46,7 +46,11 @@
                 class="card w-full mb-4" v-model="notes"
                 style="height: 200px;" v-html="notes"></textarea>
             <inertia-link :href="route('projects.update',{'project':project.id})"
-                          method="patch" :data="{notes:notes}"
+                          method="patch" :data="{
+              notes:notes,
+              title:project.title,
+              description:project.description
+            }"
                           class="button">Update
             </inertia-link>
             <!--</form>-->

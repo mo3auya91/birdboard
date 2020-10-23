@@ -42,14 +42,8 @@ class ProjectsController extends Controller
      */
     public function store(Request $request)
     {
-        //validate
-        $data = $request->validate([
-            'title' => ['required'],
-            'description' => ['required'],
-            'notes' => ['nullable'],
-        ]);
         //persist
-        $project = auth('web')->user()->projects()->create($data);
+        $project = auth('web')->user()->projects()->create($this->validateRequest($request));
 
         //redirect
         return redirect($project->path());
@@ -75,11 +69,11 @@ class ProjectsController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param Project $project
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit(Project $project)
     {
-        //
+        return Inertia::render('Project/Edit', ['project' => $project]);
     }
 
     /**
@@ -93,14 +87,8 @@ class ProjectsController extends Controller
     public function update(Project $project, Request $request): RedirectResponse
     {
         $this->authorize('update', $project);
-        //validate
-        $data = $request->validate([
-            'title' => ['nullable'],
-            'description' => ['nullable'],
-            'notes' => ['nullable'],
-        ]);
         //persist
-        $project->update($data);
+        $project->update($this->validateRequest($request));
         //redirect
         return redirect($project->path());
     }
@@ -114,5 +102,18 @@ class ProjectsController extends Controller
     public function destroy(Project $project)
     {
         //
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    protected function validateRequest(Request $request): array
+    {
+        return $request->validate([
+            'title' => ['required'],
+            'description' => ['required'],
+            'notes' => ['nullable'],
+        ]);
     }
 }

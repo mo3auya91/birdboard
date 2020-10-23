@@ -53,6 +53,7 @@ class ProjectsTest extends TestCase
         $project = (new ProjectFactory())->create();
 
         $updated_attributes = [
+            'title' => $this->faker->sentence,
             'notes' => $this->faker->sentence,
             'description' => $this->faker->sentence,
         ];
@@ -60,6 +61,8 @@ class ProjectsTest extends TestCase
         $this->actingAs($project->owner)
             ->patch($project->path(), $updated_attributes)
             ->assertRedirect($project->path());
+
+        $this->get(route('projects.edit', ['project' => $project->id]))->assertOk();
 
         $this->assertDatabaseHas('projects', $updated_attributes);
     }
@@ -126,6 +129,7 @@ class ProjectsTest extends TestCase
         $project = $user->projects()->create(Project::factory()->raw());
 
         $this->get(route('projects.create'))->assertRedirect(route('login'));
+        $this->get(route('projects.edit', ['project' => $project->id]))->assertRedirect(route('login'));
         $this->post(route('projects.store'), $project->toArray())->assertRedirect(route('login'));
         $this->get(route('projects.index'))->assertRedirect(route('login'));
         $this->get($project->path())->assertRedirect(route('login'));
