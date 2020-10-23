@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Response;
+use Tests\SetUp\ProjectFactory;
 use Tests\TestCase;
 
 class ProjectsTest extends TestCase
@@ -17,22 +18,19 @@ class ProjectsTest extends TestCase
     /** @test */
     public function a_user_can_creat_a_project()
     {
-        $this->withoutExceptionHandling();
-
         $this->signIn();
 
         $this->get(route('projects.create'))
             ->assertStatus(Response::HTTP_OK);
+
         $attributes = Project::factory()->raw();
-        unset($attributes['owner_id']);
+
         $response = $this->post(route('projects.store'), $attributes);
-        $project = Project::query()->where($attributes)->first();
-        //$response->assertRedirect(route('projects.show', ['project' => $project->id]));
+
+        $project = auth('web')->user()->projects()->first();
+
         $response->assertRedirect($project->path());
 
-        $this->assertDatabaseHas('projects', $attributes);
-
-        //$this->get(route('projects.index'))->assertSee($attributes['title']);
         $this->get($project->path())
             ->assertSee($attributes['title'])
             ->assertSee($attributes['description'])
@@ -40,42 +38,39 @@ class ProjectsTest extends TestCase
     }
 
     /** @test */
+    public function a_user_can_access_edit_project_page()
+    {
+        $project = (new ProjectFactory())->create();
+
+        $this->actingAs($project->owner)
+            ->get(route('projects.edit', ['project' => $project->id]))
+            ->assertStatus(Response::HTTP_OK);
+    }
+
+    /** @test */
     public function a_user_can_update_a_project()
     {
-        $this->withoutExceptionHandling();
-
-        $this->signIn();
-
-        $this->get(route('projects.create'))
-            ->assertStatus(Response::HTTP_OK);
-
-        $attributes = Project::factory()->raw();
-        unset($attributes['owner_id']);
-        $project = auth('web')->user()->projects()->create($attributes);
+        $project = (new ProjectFactory())->create();
 
         $updated_attributes = [
             'notes' => $this->faker->sentence,
             'description' => $this->faker->sentence,
         ];
 
-        $this->patch($project->path(), $updated_attributes)->assertRedirect($project->path());
+        $this->actingAs($project->owner)
+            ->patch($project->path(), $updated_attributes)
+            ->assertRedirect($project->path());
 
         $this->assertDatabaseHas('projects', $updated_attributes);
-
-//        $this->get($project->path())
-//            ->assertSee($attributes['title'])
-//            ->assertSee($attributes['description'])
-//            ->assertSee($attributes['notes']);
     }
 
     /** @test */
     public function a_user_can_view_their_project()
     {
-        $user = User::factory()->create();
-        $this->signIn($user);
-        $this->withoutExceptionHandling();
-        $project = auth('web')->user()->projects()->create(Project::factory()->raw());
-        $this->get($project->path())
+        $project = (new ProjectFactory())->create();
+
+        $this->actingAs($project->owner)
+            ->get($project->path())
             ->assertSee($project->title)
             ->assertSee($project->description);
     }

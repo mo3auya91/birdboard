@@ -7,6 +7,7 @@ use App\Models\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Response;
+use Tests\SetUp\ProjectFactory;
 use Tests\TestCase;
 
 class ProjectTasksTest extends TestCase
@@ -42,15 +43,10 @@ class ProjectTasksTest extends TestCase
     public function only_the_project_owner_can_update_a_task()
     {
         $this->signIn();
-        $project = Project::factory()->create();
-        $attributes = Task::factory()->raw();
-        $task = $project->addTask($attributes);
-        $new_task_body = $this->faker->sentence;
-        $attributes['body'] = $new_task_body;
-        $this->patch(route('projects.tasks.update', [
-            'project' => $project->id,
-            'task' => $task->id,
-        ]), ['body' => $new_task_body])
+        $project = (new ProjectFactory())->witTasks(1)->create();
+        $task = $project->tasks()->first();
+        $attributes['body'] = $this->faker->sentence;
+        $this->patch($task->path(), $attributes)
             ->assertStatus(Response::HTTP_FORBIDDEN);
         $this->assertDatabaseMissing('tasks', $attributes);
     }
@@ -58,13 +54,12 @@ class ProjectTasksTest extends TestCase
     /** @test */
     public function a_project_can_have_tasks()
     {
-        $this->withoutExceptionHandling();
-        $this->signIn();
-        $project = auth('web')->user()->projects()->create(Project::factory()->raw());
+        $project = (new ProjectFactory())->create();
         $attributes = Task::factory()->raw();
-        $this->post(route('projects.tasks.store', [
-            'project' => $project->id
-        ]), $attributes);
+        $this->actingAs($project->owner)
+            ->post(route('projects.tasks.store', [
+                'project' => $project->id
+            ]), $attributes);
         $this->get($project->path())
             ->assertSee($attributes['body']);
     }
@@ -72,41 +67,25 @@ class ProjectTasksTest extends TestCase
     /** @test */
     public function a_task_can_be_updated()
     {
-        $this->withoutExceptionHandling();
-        $this->signIn();
-        $project = auth('web')->user()->projects()->create(Project::factory()->raw());
-        $attributes = Task::factory()->raw();
-        $task = $project->addTask($attributes);
-
+        $project = (new ProjectFactory())->witTasks(1)->create();
         $new_task_body = $this->faker->sentence;
+        $attributes = ['body' => $new_task_body, 'is_completed' => 1];
+        $this->actingAs($project->owner)
+            ->patch($project->tasks()->first()->path(), $attributes)
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson($attributes);
 
-        $this->patch(route('projects.tasks.update', [
-            'project' => $project->id,
-            'task' => $task->id,
-            'body' => $new_task_body,
-            'is_completed' => 1,
-        ]))->assertStatus(Response::HTTP_OK)
-        ->assertJson([
-            'body' => $new_task_body,
-            'is_completed' => 1
-        ]);
-
-        $this->assertDatabaseHas('tasks', [
-            'body' => $new_task_body,
-            'is_completed' => 1,
-            'project_id' => $project->id,
-            'id' => $task->id,
-        ]);
+        $this->assertDatabaseHas('tasks', $attributes);
     }
 
     /** @test */
     public function a_task_requires_a_body()
     {
-        $this->signIn();
-        $project = auth('web')->user()->projects()->create(Project::factory()->raw());
+        $project = (new ProjectFactory())->create();
         $attributes = Task::factory()->raw(['body' => '']);
-        $this->post(route('projects.tasks.store', [
-            'project' => $project->id,
-        ]), $attributes)->assertSessionHasErrors('body');
+        $this->actingAs($project->owner)
+            ->post(route('projects.tasks.store', [
+                'project' => $project->id,
+            ]), $attributes)->assertSessionHasErrors('body');
     }
 }
