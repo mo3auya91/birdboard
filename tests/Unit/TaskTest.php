@@ -37,4 +37,15 @@ class TaskTest extends TestCase
         $task->complete();
         $this->assertTrue($task->fresh()->is_completed);
     }
+
+    /** @test */
+    public function it_can_be_marked_as_incompleted()
+    {
+        $task = Task::factory()->create();
+        $this->assertFalse($task->fresh()->is_completed);
+        $task->complete();
+        $this->assertTrue($task->fresh()->is_completed);
+        $task->inComplete();
+        $this->assertFalse($task->fresh()->is_completed);
+    }
 }

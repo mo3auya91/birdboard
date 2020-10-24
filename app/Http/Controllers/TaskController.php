@@ -90,13 +90,9 @@ class TaskController extends Controller
         $this->authorize('update', $project);
         $data = $this->validate($request, [
             'body' => ['sometimes', 'required'],
-            'is_completed' => ['nullable'],
         ]);
-        //$data['is_completed'] = $request->filled('is_completed') ? 1 : 0;
         $task->update($data);
-        if ($request->filled('is_completed')) {
-            $task->complete();
-        }
+        $request->get('is_completed') ? $task->complete() : $task->inComplete();
         return response()->json($task);
     }
 

@@ -25,8 +25,10 @@ class TaskObserver
      */
     public function updated(Task $task)
     {
-        if ($task->is_completed) {
-            $task->project->recordActivity('completed_task');
+        $task->isDirty(['is_completed']);
+        if ($task->isDirty(['is_completed'])) {
+            $type = $task->is_completed ? 'completed_task' : 'incomplete_task';
+            $task->project->recordActivity($type);
         } else {
             $task->project->recordActivity('updated_task');
         }
@@ -40,7 +42,7 @@ class TaskObserver
      */
     public function deleted(Task $task)
     {
-        //
+        $task->project->recordActivity('deleted_task');
     }
 
     /**

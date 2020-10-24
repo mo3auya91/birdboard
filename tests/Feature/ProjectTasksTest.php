@@ -79,6 +79,38 @@ class ProjectTasksTest extends TestCase
     }
 
     /** @test */
+    public function a_task_can_be_completed()
+    {
+        $project = (new ProjectFactory())->witTasks(1)->create();
+        $attributes = ['is_completed' => 1];
+        $this->actingAs($project->owner)
+            ->patch($project->tasks()->first()->path(), $attributes)
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson($attributes);
+
+        $this->assertDatabaseHas('tasks', $attributes);
+    }
+
+    /** @test */
+    public function a_task_can_be_incomplete()
+    {
+        $this->withoutExceptionHandling();
+        $project = (new ProjectFactory())->witTasks(1)->create();
+        $attributes = ['is_completed' => 1];
+
+        $this->actingAs($project->owner)
+            ->patch($project->tasks()->first()->path(), $attributes)
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson($attributes);
+
+        $this->patch($project->tasks()->first()->path(), ['is_completed' => 0])
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson(['is_completed' => 0]);
+
+        $this->assertDatabaseHas('tasks', ['is_completed' => 0]);
+    }
+
+    /** @test */
     public function a_task_requires_a_body()
     {
         $project = (new ProjectFactory())->create();
