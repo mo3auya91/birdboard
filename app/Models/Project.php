@@ -34,6 +34,9 @@ use Illuminate\Support\Carbon;
  * @property-read Collection|Task[] $tasks
  * @property-read int|null $tasks_count
  * @method static Builder|Project whereOwnerId($value)
+ * @property-read Collection|Activity[] $activities
+ * @property-read int|null $activities_count
+ * @method static Builder|Project whereNotes($value)
  */
 class Project extends Model
 {
@@ -61,5 +64,15 @@ class Project extends Model
     public function addTask(array $data)
     {
         return $this->tasks()->create($data);
+    }
+
+    public function activities()
+    {
+        return $this->hasMany(Activity::class);
+    }
+
+    public function recordActivity($type)
+    {
+        $this->activities()->create(['description' => $type]);
     }
 }

@@ -27,12 +27,17 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Task whereUpdatedAt($value)
  * @mixin Eloquent
  * @property-read Project $project
+ * @method static Builder|Task whereIsCompleted($value)
  */
 class Task extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
+
+    protected $casts = [
+        'is_completed' => 'boolean'
+    ];
 
     protected $touches = ['project'];
 
@@ -47,5 +52,10 @@ class Task extends Model
             'project' => $this->project_id,
             'task' => $this->id,
         ]);
+    }
+
+    public function complete()
+    {
+        $this->update(['is_completed' => 1]);
     }
 }
