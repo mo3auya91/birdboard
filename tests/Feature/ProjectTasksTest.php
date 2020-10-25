@@ -72,8 +72,8 @@ class ProjectTasksTest extends TestCase
         $attributes = ['body' => $new_task_body, 'is_completed' => 1];
         $this->actingAs($project->owner)
             ->patch($project->tasks()->first()->path(), $attributes)
-            ->assertStatus(Response::HTTP_OK)
-            ->assertJson($attributes);
+            ->assertStatus(Response::HTTP_OK);
+        //->assertJson($attributes);
 
         $this->assertDatabaseHas('tasks', $attributes);
     }
@@ -83,10 +83,12 @@ class ProjectTasksTest extends TestCase
     {
         $project = (new ProjectFactory())->witTasks(1)->create();
         $attributes = ['is_completed' => 1];
+        $task = $project->tasks()->first();
         $this->actingAs($project->owner)
-            ->patch($project->tasks()->first()->path(), $attributes)
-            ->assertStatus(Response::HTTP_OK)
-            ->assertJson($attributes);
+            ->patch($task->path(), $attributes)
+            ->assertStatus(Response::HTTP_OK);
+
+        $this->assertTrue($task->refresh()->is_completed);
 
         $this->assertDatabaseHas('tasks', $attributes);
     }
@@ -97,16 +99,17 @@ class ProjectTasksTest extends TestCase
         $this->withoutExceptionHandling();
         $project = (new ProjectFactory())->witTasks(1)->create();
         $attributes = ['is_completed' => 1];
-
+        $task = $project->tasks()->first();
         $this->actingAs($project->owner)
-            ->patch($project->tasks()->first()->path(), $attributes)
-            ->assertStatus(Response::HTTP_OK)
-            ->assertJson($attributes);
+            ->patch($task->path(), $attributes)
+            ->assertStatus(Response::HTTP_OK);
+
+        $this->assertTrue($task->refresh()->is_completed);
 
         $this->patch($project->tasks()->first()->path(), ['is_completed' => 0])
-            ->assertStatus(Response::HTTP_OK)
-            ->assertJson(['is_completed' => 0]);
+            ->assertStatus(Response::HTTP_OK);
 
+        $this->assertFalse($task->refresh()->is_completed);
         $this->assertDatabaseHas('tasks', ['is_completed' => 0]);
     }
 

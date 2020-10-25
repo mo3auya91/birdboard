@@ -59,13 +59,27 @@
 
         <div class="lg:w-1/4 px-3 mb-8">
           <card :project="project" style="height: 200px;"/>
-          <!--          <div class="card">-->
-          <!--            <h1>{{ project.title }}</h1>-->
-          <!--            <p v-html="project.description"></p>-->
-          <!--            <a :href="route('projects.index')"-->
-          <!--               class="inline-flex items-center px-4 py-2 bg-white-800 border border-blue-500 border-transparent rounded-md font-semibold text-xs text-blue-500 hover:text-white uppercase tracking-widest hover:bg-blue-500 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:shadow-outline-blue transition ease-in-out duration-150"-->
-          <!--            >Back</a>-->
-          <!--          </div>-->
+          <!--<div class="card">-->
+          <!--  <h1>{{ project.title }}</h1>-->
+          <!--  <p v-html="project.description"></p>-->
+          <!--  <a :href="route('projects.index')"-->
+          <!--     class="inline-flex items-center px-4 py-2 bg-white-800 border border-blue-500 border-transparent rounded-md font-semibold text-xs text-blue-500 hover:text-white uppercase tracking-widest hover:bg-blue-500 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:shadow-outline-blue transition ease-in-out duration-150"-->
+          <!--  >Back</a>-->
+          <!--</div>-->
+          <div class="card mt-3">
+            <!--<h3 class="font-normal text-xl py-4 -ml-5 mb-3 border-l-4 border-blue-light pl-4">-->
+            <!--  <inertia-link :href="route('projects.show', {'project':project.id})"-->
+            <!--                class="text-black no-underline">{{ project.title }}-->
+            <!--  </inertia-link>-->
+            <!--</h3>-->
+            <ul class="text-xs list-reset">
+              <li
+                  :class="index === project.activities.length - 1 ? '' : 'mb-1'"
+                  v-for="(activity,index) in project.activities">{{ activity.description }}
+                <span class="text-gray">{{ moment(activity.created_at).fromNow() }}</span>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </main>
@@ -74,6 +88,7 @@
 <script>
 import AppLayout from './../../Layouts/AppLayout'
 import Card from './../../Pages/Project/Card'
+import moment from 'moment'
 
 export default {
   props: {
@@ -87,6 +102,7 @@ export default {
   data() {
     return {
       notes: this.project.notes,
+      moment: moment,
       form: {
         body: null,
       },
@@ -99,7 +115,8 @@ export default {
           {headers: {'accept': 'application/json'}})
           .then(response => {
             //todo show success message toast
-            this.project.tasks.push(response.data)
+            this.project.tasks.push(response.data.tasks)
+            this.project.activities = response.data.activities
             this.form.body = null
           })
           .catch(error => {
@@ -121,13 +138,15 @@ export default {
           },
           {headers: {'accept': 'application/json'}},
       )
-          .then(() => {
+          .then((response) => {
             //todo show success message toast
+            // this.project = response.data
             let item = this.project.tasks.find((item) => {
               return parseInt(item.id) === parseInt(id)
             })
             item.body = data.body
             item.is_completed = data.is_completed
+            this.project.activities = response.data.activities
             document.getElementById(`task_${id}_body`).blur()
             //document.getElementById('reload-btn').click()
           })

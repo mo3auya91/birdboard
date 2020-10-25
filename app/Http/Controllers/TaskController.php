@@ -49,8 +49,9 @@ class TaskController extends Controller
         $data = $this->validate($request, [
             'body' => ['required']
         ]);
-        $task = $project->addTask($data);
-        return response()->json($task);
+        $project->addTask($data);
+        $project = Project::with('tasks', 'activities')->findOrFail($project->id);
+        return response()->json($project);
     }
 
     /**
@@ -93,7 +94,9 @@ class TaskController extends Controller
         ]);
         $task->update($data);
         $request->get('is_completed') ? $task->complete() : $task->inComplete();
-        return response()->json($task);
+
+        $project = Project::with('tasks', 'activities')->findOrFail($project->id);
+        return response()->json($project);
     }
 
     /**
