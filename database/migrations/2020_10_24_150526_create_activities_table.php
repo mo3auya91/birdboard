@@ -17,6 +17,7 @@ class CreateActivitiesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('project_id');
             $table->string('description');
+            $table->nullableMorphs('subject');
             $table->timestamps();
             $table->softDeletes();
         });

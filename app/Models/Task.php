@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -28,6 +29,8 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  * @property-read Project $project
  * @method static Builder|Task whereIsCompleted($value)
+ * @property-read Collection|Activity[] $activities
+ * @property-read int|null $activities_count
  */
 class Task extends Model
 {
@@ -62,5 +65,18 @@ class Task extends Model
     public function inComplete()
     {
         $this->update(['is_completed' => 0]);
+    }
+
+    public function activities()
+    {
+        return $this->morphMany(Activity::class, 'subject')->latest();
+    }
+
+    public function recordActivity($type)
+    {
+        $this->activities()->create([
+            'project_id' => $this->project_id,
+            'description' => $type,
+        ]);
     }
 }

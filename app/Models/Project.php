@@ -48,7 +48,6 @@ class Project extends Model
     public function path()
     {
         return route('projects.show', ['project' => $this->id]);
-        //return "/projects/{$this->id}";
     }
 
     public function owner()
