@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\RecordActivity;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -35,12 +36,15 @@ use Illuminate\Support\Carbon;
 class Task extends Model
 {
     use HasFactory;
+    use RecordActivity;
 
     protected $guarded = [];
 
     protected $casts = [
         'is_completed' => 'boolean'
     ];
+
+    //protected static $recordableEvents = ['created', 'updated', 'deleted'];
 
     protected $touches = ['project'];
 
@@ -65,18 +69,5 @@ class Task extends Model
     public function inComplete()
     {
         $this->update(['is_completed' => 0]);
-    }
-
-    public function activities()
-    {
-        return $this->morphMany(Activity::class, 'subject')->latest();
-    }
-
-    public function recordActivity($type)
-    {
-        $this->activities()->create([
-            'project_id' => $this->project_id,
-            'description' => $type,
-        ]);
     }
 }

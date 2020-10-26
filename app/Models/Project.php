@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\RecordActivity;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -42,11 +43,10 @@ use Illuminate\Support\Carbon;
 class Project extends Model
 {
     use HasFactory;
+    use RecordActivity;
 
     /** @var array */
     protected $guarded = [];
-
-    public $old = [];
 
     public function path()
     {
@@ -71,21 +71,5 @@ class Project extends Model
     public function activities()
     {
         return $this->hasMany(Activity::class)->latest();
-    }
-
-    public function recordActivity($type)
-    {
-        $this->activities()->create([
-            'description' => $type,
-            'changes' => $this->activityChanges($type),
-        ]);
-    }
-
-    public function activityChanges($type)
-    {
-        return $type === 'updated' ? [
-            'before' => array_diff($this->old, $this->getAttributes()),
-            'after' => Arr::except($this->getChanges(), ['updated_at']),
-        ] : null;
     }
 }
