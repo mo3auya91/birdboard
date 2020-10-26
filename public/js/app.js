@@ -4359,6 +4359,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -4394,6 +4398,10 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../../Layouts/AppLayout */ "./resources/js/Layouts/AppLayout.vue");
+//
+//
+//
+//
 //
 //
 //
@@ -4632,6 +4640,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
@@ -4667,7 +4678,9 @@ __webpack_require__.r(__webpack_exports__);
         }
       }).then(function (response) {
         //todo show success message toast
-        _this.project.tasks.push(response.data.tasks);
+        var tasks = response.data.tasks;
+
+        _this.project.tasks.push(tasks[tasks.length - 1]);
 
         _this.project.activities = response.data.activities;
         _this.form.body = null;
@@ -49844,7 +49857,7 @@ var render = function() {
               href: _vm.route("projects.show", { project: _vm.project.id })
             }
           },
-          [_vm._v(_vm._s(_vm.project.title) + "\n    ")]
+          [_vm._v(_vm._s(_vm.project.title) + "\n        ")]
         )
       ],
       1
@@ -50033,7 +50046,11 @@ var render = function() {
                               "shadow bg-teal-400 hover:bg-teal-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded",
                             attrs: { type: "submit" }
                           },
-                          [_vm._v("\n                Send\n              ")]
+                          [
+                            _vm._v(
+                              "\n                                Send\n                            "
+                            )
+                          ]
                         )
                       ]),
                       _vm._v(" "),
@@ -50048,7 +50065,7 @@ var render = function() {
                                 "shadow bg-teal-400 hover:bg-teal-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded",
                               attrs: { href: _vm.route("projects.index") }
                             },
-                            [_vm._v("Cancel\n              ")]
+                            [_vm._v("Cancel\n                            ")]
                           )
                         ],
                         1
@@ -50290,7 +50307,11 @@ var render = function() {
                               "shadow bg-teal-400 hover:bg-teal-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded",
                             attrs: { type: "submit" }
                           },
-                          [_vm._v("\n                Send\n              ")]
+                          [
+                            _vm._v(
+                              "\n                                Send\n                            "
+                            )
+                          ]
                         )
                       ]),
                       _vm._v(" "),
@@ -50309,7 +50330,7 @@ var render = function() {
                                 })
                               }
                             },
-                            [_vm._v("Cancel\n              ")]
+                            [_vm._v("Cancel\n                            ")]
                           )
                         ],
                         1
@@ -50460,10 +50481,16 @@ var render = function() {
                             "text-sm text-gray font-normal no-underline",
                           attrs: { href: _vm.route("projects.index") }
                         },
-                        [_vm._v("My Projects\n        ")]
+                        [
+                          _vm._v(
+                            "My\n                    Projects\n                "
+                          )
+                        ]
                       ),
                       _vm._v(
-                        "\n        / " + _vm._s(_vm.project.title) + "\n      "
+                        "\n                / " +
+                          _vm._s(_vm.project.title) +
+                          "\n            "
                       )
                     ],
                     1
@@ -50479,7 +50506,7 @@ var render = function() {
                         })
                       }
                     },
-                    [_vm._v("Edit Project")]
+                    [_vm._v("Edit Project\n            ")]
                   )
                 ],
                 1
@@ -50643,7 +50670,7 @@ var render = function() {
                       }
                     }
                   },
-                  [_vm._v("Update\n          ")]
+                  [_vm._v("Update\n                    ")]
                 )
               ],
               1
@@ -50674,7 +50701,8 @@ var render = function() {
                       },
                       [
                         _vm._v(
-                          _vm._s(activity.description) + "\n              "
+                          _vm._s(activity.description) +
+                            "\n                            "
                         ),
                         _c("span", { staticClass: "text-gray" }, [
                           _vm._v(
