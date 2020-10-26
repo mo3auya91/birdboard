@@ -39,15 +39,37 @@ class RouteServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
 
         $this->routes(function () {
-            Route::prefix('api')
-                ->middleware('api')
-                ->namespace($this->namespace)
-                ->group(base_path('routes/api.php'));
-
+//            Route::prefix('api')
+//                ->middleware('api')
+//                ->namespace($this->namespace)
+//                ->group(base_path('routes/api.php'));
+//
+//            Route::prefix(LaravelLocalization::setLocale())
+//                ->namespace($this->namespace)
+//                ->middleware(['web'])
+//                ->group(base_path('routes/web.php'));
             Route::prefix(LaravelLocalization::setLocale())
-                ->namespace($this->namespace)
                 ->middleware(['web'])
                 ->group(base_path('routes/web.php'));
+
+            Route::prefix(LaravelLocalization::setLocale())
+                ->middleware(['web'])
+                ->group(base_path('routes/auth.php'));
+
+            Route::prefix(LaravelLocalization::setLocale())
+                ->middleware(['web'])
+                ->group(base_path('routes/jetstream.php'));
+
+            Route::prefix(LaravelLocalization::setLocale())
+                ->middleware([
+                    'api',
+                    //'auth:sanctum'
+                ])
+                ->group(base_path('routes/channels.php'));
+
+            Route::prefix('api')
+                ->middleware('api')
+                ->group(base_path('routes/api.php'));
         });
     }
 
