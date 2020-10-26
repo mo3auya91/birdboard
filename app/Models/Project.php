@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 
 /**
@@ -45,6 +46,8 @@ class Project extends Model
     /** @var array */
     protected $guarded = [];
 
+    public $old = [];
+
     public function path()
     {
         return route('projects.show', ['project' => $this->id]);
@@ -72,6 +75,17 @@ class Project extends Model
 
     public function recordActivity($type)
     {
-        $this->activities()->create(['description' => $type]);
+        $this->activities()->create([
+            'description' => $type,
+            'changes' => $this->activityChanges($type),
+        ]);
+    }
+
+    public function activityChanges($type)
+    {
+        return $type === 'updated' ? [
+            'before' => array_diff($this->old, $this->getAttributes()),
+            'after' => Arr::except($this->getChanges(), ['updated_at']),
+        ] : null;
     }
 }

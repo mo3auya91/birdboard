@@ -15,6 +15,9 @@
 
         <!-- Scripts -->
         <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.7.0/dist/alpine.js" defer></script>
+        <link rel="icon" type="image/png" sizes="96x96" href="{{asset('assets/images/favicon-96x96.png')}}">
+        <link rel="icon" type="image/png" sizes="96x96" href="{{asset('assets/images/favicon-32×32.png')}}">
+        <link rel="icon" type="image/png" sizes="96x96" href="{{asset('assets/images/favicon-16×16.png')}}">
     </head>
     <body>
         <div class="font-sans text-gray-900 antialiased">
