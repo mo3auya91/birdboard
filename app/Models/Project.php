@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * App\Models\Project
@@ -44,6 +45,9 @@ class Project extends Model
 {
     use HasFactory;
     use RecordActivity;
+//    use HasTranslations;
+//
+//    public $translatable = ['title'];
 
     /** @var array */
     protected $guarded = [];

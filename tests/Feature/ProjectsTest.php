@@ -15,6 +15,12 @@ class ProjectsTest extends TestCase
     use WithFaker;
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        $this->refreshApplicationWithLocale('en');
+        parent::setUp();
+    }
+
     /** @test */
     public function a_user_can_creat_a_project()
     {

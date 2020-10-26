@@ -12,6 +12,12 @@ class UserTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        $this->refreshApplicationWithLocale('en');
+        parent::setUp();
+    }
+
     /** @test */
     public function a_user_has_projects()
     {

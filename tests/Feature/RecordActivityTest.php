@@ -11,6 +11,12 @@ class RecordActivityTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        $this->refreshApplicationWithLocale('en');
+        parent::setUp();
+    }
+
     /** @test */
     public function creating_a_project()
     {

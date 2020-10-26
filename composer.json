@@ -17,6 +17,8 @@
         "laravel/jetstream": "^1.4",
         "laravel/sanctum": "^2.6",
         "laravel/tinker": "^2.0",
+        "mcamara/laravel-localization": "^1.6",
+        "spatie/laravel-translatable": "^4.5",
         "tightenco/ziggy": "^0.9.4"
     },
     "require-dev": {

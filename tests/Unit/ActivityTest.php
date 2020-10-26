@@ -12,6 +12,12 @@ class ActivityTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        $this->refreshApplicationWithLocale('en');
+        parent::setUp();
+    }
+
     /** @test */
     public function it_has_a_user()
     {

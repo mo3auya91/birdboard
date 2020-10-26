@@ -15,6 +15,12 @@ class ProjectTasksTest extends TestCase
     use RefreshDatabase;
     use WithFaker;
 
+    protected function setUp(): void
+    {
+        $this->refreshApplicationWithLocale('en');
+        parent::setUp();
+    }
+
     /** @test */
     public function guests_cannot_control_a_task()
     {
