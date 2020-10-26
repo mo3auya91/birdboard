@@ -44,7 +44,7 @@ class Task extends Model
         'is_completed' => 'boolean'
     ];
 
-    //protected static $recordableEvents = ['created', 'updated', 'deleted'];
+    protected static $recordableEvents = ['created', 'updated', 'deleted'];
 
     protected $touches = ['project'];
 

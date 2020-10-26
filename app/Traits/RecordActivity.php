@@ -46,9 +46,10 @@ trait RecordActivity
     public function recordActivity($type)
     {
         $this->activities()->create([
+            'user_id' => ($this->project ?? $this)->owner->id,
+            'project_id' => $this instanceof Project ? $this->id : $this->project_id,
             'description' => $type,
             'changes' => $this->activityChanges(),
-            'project_id' => $this instanceof Project ? $this->id : $this->project_id,
         ]);
     }
 
