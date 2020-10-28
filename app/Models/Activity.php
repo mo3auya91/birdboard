@@ -32,6 +32,15 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Activity whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Activity whereProjectId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Activity whereUpdatedAt($value)
+ * @property int $user_id
+ * @property string|null $subject_type
+ * @property int|null $subject_id
+ * @property array|null $changes
+ * @property-read User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Activity whereChanges($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Activity whereSubjectId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Activity whereSubjectType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Activity whereUserId($value)
  */
 class Activity extends Model
 {
