@@ -6,7 +6,7 @@
                     <inertia-link :href="route('projects.index')" class="text-sm text-gray font-normal no-underline">My
                         Projects
                     </inertia-link>
-                    / {{ project.title }}
+                    / {{ project.title[$i18n.locale] }}
                 </p>
                 <inertia-link :href="route('projects.edit',{'project':project.id})" class="button">Edit Project
                 </inertia-link>
