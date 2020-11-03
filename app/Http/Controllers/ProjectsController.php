@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
-use App\Models\User;
+use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -97,11 +96,13 @@ class ProjectsController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Project $project
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
+     * @throws Exception
      */
-    public function destroy(Project $project)
+    public function destroy(Project $project): RedirectResponse
     {
-        //
+        $project->delete();
+        return redirect()->route('projects.index');
     }
 
     /**
@@ -111,8 +112,10 @@ class ProjectsController extends Controller
     protected function validateRequest(Request $request): array
     {
         return $request->validate([
-            'title' => ['required'],
-            'description' => ['required'],
+            'title' => ['required', 'array'],
+            'title.*' => ['required'],
+            'description' => ['required', 'array'],
+            'description.*' => ['required'],
             'notes' => ['nullable'],
         ]);
     }

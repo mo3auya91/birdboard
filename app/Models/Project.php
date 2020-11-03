@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
-//use Spatie\Translatable\HasTranslations;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * App\Models\Project
@@ -44,9 +44,14 @@ class Project extends Model
 {
     use HasFactory;
     use RecordActivity;
-//    use HasTranslations;
-//
-//    public $translatable = ['title'];
+    use HasTranslations;
+
+    public $translatable = ['title', 'description'];
+
+    protected $casts = [
+        'title' => 'json',
+        'description' => 'json',
+    ];
 
     /** @var array */
     protected $guarded = [];

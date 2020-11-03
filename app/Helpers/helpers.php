@@ -33,3 +33,18 @@ function translations(string $locale): array
 //        file_put_contents(base_path("resources/lang/${locale}.json"), $data);
 //    }
 //}
+
+/**
+ * @param $string
+ * @return bool
+ */
+function is_json($string): bool
+{
+//    return is_array(json_decode($string));
+    try {
+        json_decode($string, true, 512, JSON_THROW_ON_ERROR);
+        return true;
+    } catch (Exception $exception) {
+    }
+    return false;
+}

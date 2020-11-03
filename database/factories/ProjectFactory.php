@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class ProjectFactory extends Factory
 {
@@ -22,13 +23,16 @@ class ProjectFactory extends Factory
      */
     public function definition()
     {
-        return [
+        $item = [
             'owner_id' => function () {
                 return User::factory()->create()->id;
             },
-            'title' => $this->faker->sentence(4),
-            'description' => $this->faker->sentence(4),
             'notes' => $this->faker->sentence,
         ];
+        foreach (LaravelLocalization::getSupportedLocales() as $key => $locale) {
+            $item['title'][$key] = $this->faker->sentence(4);
+            $item['description'][$key] = $this->faker->sentence(4);
+        }
+        return $item;
     }
 }

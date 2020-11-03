@@ -61,9 +61,23 @@ trait RecordActivity
     public function activityChanges()
     {
         if ($this->wasChanged()) {
+            $getChanges = [];
+            foreach ($this->getChanges() as $key => $change) {
+                $getChanges[$key] = is_json($change) ? json_decode($change, true) : $change;
+            }
+            $getAttributes = [];
+            foreach ($this->getAttributes() as $key => $attribute) {
+                $getAttributes[$key] = is_json($attribute) ? json_decode($attribute, true) : $attribute;
+            }
+
+            $diff = array_diff(array_map('json_encode', $this->oldAttributes), array_map('json_encode', $getAttributes));
+
+            // Json decode the result
+            $diff = array_map('json_decode', $diff);
+            // Json decode the result
             return [
-                'before' => array_diff($this->oldAttributes, $this->getAttributes()),
-                'after' => Arr::except($this->getChanges(), ['updated_at']),
+                'before' =>  $diff,
+                'after' => Arr::except($getChanges, ['updated_at']),
             ];
         }
         return null;

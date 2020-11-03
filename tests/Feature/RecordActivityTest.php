@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Tests\SetUp\ProjectFactory;
 use Tests\TestCase;
 
@@ -32,15 +33,28 @@ class RecordActivityTest extends TestCase
     public function updating_a_project()
     {
         $project = (new ProjectFactory())->create();
-        $original_title = $project->title;
-        $project->update(['title' => 'new title']);
+        $original_title = $project->getTranslations('title');
+        //dd($original_title);
+        //$project->update(['title' => 'new title']);
+        $updated_attributes = [];
+        foreach (LaravelLocalization::getSupportedLocales() as $key => $locale) {
+            $updated_attributes['title'][$key] = 'new title';
+        }
+        $project->update($updated_attributes);
         $this->assertCount(2, $project->activities);
-        tap($project->activities->last(), function ($activity) use ($original_title) {
+        tap($project->activities->last(), function ($activity) use ($original_title, $updated_attributes) {
             $this->assertEquals('updated_project', $activity->description);
-            $this->assertEquals([
+            $changes = $activity->changes;
+            unset($changes['before']['updated_at']);
+            unset($changes['before']['created_at']);
+//            dd([
+//                'before' => ['title' => $original_title],
+//                'after' => $updated_attributes,
+//            ], $changes);
+            $this->assertEqualsCanonicalizing([
                 'before' => ['title' => $original_title],
-                'after' => ['title' => 'new title'],
-            ], $activity->changes);
+                'after' => $updated_attributes,
+            ], $changes);
         });
     }
 

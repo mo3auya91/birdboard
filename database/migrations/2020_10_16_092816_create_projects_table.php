@@ -16,8 +16,8 @@ class CreateProjectsTable extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('owner_id');
-            $table->text('title');
-            $table->text('description');
+            $table->json('title');
+            $table->json('description');
             $table->text('notes')->nullable();
             $table->timestamps();
             $table->softDeletes();
