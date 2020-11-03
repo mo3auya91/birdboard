@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\HomeController;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 Route::get('/', function () {
     return view('welcome');
@@ -15,3 +16,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::resource('projects', ProjectsController::class);
     Route::resource('projects.tasks', TaskController::class);
 });
+Route::match(['get', 'post'], '/locale/change', function () {
+    $HTTP_REFERER = str_replace(url('/'), '', request()->server->get('HTTP_REFERER'));
+    $HTTP_REFERER = LaravelLocalization::localizeURL($HTTP_REFERER, request('lang'));
+    //$HTTP_REFERER = str_replace(url('/' . app()->getLocale()), url('/' . request('lang')), request()->server->get('HTTP_REFERER'));
+    return redirect()->to($HTTP_REFERER);
+})->name('locale.change');
