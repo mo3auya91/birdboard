@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -108,15 +109,19 @@ class ProjectsController extends Controller
     /**
      * @param Request $request
      * @return array
+     * @throws ValidationException
      */
     protected function validateRequest(Request $request): array
     {
-        return $request->validate([
+        return $this->validate($request, [
             'title' => ['required', 'array'],
             'title.*' => ['required'],
             'description' => ['required', 'array'],
             'description.*' => ['required'],
             'notes' => ['nullable'],
+        ], [], [
+            'title.ar' => __('app.title_locale', ['locale' => __('app.ar')]),
+            'title.en' => __('app.title_locale', ['locale' => __('app.en')]),
         ]);
     }
 }

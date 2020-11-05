@@ -71,7 +71,9 @@ class ProjectsTest extends TestCase
             ->patch($project->path(), $updated_attributes)
             ->assertRedirect($project->path());
 
-        $this->get(route('projects.edit', ['project' => $project->id]))->assertOk();
+        $this->get(route('projects.edit', ['project' => $project->id]))
+            ->assertOk()
+            ->assertSee($project->getTranslation('title', app()->getLocale()));
         //it does not work to store array in sql light
         //$this->assertDatabaseHas('projects', $updated_attributes);
     }

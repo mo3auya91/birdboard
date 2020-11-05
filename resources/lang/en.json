@@ -2,6 +2,8 @@
     "ar": "عربي",
     "en": "انجليزي",
     "app": {
+        "ar": "Arabic",
+        "en": "English",
         "Dashboard": "Dashboard",
         "Projects": "Projects",
         "Manage Account": "Manage Account",
@@ -11,7 +13,13 @@
         "Team Settings": "Team Settings",
         "Create New Team": "Create New Team",
         "Switch Teams": "Switch Teams",
-        "Logout": "Logout"
+        "Logout": "Logout",
+        "title": "Title",
+        "description": "Description",
+        "notes": "Notes",
+        "cancel": "Cancel",
+        "submit": "Submit",
+        "edit_project": "Edit Project"
     },
     "auth": {
         "failed": "These credentials do not match our records.",
@@ -140,6 +148,7 @@
             }
         }
     },
+    "validation.required": "The :attribute field is required.",
     "validation": {
         "accepted": "The :attribute must be accepted.",
         "active_url": "The :attribute is not a valid URL.",

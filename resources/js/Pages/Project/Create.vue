@@ -9,26 +9,31 @@
                 <div
                     class="bg-white overflow-hidden shadow-xl sm:rounded-lg rounded px-8 pt-6 pb-8 mb-4 flex flex-col my-2">
                     <form method="post" @submit.prevent="createProject">
-                        <div class="-mx-3 md:flex mb-6">
+                        <div class="-mx-3 md:flex mb-6" v-for="locale in $i18n.availableLocales">
                             <div class="md:w-full px-3">
                                 <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                       for="title">Title</label>
-                                <input v-model="form.title"
+                                       :for="`title[${locale}]`"
+                                >{{ $t('app.title') + ' ' + $t(`app.${locale}`) }}</label>
+                                <input v-model="form.title[locale]"
                                        class="block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3"
-                                       id="title" type="text" placeholder="project title">
-                                <p v-if="errors.title" class="text-xs italic text-red">{{ errors.title[0] }}</p>
+                                       :id="`title[${locale}]`" type="text" placeholder="project title">
+                                <p v-if="errors.hasOwnProperty(`title.${locale}`)" class="text-red text-xs italic">
+                                    {{ errors.valueOf(`title.${locale}`)[`title.${locale}`][0] }}</p>
                             </div>
                         </div>
-                        <div class="-mx-3 md:flex mb-6">
+                        <div class="-mx-3 md:flex mb-6" v-for="locale in $i18n.availableLocales">
                             <div class="md:w-full px-3">
                                 <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                       for="description">Description</label>
-                                <textarea v-model="form.description" id="description" cols="30" rows="10"
-                                          placeholder="description"
+                                       :for="`description[${locale}]`">{{
+                                        $t('app.description') + ' ' + $t(`app.${locale}`)
+                                    }}</label>
+                                <textarea v-model="form.description[locale]" :id="`description[${locale}]`" cols="30"
+                                          rows="10"
+                                          :placeholder="$t('app.description')"
                                           class="block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3"></textarea>
-                                <p v-if="errors.description" class="text-xs italic text-red">{{
-                                        errors.description[0]
-                                    }}</p>
+                                <p v-if="errors.hasOwnProperty(`description.${locale}`)"
+                                   class="text-red text-xs italic">
+                                    {{ errors.valueOf(`description.${locale}`)[`description.${locale}`][0] }}</p>
                             </div>
                         </div>
                         <div class="-mx-3 md:flex mb-6 md:items-center">
@@ -36,13 +41,13 @@
                                 <button
                                     class="shadow bg-teal-400 hover:bg-teal-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
                                     type="submit">
-                                    Send
+                                    {{ $t('app.submit') }}
                                 </button>
                             </div>
                             <div class="md:w-2/3">
                                 <inertia-link :href="route('projects.index')"
                                               class="shadow bg-teal-400 hover:bg-teal-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
-                                >Cancel
+                                >{{ $t('app.cancel') }}
                                 </inertia-link>
                             </div>
                         </div>
@@ -62,8 +67,16 @@ export default {
     data() {
         return {
             form: {
-                title: null,
-                description: null,
+                title: {
+                    "ar": null,
+                    "en": null,
+                },
+                description: {
+                    "ar": null,
+                    "en": null,
+                },
+                // title: null,
+                //description: null,
             },
         }
     },

@@ -16,8 +16,8 @@ const i18n = new VueI18n({
     locale: document.getElementsByTagName('html')[0].getAttribute('lang'), // set default locale
     fallbackLocale: "en",
     messages: {
-        'en': require('../lang/en.json'),
-        'ar': require('../lang/ar.json')
+        'en': require('../lang/en/en.json'),
+        'ar': require('../lang/ar/ar.json')
     }
 })
 
