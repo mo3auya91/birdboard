@@ -73,7 +73,7 @@ class ProjectsTest extends TestCase
 
         $this->get(route('projects.edit', ['project' => $project->id]))
             ->assertOk()
-            ->assertSee($project->getTranslation('title', app()->getLocale()));
+            ->assertSee($project->refresh()->getTranslation('title', app()->getLocale()));
         //it does not work to store array in sql light
         //$this->assertDatabaseHas('projects', $updated_attributes);
     }
