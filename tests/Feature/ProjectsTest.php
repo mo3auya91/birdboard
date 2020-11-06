@@ -187,4 +187,15 @@ class ProjectsTest extends TestCase
         $project = Project::factory()->create();
         $this->patch($project->path(), ['notes' => 'new note'])->assertStatus(403);
     }
+
+    /** @test */
+    public function a_project_can_invite_a_user()
+    {
+        $project = (new ProjectFactory())->create();
+
+        $project->invite($user = User::factory()->create());
+        $this->signIn($user);
+        $this->post(route('projects.tasks.store', ['project' => $project->id]), $task = ['body' => 'foo task']);
+        $this->assertDatabaseHas('tasks', $task);
+    }
 }

@@ -38,6 +38,7 @@ use Spatie\Translatable\HasTranslations;
  * @method static Builder|Project whereOwnerId($value)
  * @property-read Collection|Activity[] $activities
  * @property-read int|null $activities_count
+ * @property mixed members
  * @method static Builder|Project whereNotes($value)
  */
 class Project extends Model
@@ -79,5 +80,15 @@ class Project extends Model
     public function activities()
     {
         return $this->hasMany(Activity::class)->latest();
+    }
+
+    public function invite($user)
+    {
+        return $this->members()->attach($user);
+    }
+
+    public function members()
+    {
+        return $this->belongsToMany(User::class, 'project_members');
     }
 }

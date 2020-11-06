@@ -2,13 +2,17 @@
 
 namespace Tests\Unit;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+
 //use PHPUnit\Framework\TestCase;
 use Tests\TestCase;
+use Tests\SetUp\ProjectFactory;
 
 class ProjectTest extends TestCase
 {
     use RefreshDatabase;
+
     /**
      * NOTE
      * in unit test there is no access to database and faker
@@ -22,8 +26,11 @@ class ProjectTest extends TestCase
     }
 
     /** @test */
-    public function basic_test()
+    public function it_can_invite_a_user()
     {
-        $this->assertTrue(true);
+        $project = (new ProjectFactory())->create();
+
+        $project->invite($user = User::factory()->create());
+        $this->assertTrue($project->members->contains($user));
     }
 }
