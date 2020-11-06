@@ -22,7 +22,7 @@ class ProjectsController extends Controller
      */
     public function index(): Response
     {
-        $projects = auth('web')->user()->projects;
+        $projects = auth('web')->user()->allProjects();
         return Inertia::render('Project/Home', ['projects' => $projects]);
     }
 

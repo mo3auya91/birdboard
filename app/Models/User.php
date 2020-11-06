@@ -36,7 +36,9 @@ use Laravel\Sanctum\PersonalAccessToken;
  * @property-read DatabaseNotificationCollection|DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
  * @property-read Collection|Project[] $projects
+ * @property-read Collection|Project[] $invitations
  * @property-read int|null $projects_count
+ * @property-read int|null $invitations_count
  * @property-read Collection|PersonalAccessToken[] $tokens
  * @property-read int|null $tokens_count
  * @method static Builder|User newModelQuery()
@@ -108,5 +110,15 @@ class User extends Authenticatable
     public function projects()
     {
         return $this->hasMany(Project::class, 'owner_id')->latest('updated_at');
+    }
+
+    public function allProjects()
+    {
+        return $this->projects->merge($this->invitations);
+    }
+
+    public function invitations()
+    {
+        return $this->belongsToMany(Project::class, 'project_members')->withTimestamps();
     }
 }
