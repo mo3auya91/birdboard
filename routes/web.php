@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InvitationsController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 Route::get('/', function () {
@@ -15,6 +16,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::resource('projects', ProjectsController::class);
     Route::resource('projects.tasks', TaskController::class);
+    Route::post('projects/{project}/invitations', [InvitationsController::class, 'store'])->name('project.invitations');
 });
 Route::match(['get', 'post'], '/locale/change', function () {
     $HTTP_REFERER = str_replace(url('/'), '', request()->server->get('HTTP_REFERER'));

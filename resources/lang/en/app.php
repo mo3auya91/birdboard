@@ -19,5 +19,6 @@ return [
     'notes' => 'Notes',
     'cancel' => 'Cancel',
     'submit' => 'Submit',
+    'the_invited_email_address_must_be_associated_with_birdboard_account' => 'The invited email address must be associated with a Birdboard account.',
     'edit_project' => 'Edit Project'
 ];

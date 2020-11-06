@@ -187,28 +187,4 @@ class ProjectsTest extends TestCase
         $project = Project::factory()->create();
         $this->patch($project->path(), ['notes' => 'new note'])->assertStatus(403);
     }
-
-    /** @test */
-    public function a_project_can_invite_a_user()
-    {
-        $project = (new ProjectFactory())->create();
-
-        $project->invite($user = User::factory()->create());
-        $this->signIn($user);
-        $this->post(route('projects.tasks.store', ['project' => $project->id]), $task = ['body' => 'foo task']);
-        $this->assertDatabaseHas('tasks', $task);
-    }
-
-    /** @test */
-    public function a_user_can_see_all_projects_they_invited_to_on_their_dashboard()
-    {
-        $user = $this->signIn();
-
-        $project = (new ProjectFactory())->create();
-
-        $project->invite($user);
-
-        $this->get(route('projects.index'))
-            ->assertSee($project->getTranslation('title', app()->getLocale()));
-    }
 }
