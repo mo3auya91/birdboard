@@ -3,13 +3,20 @@
         <template #header>
             <div class="flex justify-between items-end w-full">
                 <p class="text-sm text-gray font-normal">
-                    <inertia-link :href="route('projects.index')" class="text-sm text-gray font-normal no-underline">My
-                        Projects
+                    <inertia-link :href="route('projects.index')" class="text-sm text-gray font-normal no-underline"
+                    >{{ $t('app.my_projects') }}
                     </inertia-link>
-                    / {{ project.title[$i18n.locale] }}
+                    {{ '/ ' + project.title[$i18n.locale] }}
                 </p>
-                <inertia-link :href="route('projects.edit',{'project':project.id})" class="button">Edit Project
-                </inertia-link>
+                <div class="flex item-center">
+                    <img v-for="member in project.members" :src="member.profile_photo_url" :alt="member.name"
+                         class="rounded-full w-8 mr-2">
+                    <img :src="project.owner.profile_photo_url" :alt="project.owner.name" class="rounded-full w-8 mr-2">
+
+                    <inertia-link :href="route('projects.edit',{'project':project.id})" class="button ml-6"
+                    >{{ $t('app.edit_project') }}
+                    </inertia-link>
+                </div>
             </div>
         </template>
         <!--<inertia-link :href="route('projects.show', {'project':project.id})" id="reload-btn" class="hidden">reload</inertia-link>-->

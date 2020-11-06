@@ -21,6 +21,7 @@
         "submit": "Submit",
         "update": "Update",
         "delete": "Delete",
+        "my_projects": "My Projects",
         "edit_project": "Edit Project"
     },
     "auth": {

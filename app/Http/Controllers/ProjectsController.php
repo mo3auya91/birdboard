@@ -63,7 +63,7 @@ class ProjectsController extends Controller
     public function show(Project $project): Response
     {
         $this->authorize('update', $project);
-        $project = Project::with('tasks', 'activities')->findOrFail($project->id);
+        $project = Project::with('tasks', 'activities', 'members', 'owner')->findOrFail($project->id);
         return Inertia::render('Project/Show', ['project' => $project]);
         //return view('projects.show', ['project' => $project]);
     }
