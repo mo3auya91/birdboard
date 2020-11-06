@@ -7,7 +7,12 @@
             </inertia-link>
             <!--<a :href="route('projects.show', {'project':project.id})" class="text-black no-underline">{{ project.title }}</a>-->
         </h3>
-        <div class="truncate w-20 text-gray-description">{{ project.description[$i18n.locale] }}</div>
+        <div class="truncate w-20 text-grey mb-4">{{ project.description[$i18n.locale] }}</div>
+        <footer class="text-right">
+            <inertia-link :href="route('projects.destroy', {'project':project.id})" method="delete"
+                          class="text-black no-underline text-xs ">{{ $t('app.delete') }}
+            </inertia-link>
+        </footer>
     </div>
 </template>
 

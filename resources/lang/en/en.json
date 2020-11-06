@@ -20,6 +20,7 @@
         "cancel": "Cancel",
         "submit": "Submit",
         "update": "Update",
+        "delete": "Delete",
         "edit_project": "Edit Project"
     },
     "auth": {

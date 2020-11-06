@@ -45,6 +45,32 @@ class ProjectsTest extends TestCase
     }
 
     /** @test */
+    public function a_user_can_delete_a_project()
+    {
+        $project = (new ProjectFactory())->create();
+
+        $this->actingAs($project->owner)
+            ->delete($project->path())
+            ->assertRedirect(route('projects.index'));
+
+        $this->assertDatabaseMissing('projects', $project->only('id'));
+    }
+
+    /** @test */
+    public function unauthorized_users_can_not_delete_a_project()
+    {
+        $project = (new ProjectFactory())->create();
+
+        $this->delete($project->path())
+            ->assertRedirect(route('login'));
+
+        $this->signIn();
+
+        $this->delete($project->path())
+            ->assertStatus(403);
+    }
+
+    /** @test */
     public function a_user_can_access_edit_project_page()
     {
         $project = (new ProjectFactory())->create();

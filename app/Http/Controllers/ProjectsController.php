@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -38,7 +40,8 @@ class ProjectsController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return RedirectResponse
+     * @return Application|RedirectResponse|Redirector
+     * @throws ValidationException
      */
     public function store(Request $request)
     {
@@ -83,6 +86,7 @@ class ProjectsController extends Controller
      * @param Request $request
      * @return RedirectResponse
      * @throws AuthorizationException
+     * @throws ValidationException
      */
     public function update(Project $project, Request $request): RedirectResponse
     {
@@ -98,10 +102,12 @@ class ProjectsController extends Controller
      *
      * @param Project $project
      * @return RedirectResponse
+     * @throws AuthorizationException
      * @throws Exception
      */
     public function destroy(Project $project): RedirectResponse
     {
+        $this->authorize('update', $project);
         $project->delete();
         return redirect()->route('projects.index');
     }

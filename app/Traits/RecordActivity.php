@@ -40,7 +40,7 @@ trait RecordActivity
 
     protected static function recordableEvents(): array
     {
-        return isset(static::$recordableEvents) ? static::$recordableEvents : ['created', 'updated', 'deleted'];
+        return isset(static::$recordableEvents) ? static::$recordableEvents : ['created', 'updated'];
     }
 
     public function recordActivity($type)
@@ -76,7 +76,7 @@ trait RecordActivity
             $diff = array_map('json_decode', $diff);
             // Json decode the result
             return [
-                'before' =>  $diff,
+                'before' => $diff,
                 'after' => Arr::except($getChanges, ['updated_at']),
             ];
         }
