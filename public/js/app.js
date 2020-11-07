@@ -4734,6 +4734,23 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -4752,7 +4769,15 @@ __webpack_require__.r(__webpack_exports__);
       moment: moment__WEBPACK_IMPORTED_MODULE_2___default.a,
       form: {
         body: null
-      }
+      },
+      inviteUserForm: {
+        email: null
+      } // projectForm: {
+      //     notes: this.project.notes,
+      //     title: this.project.title,
+      //     description: this.project.description
+      // },
+
     };
   },
   methods: {
@@ -4768,20 +4793,41 @@ __webpack_require__.r(__webpack_exports__);
           'accept': 'application/json'
         }
       }).then(function (response) {
-        //todo show success message toast
         var tasks = response.data.tasks;
 
         _this.project.tasks.push(tasks[tasks.length - 1]);
 
         _this.project.activities = response.data.activities;
         _this.form.body = null;
+
+        _this.successToast(_this.$t('app.created_successfully'));
       })["catch"](function (error) {
-        //todo show error message toast
-        console.log(error);
+        _this.errorToast(error.response.data.message, error.response.data.errors);
+      });
+    },
+    inviteUser: function inviteUser() {
+      var _this2 = this;
+
+      var email_error = document.getElementById('email-error');
+      axios.post(route('project.invitations', {
+        'project': this.project.id
+      }), {
+        'email': this.inviteUserForm.email
+      }, {
+        headers: {
+          'accept': 'application/json'
+        }
+      }).then(function () {
+        //email_error.classList.add('hidden')
+        _this2.successToast(_this2.$t('app.invitation_sent'));
+      })["catch"](function (errors) {
+        _this2.errorToast(errors.response.data.message, errors.response.data.errors); // email_error.innerText = errors.response.data.errors['email'][0]
+        // email_error.classList.remove('hidden')
+
       });
     },
     updateTask: function updateTask(id) {
-      var _this2 = this;
+      var _this3 = this;
 
       var _form = document.getElementById('update_task_' + id);
 
@@ -4793,31 +4839,179 @@ __webpack_require__.r(__webpack_exports__);
       axios.patch(route('projects.tasks.update', {
         'project': this.project.id,
         'task': id
-      }), {
-        'body': form.get('body'),
-        'is_completed': form.get('is_completed')
-      }, {
+      }), data, {
         headers: {
           'accept': 'application/json'
         }
       }).then(function (response) {
-        //todo show success message toast
-        // this.project = response.data
-        var item = _this2.project.tasks.find(function (item) {
+        var item = _this3.project.tasks.find(function (item) {
           return parseInt(item.id) === parseInt(id);
         });
 
         item.body = data.body;
         item.is_completed = data.is_completed;
-        _this2.project.activities = response.data.activities;
-        document.getElementById("task_".concat(id, "_body")).blur(); //document.getElementById('reload-btn').click()
+        _this3.project.activities = response.data.activities;
+        document.getElementById("task_".concat(id, "_body")).blur();
+
+        _this3.successToast(_this3.$t('app.updated_successfully'));
       })["catch"](function (error) {
-        //todo show error message toast
-        console.log(error);
+        _this3.errorToast(error.response.data.message, error.response.data.errors);
+      });
+    },
+    updateProject: function updateProject() {
+      var _this4 = this;
+
+      var data = {
+        notes: this.notes,
+        title: {
+          'ar': this.project.title['ar'],
+          'en': this.project.title['en']
+        },
+        description: {
+          'ar': this.project.description['ar'],
+          'en': this.project.description['en']
+        }
+      }; // this.$inertia.visit(route('projects.update', {'project': this.project.id}), {
+      //     method: 'patch',
+      //     data: data,
+      //     replace: false,
+      //     preserveState: false,
+      //     preserveScroll: false,
+      //     only: [],
+      //     headers: {},
+      //     onCancelToken: cancelToken => {},
+      //     onCancel: () => {},
+      //     onBefore: visit => {},
+      //     onStart: visit => {},
+      //     onProgress: progress => {},
+      //     onSuccess: page => {},
+      //     onFinish: () => {
+      //         this.successToast(this.$t('app.updated_successfully'))
+      //     },
+      // })
+
+      axios.patch(route('projects.update', {
+        'project': this.project.id
+      }), data, {
+        headers: {
+          'accept': 'application/json'
+        }
+      }).then(function (response) {
+        _this4.successToast(_this4.$t('app.updated_successfully'));
+      })["catch"](function (error) {
+        _this4.errorToast(error.response.data.message, error.response.data.errors);
       });
     }
+  },
+  mounted: function mounted() {//
   }
 });
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/notyf/notyf.min.css":
+/*!**************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/postcss-loader/src??ref--6-2!./node_modules/notyf/notyf.min.css ***!
+  \**************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "@-webkit-keyframes notyf-fadeinup{\n  0%{\n    opacity:0;\n    transform:translateY(25%)\n  }\n\n  to{\n    opacity:1;\n    transform:translateY(0)\n  }\n}\n\n@keyframes notyf-fadeinup{\n  0%{\n    opacity:0;\n    transform:translateY(25%)\n  }\n\n  to{\n    opacity:1;\n    transform:translateY(0)\n  }\n}\n\n@-webkit-keyframes notyf-fadeinleft{\n  0%{\n    opacity:0;\n    transform:translateX(25%)\n  }\n\n  to{\n    opacity:1;\n    transform:translateX(0)\n  }\n}\n\n@keyframes notyf-fadeinleft{\n  0%{\n    opacity:0;\n    transform:translateX(25%)\n  }\n\n  to{\n    opacity:1;\n    transform:translateX(0)\n  }\n}\n\n@-webkit-keyframes notyf-fadeoutright{\n  0%{\n    opacity:1;\n    transform:translateX(0)\n  }\n\n  to{\n    opacity:0;\n    transform:translateX(25%)\n  }\n}\n\n@keyframes notyf-fadeoutright{\n  0%{\n    opacity:1;\n    transform:translateX(0)\n  }\n\n  to{\n    opacity:0;\n    transform:translateX(25%)\n  }\n}\n\n@-webkit-keyframes notyf-fadeoutdown{\n  0%{\n    opacity:1;\n    transform:translateY(0)\n  }\n\n  to{\n    opacity:0;\n    transform:translateY(25%)\n  }\n}\n\n@keyframes notyf-fadeoutdown{\n  0%{\n    opacity:1;\n    transform:translateY(0)\n  }\n\n  to{\n    opacity:0;\n    transform:translateY(25%)\n  }\n}\n\n@-webkit-keyframes ripple{\n  0%{\n    transform:scale(0) translateY(-45%) translateX(13%)\n  }\n\n  to{\n    transform:scale(1) translateY(-45%) translateX(13%)\n  }\n}\n\n@keyframes ripple{\n  0%{\n    transform:scale(0) translateY(-45%) translateX(13%)\n  }\n\n  to{\n    transform:scale(1) translateY(-45%) translateX(13%)\n  }\n}\n\n.notyf{\n  position:fixed;\n  top:0;\n  left:0;\n  height:100%;\n  width:100%;\n  color:#fff;\n  z-index:9999;\n  display:flex;\n  flex-direction:column;\n  align-items:flex-end;\n  justify-content:flex-end;\n  pointer-events:none;\n  box-sizing:border-box;\n  padding:20px\n}\n\n.notyf__icon--error,.notyf__icon--success{\n  height:21px;\n  width:21px;\n  background:#fff;\n  border-radius:50%;\n  display:block;\n  margin:0 auto;\n  position:relative\n}\n\n.notyf__icon--error:after,.notyf__icon--error:before{\n  content:\"\";\n  background:currentColor;\n  display:block;\n  position:absolute;\n  width:3px;\n  border-radius:3px;\n  left:9px;\n  height:12px;\n  top:5px\n}\n\n.notyf__icon--error:after{\n  transform:rotate(-45deg)\n}\n\n.notyf__icon--error:before{\n  transform:rotate(45deg)\n}\n\n.notyf__icon--success:after,.notyf__icon--success:before{\n  content:\"\";\n  background:currentColor;\n  display:block;\n  position:absolute;\n  width:3px;\n  border-radius:3px\n}\n\n.notyf__icon--success:after{\n  height:6px;\n  transform:rotate(-45deg);\n  top:9px;\n  left:6px\n}\n\n.notyf__icon--success:before{\n  height:11px;\n  transform:rotate(45deg);\n  top:5px;\n  left:10px\n}\n\n.notyf__toast{\n  display:block;\n  overflow:hidden;\n  pointer-events:auto;\n  -webkit-animation:notyf-fadeinup .3s ease-in forwards;\n  animation:notyf-fadeinup .3s ease-in forwards;\n  box-shadow:0 3px 7px 0 rgba(0,0,0,.25);\n  position:relative;\n  padding:0 15px;\n  border-radius:2px;\n  max-width:300px;\n  transform:translateY(25%);\n  box-sizing:border-box;\n  flex-shrink:0\n}\n\n.notyf__toast--disappear{\n  transform:translateY(0);\n  -webkit-animation:notyf-fadeoutdown .3s forwards;\n  animation:notyf-fadeoutdown .3s forwards;\n  -webkit-animation-delay:.25s;\n  animation-delay:.25s\n}\n\n.notyf__toast--disappear .notyf__icon,.notyf__toast--disappear .notyf__message{\n  -webkit-animation:notyf-fadeoutdown .3s forwards;\n  animation:notyf-fadeoutdown .3s forwards;\n  opacity:1;\n  transform:translateY(0)\n}\n\n.notyf__toast--disappear .notyf__dismiss{\n  -webkit-animation:notyf-fadeoutright .3s forwards;\n  animation:notyf-fadeoutright .3s forwards;\n  opacity:1;\n  transform:translateX(0)\n}\n\n.notyf__toast--disappear .notyf__message{\n  -webkit-animation-delay:.05s;\n  animation-delay:.05s\n}\n\n.notyf__toast--upper{\n  margin-bottom:20px\n}\n\n.notyf__toast--lower{\n  margin-top:20px\n}\n\n.notyf__toast--dismissible .notyf__wrapper{\n  padding-right:30px\n}\n\n.notyf__ripple{\n  height:400px;\n  width:400px;\n  position:absolute;\n  transform-origin:bottom right;\n  right:0;\n  top:0;\n  border-radius:50%;\n  transform:scale(0) translateY(-51%) translateX(13%);\n  z-index:5;\n  -webkit-animation:ripple .4s ease-out forwards;\n  animation:ripple .4s ease-out forwards\n}\n\n.notyf__wrapper{\n  display:flex;\n  align-items:center;\n  padding-top:17px;\n  padding-bottom:17px;\n  padding-right:15px;\n  border-radius:3px;\n  position:relative;\n  z-index:10\n}\n\n.notyf__icon{\n  width:22px;\n  text-align:center;\n  font-size:1.3em;\n  opacity:0;\n  -webkit-animation:notyf-fadeinup .3s forwards;\n  animation:notyf-fadeinup .3s forwards;\n  -webkit-animation-delay:.3s;\n  animation-delay:.3s;\n  margin-right:13px\n}\n\n.notyf__dismiss{\n  position:absolute;\n  top:0;\n  right:0;\n  height:100%;\n  width:26px;\n  margin-right:-15px;\n  -webkit-animation:notyf-fadeinleft .3s forwards;\n  animation:notyf-fadeinleft .3s forwards;\n  -webkit-animation-delay:.35s;\n  animation-delay:.35s;\n  opacity:0\n}\n\n.notyf__dismiss-btn{\n  background-color:rgba(0,0,0,.25);\n  border:none;\n  cursor:pointer;\n  transition:opacity .2s ease,background-color .2s ease;\n  outline:none;\n  opacity:.35;\n  height:100%;\n  width:100%\n}\n\n.notyf__dismiss-btn:after,.notyf__dismiss-btn:before{\n  content:\"\";\n  background:#fff;\n  height:12px;\n  width:2px;\n  border-radius:3px;\n  position:absolute;\n  left:calc(50% - 1px);\n  top:calc(50% - 5px)\n}\n\n.notyf__dismiss-btn:after{\n  transform:rotate(-45deg)\n}\n\n.notyf__dismiss-btn:before{\n  transform:rotate(45deg)\n}\n\n.notyf__dismiss-btn:hover{\n  opacity:.7;\n  background-color:rgba(0,0,0,.15)\n}\n\n.notyf__dismiss-btn:active{\n  opacity:.8\n}\n\n.notyf__message{\n  vertical-align:middle;\n  position:relative;\n  opacity:0;\n  -webkit-animation:notyf-fadeinup .3s forwards;\n  animation:notyf-fadeinup .3s forwards;\n  -webkit-animation-delay:.25s;\n  animation-delay:.25s;\n  line-height:1.5em\n}\n\n@media only screen and (max-width:480px){\n  .notyf{\n    padding:0\n  }\n\n  .notyf__ripple{\n    height:600px;\n    width:600px;\n    -webkit-animation-duration:.5s;\n    animation-duration:.5s\n  }\n\n  .notyf__toast{\n    max-width:none;\n    border-radius:0;\n    box-shadow:0 -2px 7px 0 rgba(0,0,0,.13);\n    width:100%\n  }\n\n  .notyf__dismiss{\n    width:56px\n  }\n}", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/lib/css-base.js":
+/*!*************************************************!*\
+  !*** ./node_modules/css-loader/lib/css-base.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function(useSourceMap) {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		return this.map(function (item) {
+			var content = cssWithMappingToString(item, useSourceMap);
+			if(item[2]) {
+				return "@media " + item[2] + "{" + content + "}";
+			} else {
+				return content;
+			}
+		}).join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+function cssWithMappingToString(item, useSourceMap) {
+	var content = item[1] || '';
+	var cssMapping = item[3];
+	if (!cssMapping) {
+		return content;
+	}
+
+	if (useSourceMap && typeof btoa === 'function') {
+		var sourceMapping = toComment(cssMapping);
+		var sourceURLs = cssMapping.sources.map(function (source) {
+			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
+		});
+
+		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+	}
+
+	return [content].join('\n');
+}
+
+// Adapted from convert-source-map (MIT)
+function toComment(sourceMap) {
+	// eslint-disable-next-line no-undef
+	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
+	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
+
+	return '/*# ' + data + ' */';
+}
+
 
 /***/ }),
 
@@ -44082,6 +44276,499 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
 /***/ }),
 
+/***/ "./node_modules/notyf/notyf.es.js":
+/*!****************************************!*\
+  !*** ./node_modules/notyf/notyf.es.js ***!
+  \****************************************/
+/*! exports provided: DEFAULT_OPTIONS, Notyf, NotyfArray, NotyfArrayEvent, NotyfEvent, NotyfNotification, NotyfView */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DEFAULT_OPTIONS", function() { return DEFAULT_OPTIONS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Notyf", function() { return Notyf; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NotyfArray", function() { return NotyfArray; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NotyfArrayEvent", function() { return NotyfArrayEvent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NotyfEvent", function() { return NotyfEvent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NotyfNotification", function() { return NotyfNotification; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NotyfView", function() { return NotyfView; });
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+
+var NotyfNotification = /** @class */ (function () {
+    function NotyfNotification(options) {
+        this.options = options;
+        this.listeners = {};
+    }
+    NotyfNotification.prototype.on = function (eventType, cb) {
+        var callbacks = this.listeners[eventType] || [];
+        this.listeners[eventType] = callbacks.concat([cb]);
+    };
+    NotyfNotification.prototype.triggerEvent = function (eventType, event) {
+        var _this = this;
+        var callbacks = this.listeners[eventType] || [];
+        callbacks.forEach(function (cb) { return cb({ target: _this, event: event }); });
+    };
+    return NotyfNotification;
+}());
+var NotyfArrayEvent;
+(function (NotyfArrayEvent) {
+    NotyfArrayEvent[NotyfArrayEvent["Add"] = 0] = "Add";
+    NotyfArrayEvent[NotyfArrayEvent["Remove"] = 1] = "Remove";
+})(NotyfArrayEvent || (NotyfArrayEvent = {}));
+var NotyfArray = /** @class */ (function () {
+    function NotyfArray() {
+        this.notifications = [];
+    }
+    NotyfArray.prototype.push = function (elem) {
+        this.notifications.push(elem);
+        this.updateFn(elem, NotyfArrayEvent.Add, this.notifications);
+    };
+    NotyfArray.prototype.splice = function (index, num) {
+        var elem = this.notifications.splice(index, num)[0];
+        this.updateFn(elem, NotyfArrayEvent.Remove, this.notifications);
+        return elem;
+    };
+    NotyfArray.prototype.indexOf = function (elem) {
+        return this.notifications.indexOf(elem);
+    };
+    NotyfArray.prototype.onUpdate = function (fn) {
+        this.updateFn = fn;
+    };
+    return NotyfArray;
+}());
+
+var NotyfEvent;
+(function (NotyfEvent) {
+    NotyfEvent["Dismiss"] = "dismiss";
+    NotyfEvent["Click"] = "click";
+})(NotyfEvent || (NotyfEvent = {}));
+var DEFAULT_OPTIONS = {
+    types: [
+        {
+            type: 'success',
+            className: 'notyf__toast--success',
+            backgroundColor: '#3dc763',
+            icon: {
+                className: 'notyf__icon--success',
+                tagName: 'i',
+            },
+        },
+        {
+            type: 'error',
+            className: 'notyf__toast--error',
+            backgroundColor: '#ed3d3d',
+            icon: {
+                className: 'notyf__icon--error',
+                tagName: 'i',
+            },
+        },
+    ],
+    duration: 2000,
+    ripple: true,
+    position: {
+        x: 'right',
+        y: 'bottom',
+    },
+    dismissible: false,
+};
+
+var NotyfView = /** @class */ (function () {
+    function NotyfView() {
+        this.notifications = [];
+        this.events = {};
+        this.X_POSITION_FLEX_MAP = {
+            left: 'flex-start',
+            center: 'center',
+            right: 'flex-end',
+        };
+        this.Y_POSITION_FLEX_MAP = {
+            top: 'flex-start',
+            center: 'center',
+            bottom: 'flex-end',
+        };
+        // Creates the main notifications container
+        var docFrag = document.createDocumentFragment();
+        var notyfContainer = this._createHTLMElement({ tagName: 'div', className: 'notyf' });
+        docFrag.appendChild(notyfContainer);
+        document.body.appendChild(docFrag);
+        this.container = notyfContainer;
+        // Identifies the main animation end event
+        this.animationEndEventName = this._getAnimationEndEventName();
+        this._createA11yContainer();
+    }
+    NotyfView.prototype.on = function (event, cb) {
+        var _a;
+        this.events = __assign(__assign({}, this.events), (_a = {}, _a[event] = cb, _a));
+    };
+    NotyfView.prototype.update = function (notification, type) {
+        if (type === NotyfArrayEvent.Add) {
+            this.addNotification(notification);
+        }
+        else if (type === NotyfArrayEvent.Remove) {
+            this.removeNotification(notification);
+        }
+    };
+    NotyfView.prototype.removeNotification = function (notification) {
+        var _this = this;
+        var renderedNotification = this._popRenderedNotification(notification);
+        var node;
+        if (!renderedNotification) {
+            return;
+        }
+        node = renderedNotification.node;
+        node.classList.add('notyf__toast--disappear');
+        var handleEvent;
+        node.addEventListener(this.animationEndEventName, (handleEvent = function (event) {
+            if (event.target === node) {
+                node.removeEventListener(_this.animationEndEventName, handleEvent);
+                _this.container.removeChild(node);
+            }
+        }));
+    };
+    NotyfView.prototype.addNotification = function (notification) {
+        var node = this._renderNotification(notification);
+        this.notifications.push({ notification: notification, node: node });
+        // For a11y purposes, we still want to announce that there's a notification in the screen
+        // even if it comes with no message.
+        this._announce(notification.options.message || 'Notification');
+    };
+    NotyfView.prototype._renderNotification = function (notification) {
+        var _a;
+        var card = this._buildNotificationCard(notification);
+        var className = notification.options.className;
+        if (className) {
+            (_a = card.classList).add.apply(_a, className.split(' '));
+        }
+        this.container.appendChild(card);
+        return card;
+    };
+    NotyfView.prototype._popRenderedNotification = function (notification) {
+        var idx = -1;
+        for (var i = 0; i < this.notifications.length && idx < 0; i++) {
+            if (this.notifications[i].notification === notification) {
+                idx = i;
+            }
+        }
+        if (idx !== -1) {
+            return this.notifications.splice(idx, 1)[0];
+        }
+        return;
+    };
+    NotyfView.prototype.getXPosition = function (options) {
+        var _a;
+        return ((_a = options === null || options === void 0 ? void 0 : options.position) === null || _a === void 0 ? void 0 : _a.x) || 'right';
+    };
+    NotyfView.prototype.getYPosition = function (options) {
+        var _a;
+        return ((_a = options === null || options === void 0 ? void 0 : options.position) === null || _a === void 0 ? void 0 : _a.y) || 'bottom';
+    };
+    NotyfView.prototype.adjustContainerAlignment = function (options) {
+        var align = this.X_POSITION_FLEX_MAP[this.getXPosition(options)];
+        var justify = this.Y_POSITION_FLEX_MAP[this.getYPosition(options)];
+        var style = this.container.style;
+        style.setProperty('justify-content', justify);
+        style.setProperty('align-items', align);
+    };
+    NotyfView.prototype._buildNotificationCard = function (notification) {
+        var _this = this;
+        var _a;
+        var options = notification.options;
+        var iconOpts = options.icon;
+        // Adjust container according to position (e.g. top-left, bottom-center, etc)
+        this.adjustContainerAlignment(options);
+        // Create elements
+        var notificationElem = this._createHTLMElement({ tagName: 'div', className: 'notyf__toast' });
+        var ripple = this._createHTLMElement({ tagName: 'div', className: 'notyf__ripple' });
+        var wrapper = this._createHTLMElement({ tagName: 'div', className: 'notyf__wrapper' });
+        var message = this._createHTLMElement({ tagName: 'div', className: 'notyf__message' });
+        message.innerHTML = options.message || '';
+        var color = options.background || options.backgroundColor;
+        // Build the icon and append it to the card
+        if (iconOpts && typeof iconOpts === 'object') {
+            var iconContainer = this._createHTLMElement({ tagName: 'div', className: 'notyf__icon' });
+            var icon = this._createHTLMElement({
+                tagName: iconOpts.tagName || 'i',
+                className: iconOpts.className,
+                text: iconOpts.text,
+            });
+            var iconColor = (_a = iconOpts.color) !== null && _a !== void 0 ? _a : color;
+            if (iconColor) {
+                icon.style.color = iconColor;
+            }
+            iconContainer.appendChild(icon);
+            wrapper.appendChild(iconContainer);
+        }
+        wrapper.appendChild(message);
+        notificationElem.appendChild(wrapper);
+        // Add ripple if applicable, else just paint the full toast
+        if (color) {
+            if (options.ripple) {
+                ripple.style.background = color;
+                notificationElem.appendChild(ripple);
+            }
+            else {
+                notificationElem.style.background = color;
+            }
+        }
+        // Add dismiss button
+        if (options.dismissible) {
+            var dismissWrapper = this._createHTLMElement({ tagName: 'div', className: 'notyf__dismiss' });
+            var dismissButton = this._createHTLMElement({
+                tagName: 'button',
+                className: 'notyf__dismiss-btn',
+            });
+            dismissWrapper.appendChild(dismissButton);
+            wrapper.appendChild(dismissWrapper);
+            notificationElem.classList.add("notyf__toast--dismissible");
+            dismissButton.addEventListener('click', function (event) {
+                var _a, _b;
+                (_b = (_a = _this.events)[NotyfEvent.Dismiss]) === null || _b === void 0 ? void 0 : _b.call(_a, { target: notification, event: event });
+                event.stopPropagation();
+            });
+        }
+        notificationElem.addEventListener('click', function (event) { var _a, _b; return (_b = (_a = _this.events)[NotyfEvent.Click]) === null || _b === void 0 ? void 0 : _b.call(_a, { target: notification, event: event }); });
+        // Adjust margins depending on whether its an upper or lower notification
+        var className = this.getYPosition(options) === 'top' ? 'upper' : 'lower';
+        notificationElem.classList.add("notyf__toast--" + className);
+        return notificationElem;
+    };
+    NotyfView.prototype._createHTLMElement = function (_a) {
+        var tagName = _a.tagName, className = _a.className, text = _a.text;
+        var elem = document.createElement(tagName);
+        if (className) {
+            elem.className = className;
+        }
+        elem.textContent = text || null;
+        return elem;
+    };
+    /**
+     * Creates an invisible container which will announce the notyfs to
+     * screen readers
+     */
+    NotyfView.prototype._createA11yContainer = function () {
+        var a11yContainer = this._createHTLMElement({ tagName: 'div', className: 'notyf-announcer' });
+        a11yContainer.setAttribute('aria-atomic', 'true');
+        a11yContainer.setAttribute('aria-live', 'polite');
+        // Set the a11y container to be visible hidden. Can't use display: none as
+        // screen readers won't read it.
+        a11yContainer.style.border = '0';
+        a11yContainer.style.clip = 'rect(0 0 0 0)';
+        a11yContainer.style.height = '1px';
+        a11yContainer.style.margin = '-1px';
+        a11yContainer.style.overflow = 'hidden';
+        a11yContainer.style.padding = '0';
+        a11yContainer.style.position = 'absolute';
+        a11yContainer.style.width = '1px';
+        a11yContainer.style.outline = '0';
+        document.body.appendChild(a11yContainer);
+        this.a11yContainer = a11yContainer;
+    };
+    /**
+     * Announces a message to screenreaders.
+     */
+    NotyfView.prototype._announce = function (message) {
+        var _this = this;
+        this.a11yContainer.textContent = '';
+        // This 100ms timeout is necessary for some browser + screen-reader combinations:
+        // - Both JAWS and NVDA over IE11 will not announce anything without a non-zero timeout.
+        // - With Chrome and IE11 with NVDA or JAWS, a repeated (identical) message won't be read a
+        //   second time without clearing and then using a non-zero delay.
+        // (using JAWS 17 at time of this writing).
+        // https://github.com/angular/material2/blob/master/src/cdk/a11y/live-announcer/live-announcer.ts
+        setTimeout(function () {
+            _this.a11yContainer.textContent = message;
+        }, 100);
+    };
+    /**
+     * Determine which animationend event is supported
+     */
+    NotyfView.prototype._getAnimationEndEventName = function () {
+        var el = document.createElement('_fake');
+        var transitions = {
+            MozTransition: 'animationend',
+            OTransition: 'oAnimationEnd',
+            WebkitTransition: 'webkitAnimationEnd',
+            transition: 'animationend',
+        };
+        var t;
+        for (t in transitions) {
+            if (el.style[t] !== undefined) {
+                return transitions[t];
+            }
+        }
+        // No supported animation end event. Using "animationend" as a fallback
+        return 'animationend';
+    };
+    return NotyfView;
+}());
+
+/**
+ * Main controller class. Defines the main Notyf API.
+ */
+var Notyf = /** @class */ (function () {
+    function Notyf(opts) {
+        var _this = this;
+        this.dismiss = this._removeNotification;
+        this.notifications = new NotyfArray();
+        this.view = new NotyfView();
+        var types = this.registerTypes(opts);
+        this.options = __assign(__assign({}, DEFAULT_OPTIONS), opts);
+        this.options.types = types;
+        this.notifications.onUpdate(function (elem, type) { return _this.view.update(elem, type); });
+        this.view.on(NotyfEvent.Dismiss, function (_a) {
+            var target = _a.target, event = _a.event;
+            _this._removeNotification(target);
+            // tslint:disable-next-line: no-string-literal
+            target['triggerEvent'](NotyfEvent.Dismiss, event);
+        });
+        // tslint:disable-next-line: no-string-literal
+        this.view.on(NotyfEvent.Click, function (_a) {
+            var target = _a.target, event = _a.event;
+            return target['triggerEvent'](NotyfEvent.Click, event);
+        });
+    }
+    Notyf.prototype.error = function (payload) {
+        var options = this.normalizeOptions('error', payload);
+        return this.open(options);
+    };
+    Notyf.prototype.success = function (payload) {
+        var options = this.normalizeOptions('success', payload);
+        return this.open(options);
+    };
+    Notyf.prototype.open = function (options) {
+        var defaultOpts = this.options.types.find(function (_a) {
+            var type = _a.type;
+            return type === options.type;
+        }) || {};
+        var config = __assign(__assign({}, defaultOpts), options);
+        this.assignProps(['ripple', 'position', 'dismissible'], config);
+        var notification = new NotyfNotification(config);
+        this._pushNotification(notification);
+        return notification;
+    };
+    Notyf.prototype.dismissAll = function () {
+        while (this.notifications.splice(0, 1))
+            ;
+    };
+    /**
+     * Assigns properties to a config object based on two rules:
+     * 1. If the config object already sets that prop, leave it as so
+     * 2. Otherwise, use the default prop from the global options
+     *
+     * It's intended to build the final config object to open a notification. e.g. if
+     * 'dismissible' is not set, then use the value from the global config.
+     *
+     * @param props - properties to be assigned to the config object
+     * @param config - object whose properties need to be set
+     */
+    Notyf.prototype.assignProps = function (props, config) {
+        var _this = this;
+        props.forEach(function (prop) {
+            // intentional double equality to check for both null and undefined
+            config[prop] = config[prop] == null ? _this.options[prop] : config[prop];
+        });
+    };
+    Notyf.prototype._pushNotification = function (notification) {
+        var _this = this;
+        this.notifications.push(notification);
+        var duration = notification.options.duration !== undefined ? notification.options.duration : this.options.duration;
+        if (duration) {
+            setTimeout(function () { return _this._removeNotification(notification); }, duration);
+        }
+    };
+    Notyf.prototype._removeNotification = function (notification) {
+        var index = this.notifications.indexOf(notification);
+        if (index !== -1) {
+            this.notifications.splice(index, 1);
+        }
+    };
+    Notyf.prototype.normalizeOptions = function (type, payload) {
+        var options = { type: type };
+        if (typeof payload === 'string') {
+            options.message = payload;
+        }
+        else if (typeof payload === 'object') {
+            options = __assign(__assign({}, options), payload);
+        }
+        return options;
+    };
+    Notyf.prototype.registerTypes = function (opts) {
+        var incomingTypes = ((opts && opts.types) || []).slice();
+        var finalDefaultTypes = DEFAULT_OPTIONS.types.map(function (defaultType) {
+            // find if there's a default type within the user input's types, if so, it means the user
+            // wants to change some of the default settings
+            var userTypeIdx = -1;
+            incomingTypes.forEach(function (t, idx) {
+                if (t.type === defaultType.type)
+                    userTypeIdx = idx;
+            });
+            var userType = userTypeIdx !== -1 ? incomingTypes.splice(userTypeIdx, 1)[0] : {};
+            return __assign(__assign({}, defaultType), userType);
+        });
+        return finalDefaultTypes.concat(incomingTypes);
+    };
+    return Notyf;
+}());
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/notyf/notyf.min.css":
+/*!******************************************!*\
+  !*** ./node_modules/notyf/notyf.min.css ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../css-loader??ref--6-1!../postcss-loader/src??ref--6-2!./notyf.min.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/notyf/notyf.min.css");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/nprogress/nprogress.js":
 /*!*********************************************!*\
   !*** ./node_modules/nprogress/nprogress.js ***!
@@ -45587,6 +46274,515 @@ process.umask = function() { return 0; };
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js"), __webpack_require__(/*! ./../process/browser.js */ "./node_modules/process/browser.js")))
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/lib/addStyles.js":
+/*!****************************************************!*\
+  !*** ./node_modules/style-loader/lib/addStyles.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+
+var stylesInDom = {};
+
+var	memoize = function (fn) {
+	var memo;
+
+	return function () {
+		if (typeof memo === "undefined") memo = fn.apply(this, arguments);
+		return memo;
+	};
+};
+
+var isOldIE = memoize(function () {
+	// Test for IE <= 9 as proposed by Browserhacks
+	// @see http://browserhacks.com/#hack-e71d8692f65334173fee715c222cb805
+	// Tests for existence of standard globals is to allow style-loader
+	// to operate correctly into non-standard environments
+	// @see https://github.com/webpack-contrib/style-loader/issues/177
+	return window && document && document.all && !window.atob;
+});
+
+var getTarget = function (target, parent) {
+  if (parent){
+    return parent.querySelector(target);
+  }
+  return document.querySelector(target);
+};
+
+var getElement = (function (fn) {
+	var memo = {};
+
+	return function(target, parent) {
+                // If passing function in options, then use it for resolve "head" element.
+                // Useful for Shadow Root style i.e
+                // {
+                //   insertInto: function () { return document.querySelector("#foo").shadowRoot }
+                // }
+                if (typeof target === 'function') {
+                        return target();
+                }
+                if (typeof memo[target] === "undefined") {
+			var styleTarget = getTarget.call(this, target, parent);
+			// Special case to return head of iframe instead of iframe itself
+			if (window.HTMLIFrameElement && styleTarget instanceof window.HTMLIFrameElement) {
+				try {
+					// This will throw an exception if access to iframe is blocked
+					// due to cross-origin restrictions
+					styleTarget = styleTarget.contentDocument.head;
+				} catch(e) {
+					styleTarget = null;
+				}
+			}
+			memo[target] = styleTarget;
+		}
+		return memo[target]
+	};
+})();
+
+var singleton = null;
+var	singletonCounter = 0;
+var	stylesInsertedAtTop = [];
+
+var	fixUrls = __webpack_require__(/*! ./urls */ "./node_modules/style-loader/lib/urls.js");
+
+module.exports = function(list, options) {
+	if (typeof DEBUG !== "undefined" && DEBUG) {
+		if (typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
+	}
+
+	options = options || {};
+
+	options.attrs = typeof options.attrs === "object" ? options.attrs : {};
+
+	// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+	// tags it will allow on a page
+	if (!options.singleton && typeof options.singleton !== "boolean") options.singleton = isOldIE();
+
+	// By default, add <style> tags to the <head> element
+        if (!options.insertInto) options.insertInto = "head";
+
+	// By default, add <style> tags to the bottom of the target
+	if (!options.insertAt) options.insertAt = "bottom";
+
+	var styles = listToStyles(list, options);
+
+	addStylesToDom(styles, options);
+
+	return function update (newList) {
+		var mayRemove = [];
+
+		for (var i = 0; i < styles.length; i++) {
+			var item = styles[i];
+			var domStyle = stylesInDom[item.id];
+
+			domStyle.refs--;
+			mayRemove.push(domStyle);
+		}
+
+		if(newList) {
+			var newStyles = listToStyles(newList, options);
+			addStylesToDom(newStyles, options);
+		}
+
+		for (var i = 0; i < mayRemove.length; i++) {
+			var domStyle = mayRemove[i];
+
+			if(domStyle.refs === 0) {
+				for (var j = 0; j < domStyle.parts.length; j++) domStyle.parts[j]();
+
+				delete stylesInDom[domStyle.id];
+			}
+		}
+	};
+};
+
+function addStylesToDom (styles, options) {
+	for (var i = 0; i < styles.length; i++) {
+		var item = styles[i];
+		var domStyle = stylesInDom[item.id];
+
+		if(domStyle) {
+			domStyle.refs++;
+
+			for(var j = 0; j < domStyle.parts.length; j++) {
+				domStyle.parts[j](item.parts[j]);
+			}
+
+			for(; j < item.parts.length; j++) {
+				domStyle.parts.push(addStyle(item.parts[j], options));
+			}
+		} else {
+			var parts = [];
+
+			for(var j = 0; j < item.parts.length; j++) {
+				parts.push(addStyle(item.parts[j], options));
+			}
+
+			stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
+		}
+	}
+}
+
+function listToStyles (list, options) {
+	var styles = [];
+	var newStyles = {};
+
+	for (var i = 0; i < list.length; i++) {
+		var item = list[i];
+		var id = options.base ? item[0] + options.base : item[0];
+		var css = item[1];
+		var media = item[2];
+		var sourceMap = item[3];
+		var part = {css: css, media: media, sourceMap: sourceMap};
+
+		if(!newStyles[id]) styles.push(newStyles[id] = {id: id, parts: [part]});
+		else newStyles[id].parts.push(part);
+	}
+
+	return styles;
+}
+
+function insertStyleElement (options, style) {
+	var target = getElement(options.insertInto)
+
+	if (!target) {
+		throw new Error("Couldn't find a style target. This probably means that the value for the 'insertInto' parameter is invalid.");
+	}
+
+	var lastStyleElementInsertedAtTop = stylesInsertedAtTop[stylesInsertedAtTop.length - 1];
+
+	if (options.insertAt === "top") {
+		if (!lastStyleElementInsertedAtTop) {
+			target.insertBefore(style, target.firstChild);
+		} else if (lastStyleElementInsertedAtTop.nextSibling) {
+			target.insertBefore(style, lastStyleElementInsertedAtTop.nextSibling);
+		} else {
+			target.appendChild(style);
+		}
+		stylesInsertedAtTop.push(style);
+	} else if (options.insertAt === "bottom") {
+		target.appendChild(style);
+	} else if (typeof options.insertAt === "object" && options.insertAt.before) {
+		var nextSibling = getElement(options.insertAt.before, target);
+		target.insertBefore(style, nextSibling);
+	} else {
+		throw new Error("[Style Loader]\n\n Invalid value for parameter 'insertAt' ('options.insertAt') found.\n Must be 'top', 'bottom', or Object.\n (https://github.com/webpack-contrib/style-loader#insertat)\n");
+	}
+}
+
+function removeStyleElement (style) {
+	if (style.parentNode === null) return false;
+	style.parentNode.removeChild(style);
+
+	var idx = stylesInsertedAtTop.indexOf(style);
+	if(idx >= 0) {
+		stylesInsertedAtTop.splice(idx, 1);
+	}
+}
+
+function createStyleElement (options) {
+	var style = document.createElement("style");
+
+	if(options.attrs.type === undefined) {
+		options.attrs.type = "text/css";
+	}
+
+	if(options.attrs.nonce === undefined) {
+		var nonce = getNonce();
+		if (nonce) {
+			options.attrs.nonce = nonce;
+		}
+	}
+
+	addAttrs(style, options.attrs);
+	insertStyleElement(options, style);
+
+	return style;
+}
+
+function createLinkElement (options) {
+	var link = document.createElement("link");
+
+	if(options.attrs.type === undefined) {
+		options.attrs.type = "text/css";
+	}
+	options.attrs.rel = "stylesheet";
+
+	addAttrs(link, options.attrs);
+	insertStyleElement(options, link);
+
+	return link;
+}
+
+function addAttrs (el, attrs) {
+	Object.keys(attrs).forEach(function (key) {
+		el.setAttribute(key, attrs[key]);
+	});
+}
+
+function getNonce() {
+	if (false) {}
+
+	return __webpack_require__.nc;
+}
+
+function addStyle (obj, options) {
+	var style, update, remove, result;
+
+	// If a transform function was defined, run it on the css
+	if (options.transform && obj.css) {
+	    result = typeof options.transform === 'function'
+		 ? options.transform(obj.css) 
+		 : options.transform.default(obj.css);
+
+	    if (result) {
+	    	// If transform returns a value, use that instead of the original css.
+	    	// This allows running runtime transformations on the css.
+	    	obj.css = result;
+	    } else {
+	    	// If the transform function returns a falsy value, don't add this css.
+	    	// This allows conditional loading of css
+	    	return function() {
+	    		// noop
+	    	};
+	    }
+	}
+
+	if (options.singleton) {
+		var styleIndex = singletonCounter++;
+
+		style = singleton || (singleton = createStyleElement(options));
+
+		update = applyToSingletonTag.bind(null, style, styleIndex, false);
+		remove = applyToSingletonTag.bind(null, style, styleIndex, true);
+
+	} else if (
+		obj.sourceMap &&
+		typeof URL === "function" &&
+		typeof URL.createObjectURL === "function" &&
+		typeof URL.revokeObjectURL === "function" &&
+		typeof Blob === "function" &&
+		typeof btoa === "function"
+	) {
+		style = createLinkElement(options);
+		update = updateLink.bind(null, style, options);
+		remove = function () {
+			removeStyleElement(style);
+
+			if(style.href) URL.revokeObjectURL(style.href);
+		};
+	} else {
+		style = createStyleElement(options);
+		update = applyToTag.bind(null, style);
+		remove = function () {
+			removeStyleElement(style);
+		};
+	}
+
+	update(obj);
+
+	return function updateStyle (newObj) {
+		if (newObj) {
+			if (
+				newObj.css === obj.css &&
+				newObj.media === obj.media &&
+				newObj.sourceMap === obj.sourceMap
+			) {
+				return;
+			}
+
+			update(obj = newObj);
+		} else {
+			remove();
+		}
+	};
+}
+
+var replaceText = (function () {
+	var textStore = [];
+
+	return function (index, replacement) {
+		textStore[index] = replacement;
+
+		return textStore.filter(Boolean).join('\n');
+	};
+})();
+
+function applyToSingletonTag (style, index, remove, obj) {
+	var css = remove ? "" : obj.css;
+
+	if (style.styleSheet) {
+		style.styleSheet.cssText = replaceText(index, css);
+	} else {
+		var cssNode = document.createTextNode(css);
+		var childNodes = style.childNodes;
+
+		if (childNodes[index]) style.removeChild(childNodes[index]);
+
+		if (childNodes.length) {
+			style.insertBefore(cssNode, childNodes[index]);
+		} else {
+			style.appendChild(cssNode);
+		}
+	}
+}
+
+function applyToTag (style, obj) {
+	var css = obj.css;
+	var media = obj.media;
+
+	if(media) {
+		style.setAttribute("media", media)
+	}
+
+	if(style.styleSheet) {
+		style.styleSheet.cssText = css;
+	} else {
+		while(style.firstChild) {
+			style.removeChild(style.firstChild);
+		}
+
+		style.appendChild(document.createTextNode(css));
+	}
+}
+
+function updateLink (link, options, obj) {
+	var css = obj.css;
+	var sourceMap = obj.sourceMap;
+
+	/*
+		If convertToAbsoluteUrls isn't defined, but sourcemaps are enabled
+		and there is no publicPath defined then lets turn convertToAbsoluteUrls
+		on by default.  Otherwise default to the convertToAbsoluteUrls option
+		directly
+	*/
+	var autoFixUrls = options.convertToAbsoluteUrls === undefined && sourceMap;
+
+	if (options.convertToAbsoluteUrls || autoFixUrls) {
+		css = fixUrls(css);
+	}
+
+	if (sourceMap) {
+		// http://stackoverflow.com/a/26603875
+		css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
+	}
+
+	var blob = new Blob([css], { type: "text/css" });
+
+	var oldSrc = link.href;
+
+	link.href = URL.createObjectURL(blob);
+
+	if(oldSrc) URL.revokeObjectURL(oldSrc);
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/lib/urls.js":
+/*!***********************************************!*\
+  !*** ./node_modules/style-loader/lib/urls.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
+/**
+ * When source maps are enabled, `style-loader` uses a link element with a data-uri to
+ * embed the css on the page. This breaks all relative urls because now they are relative to a
+ * bundle instead of the current page.
+ *
+ * One solution is to only use full urls, but that may be impossible.
+ *
+ * Instead, this function "fixes" the relative urls to be absolute according to the current page location.
+ *
+ * A rudimentary test suite is located at `test/fixUrls.js` and can be run via the `npm test` command.
+ *
+ */
+
+module.exports = function (css) {
+  // get current location
+  var location = typeof window !== "undefined" && window.location;
+
+  if (!location) {
+    throw new Error("fixUrls requires window.location");
+  }
+
+	// blank or null?
+	if (!css || typeof css !== "string") {
+	  return css;
+  }
+
+  var baseUrl = location.protocol + "//" + location.host;
+  var currentDir = baseUrl + location.pathname.replace(/\/[^\/]*$/, "/");
+
+	// convert each url(...)
+	/*
+	This regular expression is just a way to recursively match brackets within
+	a string.
+
+	 /url\s*\(  = Match on the word "url" with any whitespace after it and then a parens
+	   (  = Start a capturing group
+	     (?:  = Start a non-capturing group
+	         [^)(]  = Match anything that isn't a parentheses
+	         |  = OR
+	         \(  = Match a start parentheses
+	             (?:  = Start another non-capturing groups
+	                 [^)(]+  = Match anything that isn't a parentheses
+	                 |  = OR
+	                 \(  = Match a start parentheses
+	                     [^)(]*  = Match anything that isn't a parentheses
+	                 \)  = Match a end parentheses
+	             )  = End Group
+              *\) = Match anything and then a close parens
+          )  = Close non-capturing group
+          *  = Match anything
+       )  = Close capturing group
+	 \)  = Match a close parens
+
+	 /gi  = Get all matches, not the first.  Be case insensitive.
+	 */
+	var fixedCss = css.replace(/url\s*\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/gi, function(fullMatch, origUrl) {
+		// strip quotes (if they exist)
+		var unquotedOrigUrl = origUrl
+			.trim()
+			.replace(/^"(.*)"$/, function(o, $1){ return $1; })
+			.replace(/^'(.*)'$/, function(o, $1){ return $1; });
+
+		// already a full url? no change
+		if (/^(#|data:|http:\/\/|https:\/\/|file:\/\/\/|\s*$)/i.test(unquotedOrigUrl)) {
+		  return fullMatch;
+		}
+
+		// convert the url to a full url
+		var newUrl;
+
+		if (unquotedOrigUrl.indexOf("//") === 0) {
+		  	//TODO: should we add protocol?
+			newUrl = unquotedOrigUrl;
+		} else if (unquotedOrigUrl.indexOf("/") === 0) {
+			// path should be relative to the base url
+			newUrl = baseUrl + unquotedOrigUrl; // already starts with '/'
+		} else {
+			// path should be relative to current directory
+			newUrl = currentDir + unquotedOrigUrl.replace(/^\.\//, ""); // Strip leading './'
+		}
+
+		// send back the fixed url(...)
+		return "url(" + JSON.stringify(newUrl) + ")";
+	});
+
+	// send back the fixed css
+	return fixedCss;
+};
+
 
 /***/ }),
 
@@ -52223,7 +53419,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "card" }, [
+  return _c("div", { staticClass: "card flex flex-col" }, [
     _c(
       "h3",
       {
@@ -52245,7 +53441,7 @@ var render = function() {
       1
     ),
     _vm._v(" "),
-    _c("div", { staticClass: "truncate w-20 text-grey mb-4" }, [
+    _c("div", { staticClass: "truncate w-20 text-grey mb-4 flex-1" }, [
       _vm._v(_vm._s(_vm.project.description[_vm.$i18n.locale]))
     ]),
     _vm._v(" "),
@@ -53172,57 +54368,60 @@ var render = function() {
               2
             ),
             _vm._v(" "),
-            _c(
-              "div",
-              [
-                _c("h2", { staticClass: "text-gray font-normal text-lg" }, [
-                  _vm._v("General Notes")
-                ]),
-                _vm._v(" "),
-                _c("textarea", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.notes,
-                      expression: "notes"
-                    }
-                  ],
-                  staticClass: "card w-full mb-4",
-                  staticStyle: { height: "200px" },
-                  attrs: { id: "general_note", name: "notes" },
-                  domProps: { value: _vm.notes, innerHTML: _vm._s(_vm.notes) },
+            _c("div", [
+              _c("h2", { staticClass: "text-gray font-normal text-lg" }, [
+                _vm._v("General Notes")
+              ]),
+              _vm._v(" "),
+              _c(
+                "form",
+                {
+                  attrs: { id: "update-project" },
                   on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.notes = $event.target.value
+                    submit: function($event) {
+                      $event.preventDefault()
+                      return _vm.updateProject($event)
                     }
                   }
-                }),
-                _vm._v(" "),
-                _c(
-                  "inertia-link",
-                  {
-                    staticClass: "button",
-                    attrs: {
-                      href: _vm.route("projects.update", {
-                        project: _vm.project.id
-                      }),
-                      method: "patch",
-                      data: {
-                        notes: _vm.notes,
-                        title: _vm.project.title,
-                        description: _vm.project.description
+                },
+                [
+                  _c("textarea", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.notes,
+                        expression: "notes"
+                      }
+                    ],
+                    staticClass: "card w-full mb-4",
+                    staticStyle: { height: "200px" },
+                    attrs: { id: "general_note", name: "notes" },
+                    domProps: {
+                      value: _vm.notes,
+                      innerHTML: _vm._s(_vm.notes)
+                    },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.notes = $event.target.value
                       }
                     }
-                  },
-                  [_vm._v("Update\n                    ")]
-                )
-              ],
-              1
-            )
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "text-xs button",
+                      attrs: { type: "submit" }
+                    },
+                    [_vm._v(_vm._s(_vm.$t("app.update")))]
+                  )
+                ]
+              )
+            ])
           ]),
           _vm._v(" "),
           _c(
@@ -53261,6 +54460,91 @@ var render = function() {
                     )
                   }),
                   0
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "card flex flex-col mt-3" }, [
+                _c(
+                  "h3",
+                  {
+                    staticClass:
+                      "font-normal text-xl py-4 -ml-5 mb-3 border-l-4 border-blue-light pl-4"
+                  },
+                  [
+                    _vm._v(
+                      "\n                        " +
+                        _vm._s(_vm.$t("app.invite_user")) +
+                        "\n                    "
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "form",
+                  {
+                    attrs: { method: "post", id: "invite-user" },
+                    on: {
+                      submit: function($event) {
+                        $event.preventDefault()
+                        return _vm.inviteUser($event)
+                      }
+                    }
+                  },
+                  [
+                    _c("div", { staticClass: "mb-3" }, [
+                      _c("label", {
+                        staticClass: "hidden",
+                        attrs: { for: "email" }
+                      }),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.inviteUserForm.email,
+                            expression: "inviteUserForm.email"
+                          }
+                        ],
+                        staticClass:
+                          "border border-grey-light rounded w-full py-2 px-3",
+                        attrs: {
+                          type: "email",
+                          name: "email",
+                          id: "email",
+                          required: "",
+                          placeholder: _vm.$t("app.email_address")
+                        },
+                        domProps: { value: _vm.inviteUserForm.email },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.inviteUserForm,
+                              "email",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("span", {
+                        staticClass: "text-red-500 hidden",
+                        attrs: { id: "email-error" }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "text-xs button",
+                        attrs: { type: "submit" }
+                      },
+                      [_vm._v(_vm._s(_vm.$t("app.invite")))]
+                    )
+                  ]
                 )
               ])
             ],
@@ -68018,6 +69302,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var portal_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! portal-vue */ "./node_modules/portal-vue/dist/portal-vue.common.js");
 /* harmony import */ var portal_vue__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(portal_vue__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var vue_i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vue-i18n */ "./node_modules/vue-i18n/dist/vue-i18n.esm.js");
+/* harmony import */ var notyf__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! notyf */ "./node_modules/notyf/notyf.es.js");
+/* harmony import */ var notyf_notyf_min_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! notyf/notyf.min.css */ "./node_modules/notyf/notyf.min.css");
+/* harmony import */ var notyf_notyf_min_css__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(notyf_notyf_min_css__WEBPACK_IMPORTED_MODULE_6__);
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 
@@ -68025,17 +69312,43 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 
 
+
+ // for React, Vue and Svelte
+// Create an instance of Notyf
+
+var notyf = new notyf__WEBPACK_IMPORTED_MODULE_5__["Notyf"]({
+  duration: 5000,
+  //5 sec
+  dismissible: true
+});
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.mixin({
   methods: {
-    route: route
+    route: route,
+    successToast: function successToast(message) {
+      notyf.success(message);
+    },
+    errorToast: function errorToast(title, errors) {
+      var html = "<h1><b>".concat(title, "</b></h1>");
+
+      if (errors) {
+        html += "<ul>";
+        Object.values(errors).forEach(function (error) {
+          html += "<li><sm>".concat(error[0], "</sm></li>");
+        });
+        html += "</ul>";
+      }
+
+      notyf.error(html);
+    }
   }
 });
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(_inertiajs_inertia_vue__WEBPACK_IMPORTED_MODULE_1__["InertiaApp"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(laravel_jetstream__WEBPACK_IMPORTED_MODULE_2__["InertiaForm"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(portal_vue__WEBPACK_IMPORTED_MODULE_3___default.a);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_i18n__WEBPACK_IMPORTED_MODULE_4__["default"]);
+var default_locale = document.getElementsByTagName('html')[0].getAttribute('lang');
 var i18n = new vue_i18n__WEBPACK_IMPORTED_MODULE_4__["default"]({
-  locale: document.getElementsByTagName('html')[0].getAttribute('lang'),
+  locale: default_locale,
   // set default locale
   fallbackLocale: "en",
   messages: {
@@ -68103,7 +69416,7 @@ window.axios.defaults.headers.common['X-CSRF-TOKEN'] = document.head.querySelect
 /*! exports provided: ar, en, app, auth, pagination, passwords, validation-inline, validation, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"ar\":\"Arabic\",\"en\":\"English\",\"app\":{\"ar\":\"عربي\",\"en\":\"انجليزي\",\"Dashboard\":\"الصفحة الرئيسية\",\"Projects\":\"المشاريع\",\"Manage Account\":\"إدارة الحساب\",\"Profile\":\"الملف الشخصي\",\"API Tokens\":\"API Tokens\",\"Manage Team\":\"إدارة الفريق\",\"Team Settings\":\"إعدادات الفريق\",\"Create New Team\":\"إنشاء فريق جديد\",\"Switch Teams\":\"تبديل الفريق\",\"Logout\":\"تسجيل الخروج\",\"title\":\"العنوان\",\"description\":\"الوصف\",\"notes\":\"الملاحظات\",\"cancel\":\"إغلاق\",\"submit\":\"اعتماد\",\"update\":\"تحديث\",\"edit_project\":\"تعديل المشروع\"},\"auth\":{\"failed\":\"بيانات الاعتماد هذه غير متطابقة مع البيانات المسجلة لدينا.\",\"throttle\":\"عدد كبير جدا من محاولات الدخول. يرجى المحاولة مرة أخرى بعد :seconds ثانية.\"},\"pagination\":{\"previous\":\"&laquo; السابق\",\"next\":\"التالي &raquo;\"},\"passwords\":{\"reset\":\"تمت إعادة تعيين كلمة المرور!\",\"sent\":\"تم إرسال تفاصيل استعادة كلمة المرور الخاصة بك إلى بريدك الإلكتروني!\",\"throttled\":\"الرجاء الانتظار قبل إعادة المحاولة.\",\"token\":\"رمز استعادة كلمة المرور الذي أدخلته غير صحيح.\",\"user\":\"لم يتم العثور على أيّ حسابٍ بهذا العنوان الإلكتروني.\"},\"validation-inline\":{\"accepted\":\"يجب قبول :attribute.\",\"active_url\":\":attribute لا يُمثّل رابطًا صحيحًا.\",\"after\":\"يجب على :attribute أن يكون تاريخًا لاحقًا للتاريخ :date.\",\"after_or_equal\":\":attribute يجب أن يكون تاريخاً لاحقاً أو مطابقاً للتاريخ :date.\",\"alpha\":\"يجب أن لا يحتوي :attribute سوى على حروف.\",\"alpha_dash\":\"يجب أن لا يحتوي :attribute سوى على حروف، أرقام ومطّات.\",\"alpha_num\":\"يجب أن يحتوي :attribute على حروفٍ وأرقامٍ فقط.\",\"array\":\"يجب أن يكون :attribute ًمصفوفة.\",\"before\":\"يجب على :attribute أن يكون تاريخًا سابقًا للتاريخ :date.\",\"before_or_equal\":\":attribute يجب أن يكون تاريخا سابقا أو مطابقا للتاريخ :date.\",\"between\":{\"numeric\":\"يجب أن تكون قيمة :attribute بين :min و :max.\",\"file\":\"يجب أن يكون حجم الملف :attribute بين :min و :max كيلوبايت.\",\"string\":\"يجب أن يكون عدد حروف النّص :attribute بين :min و :max.\",\"array\":\"يجب أن يحتوي :attribute على عدد من العناصر بين :min و :max.\"},\"boolean\":\"يجب أن تكون قيمة :attribute إما true أو false .\",\"confirmed\":\"حقل التأكيد غير مُطابق للحقل :attribute.\",\"date\":\":attribute ليس تاريخًا صحيحًا.\",\"date_equals\":\"يجب أن يكون :attribute مطابقاً للتاريخ :date.\",\"date_format\":\"لا يتوافق :attribute مع الشكل :format.\",\"different\":\"يجب أن يكون الحقلان :attribute و :other مُختلفين.\",\"digits\":\"يجب أن يحتوي :attribute على :digits رقمًا/أرقام.\",\"digits_between\":\"يجب أن يحتوي :attribute بين :min و :max رقمًا/أرقام .\",\"dimensions\":\"الـ :attribute يحتوي على أبعاد صورة غير صالحة.\",\"distinct\":\"للحقل :attribute قيمة مُكرّرة.\",\"email\":\"يجب أن يكون :attribute عنوان بريد إلكتروني صحيح البُنية.\",\"ends_with\":\"يجب أن ينتهي :attribute بأحد القيم التالية: :values\",\"exists\":\"القيمة المحددة :attribute غير موجودة.\",\"file\":\"الـ :attribute يجب أن يكون ملفا.\",\"filled\":\":attribute إجباري.\",\"gt\":{\"numeric\":\"يجب أن تكون قيمة :attribute أكبر من :value.\",\"file\":\"يجب أن يكون حجم الملف :attribute أكبر من :value كيلوبايت.\",\"string\":\"يجب أن يكون طول النّص :attribute أكثر من :value حروفٍ/حرفًا.\",\"array\":\"يجب أن يحتوي :attribute على أكثر من :value عناصر/عنصر.\"},\"gte\":{\"numeric\":\"يجب أن تكون قيمة :attribute مساوية أو أكبر من :value.\",\"file\":\"يجب أن يكون حجم الملف :attribute على الأقل :value كيلوبايت.\",\"string\":\"يجب أن يكون طول النص :attribute على الأقل :value حروفٍ/حرفًا.\",\"array\":\"يجب أن يحتوي :attribute على الأقل على :value عُنصرًا/عناصر.\"},\"image\":\"يجب أن يكون :attribute صورةً.\",\"in\":\":attribute غير موجود.\",\"in_array\":\":attribute غير موجود في :other.\",\"integer\":\"يجب أن يكون :attribute عددًا صحيحًا.\",\"ip\":\"يجب أن يكون :attribute عنوان IP صحيحًا.\",\"ipv4\":\"يجب أن يكون :attribute عنوان IPv4 صحيحًا.\",\"ipv6\":\"يجب أن يكون :attribute عنوان IPv6 صحيحًا.\",\"json\":\"يجب أن يكون :attribute نصًا من نوع JSON.\",\"lt\":{\"numeric\":\"يجب أن تكون قيمة :attribute أصغر من :value.\",\"file\":\"يجب أن يكون حجم الملف :attribute أصغر من :value كيلوبايت.\",\"string\":\"يجب أن يكون طول النّص :attribute أقل من :value حروفٍ/حرفًا.\",\"array\":\"يجب أن يحتوي :attribute على أقل من :value عناصر/عنصر.\"},\"lte\":{\"numeric\":\"يجب أن تكون قيمة :attribute مساوية أو أصغر من :value.\",\"file\":\"يجب أن لا يتجاوز حجم الملف :attribute :value كيلوبايت.\",\"string\":\"يجب أن لا يتجاوز طول النّص :attribute :value حروفٍ/حرفًا.\",\"array\":\"يجب أن لا يحتوي :attribute على أكثر من :value عناصر/عنصر.\"},\"max\":{\"numeric\":\"يجب أن تكون قيمة :attribute مساوية أو أصغر من :max.\",\"file\":\"يجب أن لا يتجاوز حجم الملف :attribute :max كيلوبايت.\",\"string\":\"يجب أن لا يتجاوز طول النّص :attribute :max حروفٍ/حرفًا.\",\"array\":\"يجب أن لا يحتوي :attribute على أكثر من :max عناصر/عنصر.\"},\"mimes\":\"يجب أن يكون ملفًا من نوع : :values.\",\"mimetypes\":\"يجب أن يكون ملفًا من نوع : :values.\",\"min\":{\"numeric\":\"يجب أن تكون قيمة :attribute مساوية أو أكبر من :min.\",\"file\":\"يجب أن يكون حجم الملف :attribute على الأقل :min كيلوبايت.\",\"string\":\"يجب أن يكون طول النص :attribute على الأقل :min حروفٍ/حرفًا.\",\"array\":\"يجب أن يحتوي :attribute على الأقل على :min عُنصرًا/عناصر.\"},\"multiple_of\":\"يجب أن تكون القيمة من مضاعفات :value\",\"not_in\":\"العنصر :attribute غير صحيح.\",\"not_regex\":\"صيغة :attribute غير صحيحة.\",\"numeric\":\"يجب على :attribute أن يكون رقمًا.\",\"password\":\"كلمة المرور غير صحيحة.\",\"present\":\"يجب تقديم :attribute.\",\"regex\":\"صيغة :attribute .غير صحيحة.\",\"required\":\":attribute مطلوب.\",\"required_if\":\":attribute مطلوب في حال ما إذا كان :other يساوي :value.\",\"required_unless\":\":attribute مطلوب في حال ما لم يكن :other يساوي :values.\",\"required_with\":\":attribute مطلوب إذا توفّر :values.\",\"required_with_all\":\":attribute مطلوب إذا توفّر :values.\",\"required_without\":\":attribute مطلوب إذا لم يتوفّر :values.\",\"required_without_all\":\":attribute مطلوب إذا لم يتوفّر :values.\",\"same\":\"يجب أن يتطابق :attribute مع :other.\",\"size\":{\"numeric\":\"يجب أن تكون قيمة :attribute مساوية لـ :size.\",\"file\":\"يجب أن يكون حجم الملف :attribute :size كيلوبايت.\",\"string\":\"يجب أن يحتوي النص :attribute على :size حروفٍ/حرفًا بالضبط.\",\"array\":\"يجب أن يحتوي :attribute على :size عنصرٍ/عناصر بالضبط.\"},\"starts_with\":\"يجب أن يبدأ :attribute بأحد القيم التالية: :values\",\"string\":\"يجب أن يكون :attribute نصًا.\",\"timezone\":\"يجب أن يكون :attribute نطاقًا زمنيًا صحيحًا.\",\"unique\":\"قيمة :attribute مُستخدمة من قبل.\",\"uploaded\":\"فشل في تحميل الـ :attribute.\",\"url\":\"صيغة الرابط :attribute غير صحيحة.\",\"uuid\":\":attribute يجب أن يكون بصيغة UUID سليمة.\",\"custom\":{\"attribute-name\":{\"rule-name\":\"custom-message\"}}},\"validation\":{\"accepted\":\"يجب قبول :attribute.\",\"active_url\":\":attribute لا يُمثّل رابطًا صحيحًا.\",\"after\":\"يجب على :attribute أن يكون تاريخًا لاحقًا للتاريخ :date.\",\"after_or_equal\":\":attribute يجب أن يكون تاريخاً لاحقاً أو مطابقاً للتاريخ :date.\",\"alpha\":\"يجب أن لا يحتوي :attribute سوى على حروف.\",\"alpha_dash\":\"يجب أن لا يحتوي :attribute سوى على حروف، أرقام ومطّات.\",\"alpha_num\":\"يجب أن يحتوي :attribute على حروفٍ وأرقامٍ فقط.\",\"array\":\"يجب أن يكون :attribute ًمصفوفة.\",\"before\":\"يجب على :attribute أن يكون تاريخًا سابقًا للتاريخ :date.\",\"before_or_equal\":\":attribute يجب أن يكون تاريخا سابقا أو مطابقا للتاريخ :date.\",\"between\":{\"numeric\":\"يجب أن تكون قيمة :attribute بين :min و :max.\",\"file\":\"يجب أن يكون حجم الملف :attribute بين :min و :max كيلوبايت.\",\"string\":\"يجب أن يكون عدد حروف النّص :attribute بين :min و :max.\",\"array\":\"يجب أن يحتوي :attribute على عدد من العناصر بين :min و :max.\"},\"boolean\":\"يجب أن تكون قيمة :attribute إما true أو false .\",\"confirmed\":\"حقل التأكيد غير مُطابق للحقل :attribute.\",\"date\":\":attribute ليس تاريخًا صحيحًا.\",\"date_equals\":\"يجب أن يكون :attribute مطابقاً للتاريخ :date.\",\"date_format\":\"لا يتوافق :attribute مع الشكل :format.\",\"different\":\"يجب أن يكون الحقلان :attribute و :other مُختلفين.\",\"digits\":\"يجب أن يحتوي :attribute على :digits رقمًا/أرقام.\",\"digits_between\":\"يجب أن يحتوي :attribute بين :min و :max رقمًا/أرقام .\",\"dimensions\":\"الـ :attribute يحتوي على أبعاد صورة غير صالحة.\",\"distinct\":\"للحقل :attribute قيمة مُكرّرة.\",\"email\":\"يجب أن يكون :attribute عنوان بريد إلكتروني صحيح البُنية.\",\"ends_with\":\"يجب أن ينتهي :attribute بأحد القيم التالية: :values\",\"exists\":\"القيمة المحددة :attribute غير موجودة.\",\"file\":\"الـ :attribute يجب أن يكون ملفا.\",\"filled\":\":attribute إجباري.\",\"gt\":{\"numeric\":\"يجب أن تكون قيمة :attribute أكبر من :value.\",\"file\":\"يجب أن يكون حجم الملف :attribute أكبر من :value كيلوبايت.\",\"string\":\"يجب أن يكون طول النّص :attribute أكثر من :value حروفٍ/حرفًا.\",\"array\":\"يجب أن يحتوي :attribute على أكثر من :value عناصر/عنصر.\"},\"gte\":{\"numeric\":\"يجب أن تكون قيمة :attribute مساوية أو أكبر من :value.\",\"file\":\"يجب أن يكون حجم الملف :attribute على الأقل :value كيلوبايت.\",\"string\":\"يجب أن يكون طول النص :attribute على الأقل :value حروفٍ/حرفًا.\",\"array\":\"يجب أن يحتوي :attribute على الأقل على :value عُنصرًا/عناصر.\"},\"image\":\"يجب أن يكون :attribute صورةً.\",\"in\":\":attribute غير موجود.\",\"in_array\":\":attribute غير موجود في :other.\",\"integer\":\"يجب أن يكون :attribute عددًا صحيحًا.\",\"ip\":\"يجب أن يكون :attribute عنوان IP صحيحًا.\",\"ipv4\":\"يجب أن يكون :attribute عنوان IPv4 صحيحًا.\",\"ipv6\":\"يجب أن يكون :attribute عنوان IPv6 صحيحًا.\",\"json\":\"يجب أن يكون :attribute نصًا من نوع JSON.\",\"lt\":{\"numeric\":\"يجب أن تكون قيمة :attribute أصغر من :value.\",\"file\":\"يجب أن يكون حجم الملف :attribute أصغر من :value كيلوبايت.\",\"string\":\"يجب أن يكون طول النّص :attribute أقل من :value حروفٍ/حرفًا.\",\"array\":\"يجب أن يحتوي :attribute على أقل من :value عناصر/عنصر.\"},\"lte\":{\"numeric\":\"يجب أن تكون قيمة :attribute مساوية أو أصغر من :value.\",\"file\":\"يجب أن لا يتجاوز حجم الملف :attribute :value كيلوبايت.\",\"string\":\"يجب أن لا يتجاوز طول النّص :attribute :value حروفٍ/حرفًا.\",\"array\":\"يجب أن لا يحتوي :attribute على أكثر من :value عناصر/عنصر.\"},\"max\":{\"numeric\":\"يجب أن تكون قيمة :attribute مساوية أو أصغر من :max.\",\"file\":\"يجب أن لا يتجاوز حجم الملف :attribute :max كيلوبايت.\",\"string\":\"يجب أن لا يتجاوز طول النّص :attribute :max حروفٍ/حرفًا.\",\"array\":\"يجب أن لا يحتوي :attribute على أكثر من :max عناصر/عنصر.\"},\"mimes\":\"يجب أن يكون ملفًا من نوع : :values.\",\"mimetypes\":\"يجب أن يكون ملفًا من نوع : :values.\",\"min\":{\"numeric\":\"يجب أن تكون قيمة :attribute مساوية أو أكبر من :min.\",\"file\":\"يجب أن يكون حجم الملف :attribute على الأقل :min كيلوبايت.\",\"string\":\"يجب أن يكون طول النص :attribute على الأقل :min حروفٍ/حرفًا.\",\"array\":\"يجب أن يحتوي :attribute على الأقل على :min عُنصرًا/عناصر.\"},\"multiple_of\":\":attribute يجب أن يكون من مضاعفات :value\",\"not_in\":\"العنصر :attribute غير صحيح.\",\"not_regex\":\"صيغة :attribute غير صحيحة.\",\"numeric\":\"يجب على :attribute أن يكون رقمًا.\",\"password\":\"كلمة المرور غير صحيحة.\",\"present\":\"يجب تقديم :attribute.\",\"regex\":\"صيغة :attribute .غير صحيحة.\",\"required\":\":attribute مطلوب.\",\"required_if\":\":attribute مطلوب في حال ما إذا كان :other يساوي :value.\",\"required_unless\":\":attribute مطلوب في حال ما لم يكن :other يساوي :values.\",\"required_with\":\":attribute مطلوب إذا توفّر :values.\",\"required_with_all\":\":attribute مطلوب إذا توفّر :values.\",\"required_without\":\":attribute مطلوب إذا لم يتوفّر :values.\",\"required_without_all\":\":attribute مطلوب إذا لم يتوفّر :values.\",\"same\":\"يجب أن يتطابق :attribute مع :other.\",\"size\":{\"numeric\":\"يجب أن تكون قيمة :attribute مساوية لـ :size.\",\"file\":\"يجب أن يكون حجم الملف :attribute :size كيلوبايت.\",\"string\":\"يجب أن يحتوي النص :attribute على :size حروفٍ/حرفًا بالضبط.\",\"array\":\"يجب أن يحتوي :attribute على :size عنصرٍ/عناصر بالضبط.\"},\"starts_with\":\"يجب أن يبدأ :attribute بأحد القيم التالية: :values\",\"string\":\"يجب أن يكون :attribute نصًا.\",\"timezone\":\"يجب أن يكون :attribute نطاقًا زمنيًا صحيحًا.\",\"unique\":\"قيمة :attribute مُستخدمة من قبل.\",\"uploaded\":\"فشل في تحميل الـ :attribute.\",\"url\":\"صيغة الرابط :attribute غير صحيحة.\",\"uuid\":\":attribute يجب أن يكون بصيغة UUID سليمة.\",\"custom\":{\"attribute-name\":{\"rule-name\":\"custom-message\"}},\"attributes\":{\"name\":\"الاسم\",\"username\":\"اسم المُستخدم\",\"email\":\"البريد الالكتروني\",\"first_name\":\"الاسم الأول\",\"last_name\":\"اسم العائلة\",\"password\":\"كلمة المرور\",\"password_confirmation\":\"تأكيد كلمة المرور\",\"city\":\"المدينة\",\"country\":\"الدولة\",\"address\":\"العنوان\",\"phone\":\"الهاتف\",\"mobile\":\"الجوال\",\"age\":\"العمر\",\"sex\":\"الجنس\",\"gender\":\"النوع\",\"day\":\"اليوم\",\"month\":\"الشهر\",\"year\":\"السنة\",\"hour\":\"ساعة\",\"minute\":\"دقيقة\",\"second\":\"ثانية\",\"title\":\"العنوان\",\"content\":\"المُحتوى\",\"description\":\"الوصف\",\"excerpt\":\"المُلخص\",\"date\":\"التاريخ\",\"time\":\"الوقت\",\"available\":\"مُتاح\",\"size\":\"الحجم\"}}}");
+module.exports = JSON.parse("{\"ar\":\"Arabic\",\"en\":\"English\",\"app\":{\"ar\":\"عربي\",\"en\":\"انجليزي\",\"Dashboard\":\"الصفحة الرئيسية\",\"Projects\":\"المشاريع\",\"Manage Account\":\"إدارة الحساب\",\"Profile\":\"الملف الشخصي\",\"API Tokens\":\"API Tokens\",\"Manage Team\":\"إدارة الفريق\",\"Team Settings\":\"إعدادات الفريق\",\"Create New Team\":\"إنشاء فريق جديد\",\"Switch Teams\":\"تبديل الفريق\",\"Logout\":\"تسجيل الخروج\",\"title\":\"العنوان\",\"description\":\"الوصف\",\"notes\":\"الملاحظات\",\"cancel\":\"إغلاق\",\"submit\":\"اعتماد\",\"update\":\"تحديث\",\"delete\":\"حذف\",\"my_projects\":\"مشاريعي\",\"the_invited_email_address_must_be_associated_with_birdboard_account\":\"The invited email address must be associated with a Birdboard account.\",\"edit_project\":\"تعديل المشروع\"},\"auth\":{\"failed\":\"بيانات الاعتماد هذه غير متطابقة مع البيانات المسجلة لدينا.\",\"throttle\":\"عدد كبير جدا من محاولات الدخول. يرجى المحاولة مرة أخرى بعد :seconds ثانية.\"},\"pagination\":{\"previous\":\"&laquo; السابق\",\"next\":\"التالي &raquo;\"},\"passwords\":{\"reset\":\"تمت إعادة تعيين كلمة المرور!\",\"sent\":\"تم إرسال تفاصيل استعادة كلمة المرور الخاصة بك إلى بريدك الإلكتروني!\",\"throttled\":\"الرجاء الانتظار قبل إعادة المحاولة.\",\"token\":\"رمز استعادة كلمة المرور الذي أدخلته غير صحيح.\",\"user\":\"لم يتم العثور على أيّ حسابٍ بهذا العنوان الإلكتروني.\"},\"validation-inline\":{\"accepted\":\"يجب قبول :attribute.\",\"active_url\":\":attribute لا يُمثّل رابطًا صحيحًا.\",\"after\":\"يجب على :attribute أن يكون تاريخًا لاحقًا للتاريخ :date.\",\"after_or_equal\":\":attribute يجب أن يكون تاريخاً لاحقاً أو مطابقاً للتاريخ :date.\",\"alpha\":\"يجب أن لا يحتوي :attribute سوى على حروف.\",\"alpha_dash\":\"يجب أن لا يحتوي :attribute سوى على حروف، أرقام ومطّات.\",\"alpha_num\":\"يجب أن يحتوي :attribute على حروفٍ وأرقامٍ فقط.\",\"array\":\"يجب أن يكون :attribute ًمصفوفة.\",\"before\":\"يجب على :attribute أن يكون تاريخًا سابقًا للتاريخ :date.\",\"before_or_equal\":\":attribute يجب أن يكون تاريخا سابقا أو مطابقا للتاريخ :date.\",\"between\":{\"numeric\":\"يجب أن تكون قيمة :attribute بين :min و :max.\",\"file\":\"يجب أن يكون حجم الملف :attribute بين :min و :max كيلوبايت.\",\"string\":\"يجب أن يكون عدد حروف النّص :attribute بين :min و :max.\",\"array\":\"يجب أن يحتوي :attribute على عدد من العناصر بين :min و :max.\"},\"boolean\":\"يجب أن تكون قيمة :attribute إما true أو false .\",\"confirmed\":\"حقل التأكيد غير مُطابق للحقل :attribute.\",\"date\":\":attribute ليس تاريخًا صحيحًا.\",\"date_equals\":\"يجب أن يكون :attribute مطابقاً للتاريخ :date.\",\"date_format\":\"لا يتوافق :attribute مع الشكل :format.\",\"different\":\"يجب أن يكون الحقلان :attribute و :other مُختلفين.\",\"digits\":\"يجب أن يحتوي :attribute على :digits رقمًا/أرقام.\",\"digits_between\":\"يجب أن يحتوي :attribute بين :min و :max رقمًا/أرقام .\",\"dimensions\":\"الـ :attribute يحتوي على أبعاد صورة غير صالحة.\",\"distinct\":\"للحقل :attribute قيمة مُكرّرة.\",\"email\":\"يجب أن يكون :attribute عنوان بريد إلكتروني صحيح البُنية.\",\"ends_with\":\"يجب أن ينتهي :attribute بأحد القيم التالية: :values\",\"exists\":\"القيمة المحددة :attribute غير موجودة.\",\"file\":\"الـ :attribute يجب أن يكون ملفا.\",\"filled\":\":attribute إجباري.\",\"gt\":{\"numeric\":\"يجب أن تكون قيمة :attribute أكبر من :value.\",\"file\":\"يجب أن يكون حجم الملف :attribute أكبر من :value كيلوبايت.\",\"string\":\"يجب أن يكون طول النّص :attribute أكثر من :value حروفٍ/حرفًا.\",\"array\":\"يجب أن يحتوي :attribute على أكثر من :value عناصر/عنصر.\"},\"gte\":{\"numeric\":\"يجب أن تكون قيمة :attribute مساوية أو أكبر من :value.\",\"file\":\"يجب أن يكون حجم الملف :attribute على الأقل :value كيلوبايت.\",\"string\":\"يجب أن يكون طول النص :attribute على الأقل :value حروفٍ/حرفًا.\",\"array\":\"يجب أن يحتوي :attribute على الأقل على :value عُنصرًا/عناصر.\"},\"image\":\"يجب أن يكون :attribute صورةً.\",\"in\":\":attribute غير موجود.\",\"in_array\":\":attribute غير موجود في :other.\",\"integer\":\"يجب أن يكون :attribute عددًا صحيحًا.\",\"ip\":\"يجب أن يكون :attribute عنوان IP صحيحًا.\",\"ipv4\":\"يجب أن يكون :attribute عنوان IPv4 صحيحًا.\",\"ipv6\":\"يجب أن يكون :attribute عنوان IPv6 صحيحًا.\",\"json\":\"يجب أن يكون :attribute نصًا من نوع JSON.\",\"lt\":{\"numeric\":\"يجب أن تكون قيمة :attribute أصغر من :value.\",\"file\":\"يجب أن يكون حجم الملف :attribute أصغر من :value كيلوبايت.\",\"string\":\"يجب أن يكون طول النّص :attribute أقل من :value حروفٍ/حرفًا.\",\"array\":\"يجب أن يحتوي :attribute على أقل من :value عناصر/عنصر.\"},\"lte\":{\"numeric\":\"يجب أن تكون قيمة :attribute مساوية أو أصغر من :value.\",\"file\":\"يجب أن لا يتجاوز حجم الملف :attribute :value كيلوبايت.\",\"string\":\"يجب أن لا يتجاوز طول النّص :attribute :value حروفٍ/حرفًا.\",\"array\":\"يجب أن لا يحتوي :attribute على أكثر من :value عناصر/عنصر.\"},\"max\":{\"numeric\":\"يجب أن تكون قيمة :attribute مساوية أو أصغر من :max.\",\"file\":\"يجب أن لا يتجاوز حجم الملف :attribute :max كيلوبايت.\",\"string\":\"يجب أن لا يتجاوز طول النّص :attribute :max حروفٍ/حرفًا.\",\"array\":\"يجب أن لا يحتوي :attribute على أكثر من :max عناصر/عنصر.\"},\"mimes\":\"يجب أن يكون ملفًا من نوع : :values.\",\"mimetypes\":\"يجب أن يكون ملفًا من نوع : :values.\",\"min\":{\"numeric\":\"يجب أن تكون قيمة :attribute مساوية أو أكبر من :min.\",\"file\":\"يجب أن يكون حجم الملف :attribute على الأقل :min كيلوبايت.\",\"string\":\"يجب أن يكون طول النص :attribute على الأقل :min حروفٍ/حرفًا.\",\"array\":\"يجب أن يحتوي :attribute على الأقل على :min عُنصرًا/عناصر.\"},\"multiple_of\":\"يجب أن تكون القيمة من مضاعفات :value\",\"not_in\":\"العنصر :attribute غير صحيح.\",\"not_regex\":\"صيغة :attribute غير صحيحة.\",\"numeric\":\"يجب على :attribute أن يكون رقمًا.\",\"password\":\"كلمة المرور غير صحيحة.\",\"present\":\"يجب تقديم :attribute.\",\"regex\":\"صيغة :attribute .غير صحيحة.\",\"required\":\":attribute مطلوب.\",\"required_if\":\":attribute مطلوب في حال ما إذا كان :other يساوي :value.\",\"required_unless\":\":attribute مطلوب في حال ما لم يكن :other يساوي :values.\",\"required_with\":\":attribute مطلوب إذا توفّر :values.\",\"required_with_all\":\":attribute مطلوب إذا توفّر :values.\",\"required_without\":\":attribute مطلوب إذا لم يتوفّر :values.\",\"required_without_all\":\":attribute مطلوب إذا لم يتوفّر :values.\",\"same\":\"يجب أن يتطابق :attribute مع :other.\",\"size\":{\"numeric\":\"يجب أن تكون قيمة :attribute مساوية لـ :size.\",\"file\":\"يجب أن يكون حجم الملف :attribute :size كيلوبايت.\",\"string\":\"يجب أن يحتوي النص :attribute على :size حروفٍ/حرفًا بالضبط.\",\"array\":\"يجب أن يحتوي :attribute على :size عنصرٍ/عناصر بالضبط.\"},\"starts_with\":\"يجب أن يبدأ :attribute بأحد القيم التالية: :values\",\"string\":\"يجب أن يكون :attribute نصًا.\",\"timezone\":\"يجب أن يكون :attribute نطاقًا زمنيًا صحيحًا.\",\"unique\":\"قيمة :attribute مُستخدمة من قبل.\",\"uploaded\":\"فشل في تحميل الـ :attribute.\",\"url\":\"صيغة الرابط :attribute غير صحيحة.\",\"uuid\":\":attribute يجب أن يكون بصيغة UUID سليمة.\",\"custom\":{\"attribute-name\":{\"rule-name\":\"custom-message\"}}},\"validation\":{\"accepted\":\"يجب قبول :attribute.\",\"active_url\":\":attribute لا يُمثّل رابطًا صحيحًا.\",\"after\":\"يجب على :attribute أن يكون تاريخًا لاحقًا للتاريخ :date.\",\"after_or_equal\":\":attribute يجب أن يكون تاريخاً لاحقاً أو مطابقاً للتاريخ :date.\",\"alpha\":\"يجب أن لا يحتوي :attribute سوى على حروف.\",\"alpha_dash\":\"يجب أن لا يحتوي :attribute سوى على حروف، أرقام ومطّات.\",\"alpha_num\":\"يجب أن يحتوي :attribute على حروفٍ وأرقامٍ فقط.\",\"array\":\"يجب أن يكون :attribute ًمصفوفة.\",\"before\":\"يجب على :attribute أن يكون تاريخًا سابقًا للتاريخ :date.\",\"before_or_equal\":\":attribute يجب أن يكون تاريخا سابقا أو مطابقا للتاريخ :date.\",\"between\":{\"numeric\":\"يجب أن تكون قيمة :attribute بين :min و :max.\",\"file\":\"يجب أن يكون حجم الملف :attribute بين :min و :max كيلوبايت.\",\"string\":\"يجب أن يكون عدد حروف النّص :attribute بين :min و :max.\",\"array\":\"يجب أن يحتوي :attribute على عدد من العناصر بين :min و :max.\"},\"boolean\":\"يجب أن تكون قيمة :attribute إما true أو false .\",\"confirmed\":\"حقل التأكيد غير مُطابق للحقل :attribute.\",\"date\":\":attribute ليس تاريخًا صحيحًا.\",\"date_equals\":\"يجب أن يكون :attribute مطابقاً للتاريخ :date.\",\"date_format\":\"لا يتوافق :attribute مع الشكل :format.\",\"different\":\"يجب أن يكون الحقلان :attribute و :other مُختلفين.\",\"digits\":\"يجب أن يحتوي :attribute على :digits رقمًا/أرقام.\",\"digits_between\":\"يجب أن يحتوي :attribute بين :min و :max رقمًا/أرقام .\",\"dimensions\":\"الـ :attribute يحتوي على أبعاد صورة غير صالحة.\",\"distinct\":\"للحقل :attribute قيمة مُكرّرة.\",\"email\":\"يجب أن يكون :attribute عنوان بريد إلكتروني صحيح البُنية.\",\"ends_with\":\"يجب أن ينتهي :attribute بأحد القيم التالية: :values\",\"exists\":\"القيمة المحددة :attribute غير موجودة.\",\"file\":\"الـ :attribute يجب أن يكون ملفا.\",\"filled\":\":attribute إجباري.\",\"gt\":{\"numeric\":\"يجب أن تكون قيمة :attribute أكبر من :value.\",\"file\":\"يجب أن يكون حجم الملف :attribute أكبر من :value كيلوبايت.\",\"string\":\"يجب أن يكون طول النّص :attribute أكثر من :value حروفٍ/حرفًا.\",\"array\":\"يجب أن يحتوي :attribute على أكثر من :value عناصر/عنصر.\"},\"gte\":{\"numeric\":\"يجب أن تكون قيمة :attribute مساوية أو أكبر من :value.\",\"file\":\"يجب أن يكون حجم الملف :attribute على الأقل :value كيلوبايت.\",\"string\":\"يجب أن يكون طول النص :attribute على الأقل :value حروفٍ/حرفًا.\",\"array\":\"يجب أن يحتوي :attribute على الأقل على :value عُنصرًا/عناصر.\"},\"image\":\"يجب أن يكون :attribute صورةً.\",\"in\":\":attribute غير موجود.\",\"in_array\":\":attribute غير موجود في :other.\",\"integer\":\"يجب أن يكون :attribute عددًا صحيحًا.\",\"ip\":\"يجب أن يكون :attribute عنوان IP صحيحًا.\",\"ipv4\":\"يجب أن يكون :attribute عنوان IPv4 صحيحًا.\",\"ipv6\":\"يجب أن يكون :attribute عنوان IPv6 صحيحًا.\",\"json\":\"يجب أن يكون :attribute نصًا من نوع JSON.\",\"lt\":{\"numeric\":\"يجب أن تكون قيمة :attribute أصغر من :value.\",\"file\":\"يجب أن يكون حجم الملف :attribute أصغر من :value كيلوبايت.\",\"string\":\"يجب أن يكون طول النّص :attribute أقل من :value حروفٍ/حرفًا.\",\"array\":\"يجب أن يحتوي :attribute على أقل من :value عناصر/عنصر.\"},\"lte\":{\"numeric\":\"يجب أن تكون قيمة :attribute مساوية أو أصغر من :value.\",\"file\":\"يجب أن لا يتجاوز حجم الملف :attribute :value كيلوبايت.\",\"string\":\"يجب أن لا يتجاوز طول النّص :attribute :value حروفٍ/حرفًا.\",\"array\":\"يجب أن لا يحتوي :attribute على أكثر من :value عناصر/عنصر.\"},\"max\":{\"numeric\":\"يجب أن تكون قيمة :attribute مساوية أو أصغر من :max.\",\"file\":\"يجب أن لا يتجاوز حجم الملف :attribute :max كيلوبايت.\",\"string\":\"يجب أن لا يتجاوز طول النّص :attribute :max حروفٍ/حرفًا.\",\"array\":\"يجب أن لا يحتوي :attribute على أكثر من :max عناصر/عنصر.\"},\"mimes\":\"يجب أن يكون ملفًا من نوع : :values.\",\"mimetypes\":\"يجب أن يكون ملفًا من نوع : :values.\",\"min\":{\"numeric\":\"يجب أن تكون قيمة :attribute مساوية أو أكبر من :min.\",\"file\":\"يجب أن يكون حجم الملف :attribute على الأقل :min كيلوبايت.\",\"string\":\"يجب أن يكون طول النص :attribute على الأقل :min حروفٍ/حرفًا.\",\"array\":\"يجب أن يحتوي :attribute على الأقل على :min عُنصرًا/عناصر.\"},\"multiple_of\":\":attribute يجب أن يكون من مضاعفات :value\",\"not_in\":\"العنصر :attribute غير صحيح.\",\"not_regex\":\"صيغة :attribute غير صحيحة.\",\"numeric\":\"يجب على :attribute أن يكون رقمًا.\",\"password\":\"كلمة المرور غير صحيحة.\",\"present\":\"يجب تقديم :attribute.\",\"regex\":\"صيغة :attribute .غير صحيحة.\",\"required\":\":attribute مطلوب.\",\"required_if\":\":attribute مطلوب في حال ما إذا كان :other يساوي :value.\",\"required_unless\":\":attribute مطلوب في حال ما لم يكن :other يساوي :values.\",\"required_with\":\":attribute مطلوب إذا توفّر :values.\",\"required_with_all\":\":attribute مطلوب إذا توفّر :values.\",\"required_without\":\":attribute مطلوب إذا لم يتوفّر :values.\",\"required_without_all\":\":attribute مطلوب إذا لم يتوفّر :values.\",\"same\":\"يجب أن يتطابق :attribute مع :other.\",\"size\":{\"numeric\":\"يجب أن تكون قيمة :attribute مساوية لـ :size.\",\"file\":\"يجب أن يكون حجم الملف :attribute :size كيلوبايت.\",\"string\":\"يجب أن يحتوي النص :attribute على :size حروفٍ/حرفًا بالضبط.\",\"array\":\"يجب أن يحتوي :attribute على :size عنصرٍ/عناصر بالضبط.\"},\"starts_with\":\"يجب أن يبدأ :attribute بأحد القيم التالية: :values\",\"string\":\"يجب أن يكون :attribute نصًا.\",\"timezone\":\"يجب أن يكون :attribute نطاقًا زمنيًا صحيحًا.\",\"unique\":\"قيمة :attribute مُستخدمة من قبل.\",\"uploaded\":\"فشل في تحميل الـ :attribute.\",\"url\":\"صيغة الرابط :attribute غير صحيحة.\",\"uuid\":\":attribute يجب أن يكون بصيغة UUID سليمة.\",\"custom\":{\"attribute-name\":{\"rule-name\":\"custom-message\"}},\"attributes\":{\"name\":\"الاسم\",\"username\":\"اسم المُستخدم\",\"email\":\"البريد الالكتروني\",\"first_name\":\"الاسم الأول\",\"last_name\":\"اسم العائلة\",\"password\":\"كلمة المرور\",\"password_confirmation\":\"تأكيد كلمة المرور\",\"city\":\"المدينة\",\"country\":\"الدولة\",\"address\":\"العنوان\",\"phone\":\"الهاتف\",\"mobile\":\"الجوال\",\"age\":\"العمر\",\"sex\":\"الجنس\",\"gender\":\"النوع\",\"day\":\"اليوم\",\"month\":\"الشهر\",\"year\":\"السنة\",\"hour\":\"ساعة\",\"minute\":\"دقيقة\",\"second\":\"ثانية\",\"title\":\"العنوان\",\"content\":\"المُحتوى\",\"description\":\"الوصف\",\"excerpt\":\"المُلخص\",\"date\":\"التاريخ\",\"time\":\"الوقت\",\"available\":\"مُتاح\",\"size\":\"الحجم\"}}}");
 
 /***/ }),
 
@@ -68114,7 +69427,7 @@ module.exports = JSON.parse("{\"ar\":\"Arabic\",\"en\":\"English\",\"app\":{\"ar
 /*! exports provided: ar, en, app, auth, pagination, passwords, validation-inline, validation.required, validation, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"ar\":\"عربي\",\"en\":\"انجليزي\",\"app\":{\"ar\":\"Arabic\",\"en\":\"English\",\"Dashboard\":\"Dashboard\",\"Projects\":\"Projects\",\"Manage Account\":\"Manage Account\",\"Profile\":\"Profile\",\"API Tokens\":\"API Tokens\",\"Manage Team\":\"Manage Team\",\"Team Settings\":\"Team Settings\",\"Create New Team\":\"Create New Team\",\"Switch Teams\":\"Switch Teams\",\"Logout\":\"Logout\",\"title\":\"Title\",\"description\":\"Description\",\"notes\":\"Notes\",\"cancel\":\"Cancel\",\"submit\":\"Submit\",\"update\":\"Update\",\"delete\":\"Delete\",\"my_projects\":\"My Projects\",\"edit_project\":\"Edit Project\"},\"auth\":{\"failed\":\"These credentials do not match our records.\",\"throttle\":\"Too many login attempts. Please try again in :seconds seconds.\"},\"pagination\":{\"previous\":\"&laquo; Previous\",\"next\":\"Next &raquo;\"},\"passwords\":{\"reset\":\"Your password has been reset!\",\"sent\":\"We have emailed your password reset link!\",\"throttled\":\"Please wait before retrying.\",\"token\":\"This password reset token is invalid.\",\"user\":\"We can't find a user with that email address.\"},\"validation-inline\":{\"accepted\":\"This field must be accepted.\",\"active_url\":\"This is not a valid URL.\",\"after\":\"This must be a date after :date.\",\"after_or_equal\":\"This must be a date after or equal to :date.\",\"alpha\":\"This field may only contain letters.\",\"alpha_dash\":\"This field may only contain letters, numbers, dashes and underscores.\",\"alpha_num\":\"This field may only contain letters and numbers.\",\"array\":\"This field must be an array.\",\"before\":\"This must be a date before :date.\",\"before_or_equal\":\"This must be a date before or equal to :date.\",\"between\":{\"numeric\":\"This value must be between :min and :max.\",\"file\":\"This file must be between :min and :max kilobytes.\",\"string\":\"This string must be between :min and :max characters.\",\"array\":\"This content must have between :min and :max items.\"},\"boolean\":\"This field must be true or false.\",\"confirmed\":\"The confirmation does not match.\",\"date\":\"This is not a valid date.\",\"date_equals\":\"This must be a date equal to :date.\",\"date_format\":\"This does not match the format :format.\",\"different\":\"This value must be different from :other.\",\"digits\":\"This must be :digits digits.\",\"digits_between\":\"This must be between :min and :max digits.\",\"dimensions\":\"This image has invalid dimensions.\",\"distinct\":\"This field has a duplicate value.\",\"email\":\"This must be a valid email address.\",\"ends_with\":\"This must end with one of the following: :values.\",\"exists\":\"The selected value is invalid.\",\"file\":\"The content must be a file.\",\"filled\":\"This field must have a value.\",\"gt\":{\"numeric\":\"The value must be greater than :value.\",\"file\":\"The file size must be greater than :value kilobytes.\",\"string\":\"The string must be greater than :value characters.\",\"array\":\"The content must have more than :value items.\"},\"gte\":{\"numeric\":\"The value must be greater than or equal :value.\",\"file\":\"The file size must be greater than or equal :value kilobytes.\",\"string\":\"The string must be greater than or equal :value characters.\",\"array\":\"The content must have :value items or more.\"},\"image\":\"This must be an image.\",\"in\":\"The selected value is invalid.\",\"in_array\":\"This value does not exist in :other.\",\"integer\":\"This must be an integer.\",\"ip\":\"This must be a valid IP address.\",\"ipv4\":\"This must be a valid IPv4 address.\",\"ipv6\":\"This must be a valid IPv6 address.\",\"json\":\"This must be a valid JSON string.\",\"lt\":{\"numeric\":\"The value must be less than :value.\",\"file\":\"The file size must be less than :value kilobytes.\",\"string\":\"The string must be less than :value characters.\",\"array\":\"The content must have less than :value items.\"},\"lte\":{\"numeric\":\"The value must be less than or equal :value.\",\"file\":\"The file size must be less than or equal :value kilobytes.\",\"string\":\"The string must be less than or equal :value characters.\",\"array\":\"The content must not have more than :value items.\"},\"max\":{\"numeric\":\"The value may not be greater than :max.\",\"file\":\"The file size may not be greater than :max kilobytes.\",\"string\":\"The string may not be greater than :max characters.\",\"array\":\"The content may not have more than :max items.\"},\"mimes\":\"This must be a file of type: :values.\",\"mimetypes\":\"This must be a file of type: :values.\",\"min\":{\"numeric\":\"The value must be at least :min.\",\"file\":\"The file size must be at least :min kilobytes.\",\"string\":\"The string must be at least :min characters.\",\"array\":\"The value must have at least :min items.\"},\"multiple_of\":\"The value must be a multiple of :value\",\"not_in\":\"The selected value is invalid.\",\"not_regex\":\"This format is invalid.\",\"numeric\":\"This must be a number.\",\"password\":\"The password is incorrect.\",\"present\":\"This field must be present.\",\"regex\":\"This format is invalid.\",\"required\":\"This field is required.\",\"required_if\":\"This field is required when :other is :value.\",\"required_unless\":\"This field is required unless :other is in :values.\",\"required_with\":\"This field is required when :values is present.\",\"required_with_all\":\"This field is required when :values are present.\",\"required_without\":\"This field is required when :values is not present.\",\"required_without_all\":\"This field is required when none of :values are present.\",\"same\":\"The value of this field must match the one from :other.\",\"size\":{\"numeric\":\"The value must be :size.\",\"file\":\"The file size must be :size kilobytes.\",\"string\":\"The string must be :size characters.\",\"array\":\"The content must contain :size items.\"},\"starts_with\":\"This must start with one of the following: :values.\",\"string\":\"This must be a string.\",\"timezone\":\"This must be a valid zone.\",\"unique\":\"This has already been taken.\",\"uploaded\":\"This failed to upload.\",\"url\":\"This format is invalid.\",\"uuid\":\"This must be a valid UUID.\",\"custom\":{\"attribute-name\":{\"rule-name\":\"custom-message\"}}},\"validation.required\":\"The :attribute field is required.\",\"validation\":{\"accepted\":\"The :attribute must be accepted.\",\"active_url\":\"The :attribute is not a valid URL.\",\"after\":\"The :attribute must be a date after :date.\",\"after_or_equal\":\"The :attribute must be a date after or equal to :date.\",\"alpha\":\"The :attribute may only contain letters.\",\"alpha_dash\":\"The :attribute may only contain letters, numbers, dashes and underscores.\",\"alpha_num\":\"The :attribute may only contain letters and numbers.\",\"array\":\"The :attribute must be an array.\",\"before\":\"The :attribute must be a date before :date.\",\"before_or_equal\":\"The :attribute must be a date before or equal to :date.\",\"between\":{\"numeric\":\"The :attribute must be between :min and :max.\",\"file\":\"The :attribute must be between :min and :max kilobytes.\",\"string\":\"The :attribute must be between :min and :max characters.\",\"array\":\"The :attribute must have between :min and :max items.\"},\"boolean\":\"The :attribute field must be true or false.\",\"confirmed\":\"The :attribute confirmation does not match.\",\"date\":\"The :attribute is not a valid date.\",\"date_equals\":\"The :attribute must be a date equal to :date.\",\"date_format\":\"The :attribute does not match the format :format.\",\"different\":\"The :attribute and :other must be different.\",\"digits\":\"The :attribute must be :digits digits.\",\"digits_between\":\"The :attribute must be between :min and :max digits.\",\"dimensions\":\"The :attribute has invalid image dimensions.\",\"distinct\":\"The :attribute field has a duplicate value.\",\"email\":\"The :attribute must be a valid email address.\",\"ends_with\":\"The :attribute must end with one of the following: :values.\",\"exists\":\"The selected :attribute is invalid.\",\"file\":\"The :attribute must be a file.\",\"filled\":\"The :attribute field must have a value.\",\"gt\":{\"numeric\":\"The :attribute must be greater than :value.\",\"file\":\"The :attribute must be greater than :value kilobytes.\",\"string\":\"The :attribute must be greater than :value characters.\",\"array\":\"The :attribute must have more than :value items.\"},\"gte\":{\"numeric\":\"The :attribute must be greater than or equal :value.\",\"file\":\"The :attribute must be greater than or equal :value kilobytes.\",\"string\":\"The :attribute must be greater than or equal :value characters.\",\"array\":\"The :attribute must have :value items or more.\"},\"image\":\"The :attribute must be an image.\",\"in\":\"The selected :attribute is invalid.\",\"in_array\":\"The :attribute field does not exist in :other.\",\"integer\":\"The :attribute must be an integer.\",\"ip\":\"The :attribute must be a valid IP address.\",\"ipv4\":\"The :attribute must be a valid IPv4 address.\",\"ipv6\":\"The :attribute must be a valid IPv6 address.\",\"json\":\"The :attribute must be a valid JSON string.\",\"lt\":{\"numeric\":\"The :attribute must be less than :value.\",\"file\":\"The :attribute must be less than :value kilobytes.\",\"string\":\"The :attribute must be less than :value characters.\",\"array\":\"The :attribute must have less than :value items.\"},\"lte\":{\"numeric\":\"The :attribute must be less than or equal :value.\",\"file\":\"The :attribute must be less than or equal :value kilobytes.\",\"string\":\"The :attribute must be less than or equal :value characters.\",\"array\":\"The :attribute must not have more than :value items.\"},\"max\":{\"numeric\":\"The :attribute may not be greater than :max.\",\"file\":\"The :attribute may not be greater than :max kilobytes.\",\"string\":\"The :attribute may not be greater than :max characters.\",\"array\":\"The :attribute may not have more than :max items.\"},\"mimes\":\"The :attribute must be a file of type: :values.\",\"mimetypes\":\"The :attribute must be a file of type: :values.\",\"min\":{\"numeric\":\"The :attribute must be at least :min.\",\"file\":\"The :attribute must be at least :min kilobytes.\",\"string\":\"The :attribute must be at least :min characters.\",\"array\":\"The :attribute must have at least :min items.\"},\"not_in\":\"The selected :attribute is invalid.\",\"not_regex\":\"The :attribute format is invalid.\",\"numeric\":\"The :attribute must be a number.\",\"password\":\"The password is incorrect.\",\"present\":\"The :attribute field must be present.\",\"regex\":\"The :attribute format is invalid.\",\"required\":\"The :attribute field is required.\",\"required_if\":\"The :attribute field is required when :other is :value.\",\"required_unless\":\"The :attribute field is required unless :other is in :values.\",\"required_with\":\"The :attribute field is required when :values is present.\",\"required_with_all\":\"The :attribute field is required when :values are present.\",\"required_without\":\"The :attribute field is required when :values is not present.\",\"required_without_all\":\"The :attribute field is required when none of :values are present.\",\"same\":\"The :attribute and :other must match.\",\"size\":{\"numeric\":\"The :attribute must be :size.\",\"file\":\"The :attribute must be :size kilobytes.\",\"string\":\"The :attribute must be :size characters.\",\"array\":\"The :attribute must contain :size items.\"},\"starts_with\":\"The :attribute must start with one of the following: :values.\",\"string\":\"The :attribute must be a string.\",\"timezone\":\"The :attribute must be a valid zone.\",\"unique\":\"The :attribute has already been taken.\",\"uploaded\":\"The :attribute failed to upload.\",\"url\":\"The :attribute format is invalid.\",\"uuid\":\"The :attribute must be a valid UUID.\",\"custom\":{\"attribute-name\":{\"rule-name\":\"custom-message\"}},\"attributes\":[]}}");
+module.exports = JSON.parse("{\"ar\":\"عربي\",\"en\":\"انجليزي\",\"app\":{\"ar\":\"Arabic\",\"en\":\"English\",\"Dashboard\":\"Dashboard\",\"Projects\":\"Projects\",\"Manage Account\":\"Manage Account\",\"Profile\":\"Profile\",\"API Tokens\":\"API Tokens\",\"Manage Team\":\"Manage Team\",\"Team Settings\":\"Team Settings\",\"Create New Team\":\"Create New Team\",\"Switch Teams\":\"Switch Teams\",\"Logout\":\"Logout\",\"title\":\"Title\",\"description\":\"Description\",\"notes\":\"Notes\",\"cancel\":\"Cancel\",\"submit\":\"Submit\",\"update\":\"Update\",\"delete\":\"Delete\",\"my_projects\":\"My Projects\",\"the_invited_email_address_must_be_associated_with_birdboard_account\":\"The invited email address must be associated with a Birdboard account.\",\"invite_user\":\"Invite a user\",\"invite\":\"Invite\",\"email_address\":\"Email address\",\"created_successfully\":\"Created Successfully\",\"updated_successfully\":\"Updated Successfully\",\"invitation_sent\":\"Invitation sent successfully\",\"edit_project\":\"Edit Project\"},\"auth\":{\"failed\":\"These credentials do not match our records.\",\"throttle\":\"Too many login attempts. Please try again in :seconds seconds.\"},\"pagination\":{\"previous\":\"&laquo; Previous\",\"next\":\"Next &raquo;\"},\"passwords\":{\"reset\":\"Your password has been reset!\",\"sent\":\"We have emailed your password reset link!\",\"throttled\":\"Please wait before retrying.\",\"token\":\"This password reset token is invalid.\",\"user\":\"We can't find a user with that email address.\"},\"validation-inline\":{\"accepted\":\"This field must be accepted.\",\"active_url\":\"This is not a valid URL.\",\"after\":\"This must be a date after :date.\",\"after_or_equal\":\"This must be a date after or equal to :date.\",\"alpha\":\"This field may only contain letters.\",\"alpha_dash\":\"This field may only contain letters, numbers, dashes and underscores.\",\"alpha_num\":\"This field may only contain letters and numbers.\",\"array\":\"This field must be an array.\",\"before\":\"This must be a date before :date.\",\"before_or_equal\":\"This must be a date before or equal to :date.\",\"between\":{\"numeric\":\"This value must be between :min and :max.\",\"file\":\"This file must be between :min and :max kilobytes.\",\"string\":\"This string must be between :min and :max characters.\",\"array\":\"This content must have between :min and :max items.\"},\"boolean\":\"This field must be true or false.\",\"confirmed\":\"The confirmation does not match.\",\"date\":\"This is not a valid date.\",\"date_equals\":\"This must be a date equal to :date.\",\"date_format\":\"This does not match the format :format.\",\"different\":\"This value must be different from :other.\",\"digits\":\"This must be :digits digits.\",\"digits_between\":\"This must be between :min and :max digits.\",\"dimensions\":\"This image has invalid dimensions.\",\"distinct\":\"This field has a duplicate value.\",\"email\":\"This must be a valid email address.\",\"ends_with\":\"This must end with one of the following: :values.\",\"exists\":\"The selected value is invalid.\",\"file\":\"The content must be a file.\",\"filled\":\"This field must have a value.\",\"gt\":{\"numeric\":\"The value must be greater than :value.\",\"file\":\"The file size must be greater than :value kilobytes.\",\"string\":\"The string must be greater than :value characters.\",\"array\":\"The content must have more than :value items.\"},\"gte\":{\"numeric\":\"The value must be greater than or equal :value.\",\"file\":\"The file size must be greater than or equal :value kilobytes.\",\"string\":\"The string must be greater than or equal :value characters.\",\"array\":\"The content must have :value items or more.\"},\"image\":\"This must be an image.\",\"in\":\"The selected value is invalid.\",\"in_array\":\"This value does not exist in :other.\",\"integer\":\"This must be an integer.\",\"ip\":\"This must be a valid IP address.\",\"ipv4\":\"This must be a valid IPv4 address.\",\"ipv6\":\"This must be a valid IPv6 address.\",\"json\":\"This must be a valid JSON string.\",\"lt\":{\"numeric\":\"The value must be less than :value.\",\"file\":\"The file size must be less than :value kilobytes.\",\"string\":\"The string must be less than :value characters.\",\"array\":\"The content must have less than :value items.\"},\"lte\":{\"numeric\":\"The value must be less than or equal :value.\",\"file\":\"The file size must be less than or equal :value kilobytes.\",\"string\":\"The string must be less than or equal :value characters.\",\"array\":\"The content must not have more than :value items.\"},\"max\":{\"numeric\":\"The value may not be greater than :max.\",\"file\":\"The file size may not be greater than :max kilobytes.\",\"string\":\"The string may not be greater than :max characters.\",\"array\":\"The content may not have more than :max items.\"},\"mimes\":\"This must be a file of type: :values.\",\"mimetypes\":\"This must be a file of type: :values.\",\"min\":{\"numeric\":\"The value must be at least :min.\",\"file\":\"The file size must be at least :min kilobytes.\",\"string\":\"The string must be at least :min characters.\",\"array\":\"The value must have at least :min items.\"},\"multiple_of\":\"The value must be a multiple of :value\",\"not_in\":\"The selected value is invalid.\",\"not_regex\":\"This format is invalid.\",\"numeric\":\"This must be a number.\",\"password\":\"The password is incorrect.\",\"present\":\"This field must be present.\",\"regex\":\"This format is invalid.\",\"required\":\"This field is required.\",\"required_if\":\"This field is required when :other is :value.\",\"required_unless\":\"This field is required unless :other is in :values.\",\"required_with\":\"This field is required when :values is present.\",\"required_with_all\":\"This field is required when :values are present.\",\"required_without\":\"This field is required when :values is not present.\",\"required_without_all\":\"This field is required when none of :values are present.\",\"same\":\"The value of this field must match the one from :other.\",\"size\":{\"numeric\":\"The value must be :size.\",\"file\":\"The file size must be :size kilobytes.\",\"string\":\"The string must be :size characters.\",\"array\":\"The content must contain :size items.\"},\"starts_with\":\"This must start with one of the following: :values.\",\"string\":\"This must be a string.\",\"timezone\":\"This must be a valid zone.\",\"unique\":\"This has already been taken.\",\"uploaded\":\"This failed to upload.\",\"url\":\"This format is invalid.\",\"uuid\":\"This must be a valid UUID.\",\"custom\":{\"attribute-name\":{\"rule-name\":\"custom-message\"}}},\"validation.required\":\"The :attribute field is required.\",\"validation\":{\"accepted\":\"The :attribute must be accepted.\",\"active_url\":\"The :attribute is not a valid URL.\",\"after\":\"The :attribute must be a date after :date.\",\"after_or_equal\":\"The :attribute must be a date after or equal to :date.\",\"alpha\":\"The :attribute may only contain letters.\",\"alpha_dash\":\"The :attribute may only contain letters, numbers, dashes and underscores.\",\"alpha_num\":\"The :attribute may only contain letters and numbers.\",\"array\":\"The :attribute must be an array.\",\"before\":\"The :attribute must be a date before :date.\",\"before_or_equal\":\"The :attribute must be a date before or equal to :date.\",\"between\":{\"numeric\":\"The :attribute must be between :min and :max.\",\"file\":\"The :attribute must be between :min and :max kilobytes.\",\"string\":\"The :attribute must be between :min and :max characters.\",\"array\":\"The :attribute must have between :min and :max items.\"},\"boolean\":\"The :attribute field must be true or false.\",\"confirmed\":\"The :attribute confirmation does not match.\",\"date\":\"The :attribute is not a valid date.\",\"date_equals\":\"The :attribute must be a date equal to :date.\",\"date_format\":\"The :attribute does not match the format :format.\",\"different\":\"The :attribute and :other must be different.\",\"digits\":\"The :attribute must be :digits digits.\",\"digits_between\":\"The :attribute must be between :min and :max digits.\",\"dimensions\":\"The :attribute has invalid image dimensions.\",\"distinct\":\"The :attribute field has a duplicate value.\",\"email\":\"The :attribute must be a valid email address.\",\"ends_with\":\"The :attribute must end with one of the following: :values.\",\"exists\":\"The selected :attribute is invalid.\",\"file\":\"The :attribute must be a file.\",\"filled\":\"The :attribute field must have a value.\",\"gt\":{\"numeric\":\"The :attribute must be greater than :value.\",\"file\":\"The :attribute must be greater than :value kilobytes.\",\"string\":\"The :attribute must be greater than :value characters.\",\"array\":\"The :attribute must have more than :value items.\"},\"gte\":{\"numeric\":\"The :attribute must be greater than or equal :value.\",\"file\":\"The :attribute must be greater than or equal :value kilobytes.\",\"string\":\"The :attribute must be greater than or equal :value characters.\",\"array\":\"The :attribute must have :value items or more.\"},\"image\":\"The :attribute must be an image.\",\"in\":\"The selected :attribute is invalid.\",\"in_array\":\"The :attribute field does not exist in :other.\",\"integer\":\"The :attribute must be an integer.\",\"ip\":\"The :attribute must be a valid IP address.\",\"ipv4\":\"The :attribute must be a valid IPv4 address.\",\"ipv6\":\"The :attribute must be a valid IPv6 address.\",\"json\":\"The :attribute must be a valid JSON string.\",\"lt\":{\"numeric\":\"The :attribute must be less than :value.\",\"file\":\"The :attribute must be less than :value kilobytes.\",\"string\":\"The :attribute must be less than :value characters.\",\"array\":\"The :attribute must have less than :value items.\"},\"lte\":{\"numeric\":\"The :attribute must be less than or equal :value.\",\"file\":\"The :attribute must be less than or equal :value kilobytes.\",\"string\":\"The :attribute must be less than or equal :value characters.\",\"array\":\"The :attribute must not have more than :value items.\"},\"max\":{\"numeric\":\"The :attribute may not be greater than :max.\",\"file\":\"The :attribute may not be greater than :max kilobytes.\",\"string\":\"The :attribute may not be greater than :max characters.\",\"array\":\"The :attribute may not have more than :max items.\"},\"mimes\":\"The :attribute must be a file of type: :values.\",\"mimetypes\":\"The :attribute must be a file of type: :values.\",\"min\":{\"numeric\":\"The :attribute must be at least :min.\",\"file\":\"The :attribute must be at least :min kilobytes.\",\"string\":\"The :attribute must be at least :min characters.\",\"array\":\"The :attribute must have at least :min items.\"},\"not_in\":\"The selected :attribute is invalid.\",\"not_regex\":\"The :attribute format is invalid.\",\"numeric\":\"The :attribute must be a number.\",\"password\":\"The password is incorrect.\",\"present\":\"The :attribute field must be present.\",\"regex\":\"The :attribute format is invalid.\",\"required\":\"The :attribute field is required.\",\"required_if\":\"The :attribute field is required when :other is :value.\",\"required_unless\":\"The :attribute field is required unless :other is in :values.\",\"required_with\":\"The :attribute field is required when :values is present.\",\"required_with_all\":\"The :attribute field is required when :values are present.\",\"required_without\":\"The :attribute field is required when :values is not present.\",\"required_without_all\":\"The :attribute field is required when none of :values are present.\",\"same\":\"The :attribute and :other must match.\",\"size\":{\"numeric\":\"The :attribute must be :size.\",\"file\":\"The :attribute must be :size kilobytes.\",\"string\":\"The :attribute must be :size characters.\",\"array\":\"The :attribute must contain :size items.\"},\"starts_with\":\"The :attribute must start with one of the following: :values.\",\"string\":\"The :attribute must be a string.\",\"timezone\":\"The :attribute must be a valid zone.\",\"unique\":\"The :attribute has already been taken.\",\"uploaded\":\"The :attribute failed to upload.\",\"url\":\"The :attribute format is invalid.\",\"uuid\":\"The :attribute must be a valid UUID.\",\"custom\":{\"attribute-name\":{\"rule-name\":\"custom-message\"}},\"attributes\":[]}}");
 
 /***/ }),
 

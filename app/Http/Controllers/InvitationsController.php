@@ -18,7 +18,7 @@ class InvitationsController extends Controller
      */
     public function store(Project $project, Request $request): RedirectResponse
     {
-        $this->authorize('update', $project);
+        $this->authorize('manage', $project);
         $request->validate([
             'email' => ['required', 'exists:users,email']
         ], [

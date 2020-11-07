@@ -25,9 +25,17 @@ class InvitationsTest extends TestCase
     {
         $project = (new ProjectFactory())->create();
         $john = User::factory()->create();
-        $this->actingAs($john)
-            ->post(route('project.invitations', ['project' => $project->id]))
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+        $assertInvitationIsForbidden = function () use ($john, $project) {
+            $this->actingAs($john)
+                ->post(route('project.invitations', ['project' => $project->id]))
+                ->assertStatus(Response::HTTP_FORBIDDEN);
+        };
+
+        $assertInvitationIsForbidden();
+
+        $project->invite($john);
+
+        $assertInvitationIsForbidden();
     }
 
     /** @test */

@@ -6,6 +6,7 @@ use App\Models\Project;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
@@ -84,15 +85,19 @@ class ProjectsController extends Controller
      *
      * @param Project $project
      * @param Request $request
-     * @return RedirectResponse
+     * @return Application|JsonResponse|RedirectResponse|Redirector
      * @throws AuthorizationException
      * @throws ValidationException
      */
-    public function update(Project $project, Request $request): RedirectResponse
+    public function update(Project $project, Request $request)//: RedirectResponse
     {
+        $HTTP_REFERER = str_replace(url('/'), '', request()->server->get('HTTP_REFERER'));
         $this->authorize('update', $project);
         //persist
         $project->update($this->validateRequest($request));
+        if ($HTTP_REFERER == '/' . app()->getLocale() . '/projects/' . $project->id) {
+            return response()->json([]);
+        }
         //redirect
         return redirect($project->path());
     }
