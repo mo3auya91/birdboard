@@ -182,18 +182,23 @@ export default {
             axios.patch(route('projects.tasks.update', {'project': this.project.id, 'task': id}),
                 data,
                 {headers: {'accept': 'application/json'}},
-            ).then((response) => {
-                let item = this.project.tasks.find((item) => {
-                    return parseInt(item.id) === parseInt(id)
+            )
+                .then((response) => {
+                    let item = this.project.tasks.find((item) => {
+                        return parseInt(item.id) === parseInt(id)
+                    })
+                    item.body = data.body
+                    item.is_completed = data.is_completed
+                    this.project.activities = response.data.activities
+                    document.getElementById(`task_${id}_body`).blur()
+                    // if (this.$page.flash.success) {
+                    //     this.successToast(this.$page.flash.success)
+                    this.successToast(this.$t('app.updated_successfully'))
+                    // }
                 })
-                item.body = data.body
-                item.is_completed = data.is_completed
-                this.project.activities = response.data.activities
-                document.getElementById(`task_${id}_body`).blur()
-                this.successToast(this.$t('app.updated_successfully'))
-            }).catch(error => {
-                this.errorToast(error.response.data.message, error.response.data.errors)
-            })
+                .catch(error => {
+                    this.errorToast(error.response.data.message, error.response.data.errors)
+                })
         },
         updateProject() {
             let data = {
@@ -236,8 +241,24 @@ export default {
         }
     },
     mounted() {
-        //
-    }
+        //console.log(this.$page.flash.success)
+        // console.log(this.flash.success)
+        //console.log(this.$page.user.can('update', this.project))
+    },
+    // watch: {
+    //     'this.$page.flash.success': function (newVal, oldVal) { // watch it
+    //         console.log('Prop changed: ', newVal, ' | was: ', oldVal)
+    //     },
+    //     flash: {
+    //         handler() {
+    //             //console.log('watch')
+    //             this.successToast(this.flash.success)
+    //             this.my_prop = true
+    //             //console.log(this.$page.flash.success)
+    //         },
+    //         deep: true,
+    //     },
+    // },
 }
 </script>
 

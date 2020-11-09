@@ -51,6 +51,7 @@ class TaskController extends Controller
         ]);
         $project->addTask($data);
         $project = Project::with('tasks', 'activities')->findOrFail($project->id);
+        session()->flash('success', __('app.updated_successfully'));
         return response()->json($project);
     }
 
@@ -96,6 +97,7 @@ class TaskController extends Controller
         $request->get('is_completed') ? $task->complete() : $task->inComplete();
 
         $project = Project::with('tasks', 'activities')->findOrFail($project->id);
+        session()->flash('success', __('app.updated_successfully'));
         return response()->json($project);
     }
 

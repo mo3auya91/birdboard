@@ -4354,6 +4354,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['project'],
   name: "Card"
@@ -4851,9 +4852,11 @@ __webpack_require__.r(__webpack_exports__);
         item.body = data.body;
         item.is_completed = data.is_completed;
         _this3.project.activities = response.data.activities;
-        document.getElementById("task_".concat(id, "_body")).blur();
+        document.getElementById("task_".concat(id, "_body")).blur(); // if (this.$page.flash.success) {
+        //     this.successToast(this.$page.flash.success)
 
-        _this3.successToast(_this3.$t('app.updated_successfully'));
+        _this3.successToast(_this3.$t('app.updated_successfully')); // }
+
       })["catch"](function (error) {
         _this3.errorToast(error.response.data.message, error.response.data.errors);
       });
@@ -4903,8 +4906,24 @@ __webpack_require__.r(__webpack_exports__);
       });
     }
   },
-  mounted: function mounted() {//
-  }
+  mounted: function mounted() {//console.log(this.$page.flash.success)
+    // console.log(this.flash.success)
+    //console.log(this.$page.user.can('update', this.project))
+  } // watch: {
+  //     'this.$page.flash.success': function (newVal, oldVal) { // watch it
+  //         console.log('Prop changed: ', newVal, ' | was: ', oldVal)
+  //     },
+  //     flash: {
+  //         handler() {
+  //             //console.log('watch')
+  //             this.successToast(this.flash.success)
+  //             this.my_prop = true
+  //             //console.log(this.$page.flash.success)
+  //         },
+  //         deep: true,
+  //     },
+  // },
+
 });
 
 /***/ }),
@@ -53441,7 +53460,7 @@ var render = function() {
       1
     ),
     _vm._v(" "),
-    _c("div", { staticClass: "truncate w-20 text-grey mb-4 flex-1" }, [
+    _c("div", { staticClass: "text-grey mb-4 flex-1" }, [
       _vm._v(_vm._s(_vm.project.description[_vm.$i18n.locale]))
     ]),
     _vm._v(" "),

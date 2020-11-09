@@ -50,7 +50,7 @@ class ProjectsController extends Controller
         $project = auth('web')->user()->projects()->create($this->validateRequest($request));
 
         //redirect
-        return redirect($project->path());
+        return redirect($project->path())->with('success', __('app.created_successfully'));
         //return redirect()->route('projects.show', ['project' => $project->id]);
     }
 
@@ -96,10 +96,11 @@ class ProjectsController extends Controller
         //persist
         $project->update($this->validateRequest($request));
         if ($HTTP_REFERER == '/' . app()->getLocale() . '/projects/' . $project->id) {
+        session()->flash('success', __('app.updated_successfully'));
             return response()->json([]);
         }
         //redirect
-        return redirect($project->path());
+        return redirect($project->path())->with('success', __('app.updated_successfully'));
     }
 
     /**
@@ -114,7 +115,7 @@ class ProjectsController extends Controller
     {
         $this->authorize('update', $project);
         $project->delete();
-        return redirect()->route('projects.index');
+        return redirect()->route('projects.index')->with('success', __('app.deleted_successfully'));
     }
 
     /**

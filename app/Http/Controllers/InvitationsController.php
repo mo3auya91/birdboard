@@ -27,6 +27,6 @@ class InvitationsController extends Controller
         $user = User::whereEmail($request->get('email'))->first();
         $project->invite($user);
 
-        return redirect($project->path());
+        return redirect($project->path())->with('success', __('app.created_successfully'));
     }
 }
