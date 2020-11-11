@@ -23,6 +23,12 @@
         "delete": "حذف",
         "my_projects": "مشاريعي",
         "the_invited_email_address_must_be_associated_with_birdboard_account": "The invited email address must be associated with a Birdboard account.",
+        "invite_user" : "ادعُ مستخدم",
+        "invite" : "ادعُ",
+        "email_address" : "البريد الإلكتروني",
+        "created_successfully" : "تم الإنشاء بنجاح",
+        "updated_successfully" : "تم التعديل بنجاح",
+        "invitation_sent" : "تم إرسال الدعوة بنجاح",
         "edit_project": "تعديل المشروع"
     },
     "auth": {
