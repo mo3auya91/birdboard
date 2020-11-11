@@ -30,15 +30,8 @@ class ProjectsTest extends TestCase
         $this->get(route('projects.create'))
             ->assertStatus(Response::HTTP_OK);
 
-        $attributes = Project::factory()->raw();
-
-        $response = $this->post(route('projects.store'), $attributes);
-
-        $project = auth('web')->user()->projects()->first();
-
-        $response->assertRedirect($project->path());
-
-        $this->get($project->path())
+        $this->followingRedirects()
+            ->post(route('projects.store'), $attributes = Project::factory()->raw())
             ->assertSee($attributes['title'][app()->getLocale()])
             ->assertSee($attributes['description'][app()->getLocale()])
             ->assertSee($attributes['notes']);
@@ -64,9 +57,14 @@ class ProjectsTest extends TestCase
         $this->delete($project->path())
             ->assertRedirect(route('login'));
 
-        $this->signIn();
+        $user = $this->signIn();
 
         $this->delete($project->path())
+            ->assertStatus(403);
+
+        $project->invite($user);
+
+        $this->actingAs($user)->delete($project->path())
             ->assertStatus(403);
     }
 

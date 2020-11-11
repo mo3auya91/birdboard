@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "44b182a2e5e160aeeade5155a5f80319",
+    "content-hash": "c8bf7f56ce7454207b1c9dae865fa884",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -5119,6 +5119,60 @@
                 }
             ],
             "time": "2020-10-27T10:11:13+00:00"
+        },
+        {
+            "name": "thepinecode/policy",
+            "version": "v0.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thepinecode/policy.git",
+                "reference": "957fb5fea5e10431753627655a38a979044d2537"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thepinecode/policy/zipball/957fb5fea5e10431753627655a38a979044d2537",
+                "reference": "957fb5fea5e10431753627655a38a979044d2537",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "^6.0 || ^7.0 || ^8.0",
+                "php": "^7.2.5"
+            },
+            "require-dev": {
+                "fzaninotto/faker": "^1.9.1",
+                "laravel/laravel": "dev-master",
+                "mockery/mockery": "^1.3.1",
+                "phpunit/phpunit": "^9.0"
+            },
+            "type": "project",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Pine\\Policy\\PolicyServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Pine\\Policy\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Cone Development",
+                    "email": "hello@conedevelopment.com"
+                }
+            ],
+            "description": "Using Laravel's authorization on the front-end.",
+            "abandoned": "conedevelopment/policy",
+            "time": "2020-09-16T07:12:00+00:00"
         },
         {
             "name": "tightenco/ziggy",

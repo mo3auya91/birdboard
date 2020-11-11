@@ -86,10 +86,9 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="card flex flex-col mt-3">
-                        <h3 class="font-normal text-xl py-4 -ml-5 mb-3 border-l-4 border-blue-light pl-4">
-                            {{ $t('app.invite_user') }}
-                        </h3>
+                    <div class="card flex flex-col mt-3" v-if="$Gate.allow('manage', project)">
+                        <h3 class="font-normal text-xl py-4 -ml-5 mb-3 border-l-4 border-blue-light pl-4"
+                        >{{ $t('app.invite_user') }}</h3>
                         <form method="post" id="invite-user" @submit.prevent="inviteUser">
                             <div class="mb-3">
                                 <label for="email" class="hidden"></label>
@@ -241,7 +240,8 @@ export default {
         }
     },
     mounted() {
-        //console.log(this.$page.flash.success)
+        // this.$Gate.allow('update', this.project)
+        //console.log(this.$Gate.allow('manage', this.project))
         // console.log(this.flash.success)
         //console.log(this.$page.user.can('update', this.project))
     },

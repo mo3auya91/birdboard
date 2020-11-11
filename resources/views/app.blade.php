@@ -19,6 +19,7 @@
     @routes
     {{--@translations--}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment.min.js"></script>
+    @currentUser
     <script src="{{ mix('js/app.js') }}" defer></script>
     <link rel="icon" type="image/png" sizes="96x96" href="{{asset('assets/images/favicon-96x96.png')}}">
     <link rel="icon" type="image/png" sizes="96x96" href="{{asset('assets/images/favicon-32×32.png')}}">

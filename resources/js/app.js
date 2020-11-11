@@ -8,6 +8,9 @@ import PortalVue from 'portal-vue';
 import VueI18n from 'vue-i18n'
 import {Notyf} from 'notyf';
 import 'notyf/notyf.min.css'; // for React, Vue and Svelte
+import Gate from './policies/Gate';
+window.Gate = Gate;
+Vue.prototype.$Gate = new Gate;
 
 // Create an instance of Notyf
 const notyf = new Notyf({
@@ -37,6 +40,7 @@ Vue.mixin({
 Vue.use(InertiaApp);
 Vue.use(InertiaForm);
 Vue.use(PortalVue);
+//Vue.use(Gate);
 Vue.use(VueI18n);
 let default_locale = document.getElementsByTagName('html')[0].getAttribute('lang')
 const i18n = new VueI18n({

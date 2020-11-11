@@ -113,7 +113,7 @@ class ProjectsController extends Controller
      */
     public function destroy(Project $project): RedirectResponse
     {
-        $this->authorize('update', $project);
+        $this->authorize('manage', $project);
         $project->delete();
         return redirect()->route('projects.index')->with('success', __('app.deleted_successfully'));
     }

@@ -38,6 +38,27 @@ class InvitationsTest extends TestCase
         $assertInvitationIsForbidden();
     }
 
+//    /** @test */
+//    public function non_owners_can_not_see_invite_user_form()
+//    {
+//        //$this->withoutExceptionHandling();
+//        $project = (new ProjectFactory())->create();
+//        $john = User::factory()->create();
+//        $this->actingAs($project->owner)
+//            ->post(route('project.invitations', ['project' => $project->id]), [
+//                'email' => $john->email
+//            ])
+//            ->assertRedirect($project->path());
+//
+//        $this->assertTrue($project->refresh()->members->contains($john));
+//
+//        $this->actingAs($john)
+//            ->get($project->path())
+////            ->assertDontSeeText('Invite a user');
+//            //->assertDontSeeText('Invite a user');
+//            ->assertSee('Invite a user');
+//    }
+
     /** @test */
     public function a_project_owner_can_invite_a_user()
     {

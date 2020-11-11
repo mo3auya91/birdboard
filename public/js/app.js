@@ -4751,7 +4751,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 
 
@@ -4906,7 +4905,8 @@ __webpack_require__.r(__webpack_exports__);
       });
     }
   },
-  mounted: function mounted() {//console.log(this.$page.flash.success)
+  mounted: function mounted() {// this.$Gate.allow('update', this.project)
+    //console.log(this.$Gate.allow('manage', this.project))
     // console.log(this.flash.success)
     //console.log(this.$page.user.can('update', this.project))
   } // watch: {
@@ -53464,24 +53464,28 @@ var render = function() {
       _vm._v(_vm._s(_vm.project.description[_vm.$i18n.locale]))
     ]),
     _vm._v(" "),
-    _c(
-      "footer",
-      { staticClass: "text-right" },
-      [
-        _c(
-          "inertia-link",
-          {
-            staticClass: "text-black no-underline text-xs ",
-            attrs: {
-              href: _vm.route("projects.destroy", { project: _vm.project.id }),
-              method: "delete"
-            }
-          },
-          [_vm._v(_vm._s(_vm.$t("app.delete")) + "\n        ")]
+    _vm.$Gate.allow("manage", _vm.project)
+      ? _c(
+          "footer",
+          { staticClass: "text-right" },
+          [
+            _c(
+              "inertia-link",
+              {
+                staticClass: "text-black no-underline text-xs ",
+                attrs: {
+                  href: _vm.route("projects.destroy", {
+                    project: _vm.project.id
+                  }),
+                  method: "delete"
+                }
+              },
+              [_vm._v(_vm._s(_vm.$t("app.delete")) + "\n        ")]
+            )
+          ],
+          1
         )
-      ],
-      1
-    )
+      : _vm._e()
   ])
 }
 var staticRenderFns = []
@@ -54482,90 +54486,86 @@ var render = function() {
                 )
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "card flex flex-col mt-3" }, [
-                _c(
-                  "h3",
-                  {
-                    staticClass:
-                      "font-normal text-xl py-4 -ml-5 mb-3 border-l-4 border-blue-light pl-4"
-                  },
-                  [
-                    _vm._v(
-                      "\n                        " +
-                        _vm._s(_vm.$t("app.invite_user")) +
-                        "\n                    "
-                    )
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "form",
-                  {
-                    attrs: { method: "post", id: "invite-user" },
-                    on: {
-                      submit: function($event) {
-                        $event.preventDefault()
-                        return _vm.inviteUser($event)
-                      }
-                    }
-                  },
-                  [
-                    _c("div", { staticClass: "mb-3" }, [
-                      _c("label", {
-                        staticClass: "hidden",
-                        attrs: { for: "email" }
-                      }),
-                      _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.inviteUserForm.email,
-                            expression: "inviteUserForm.email"
-                          }
-                        ],
+              _vm.$Gate.allow("manage", _vm.project)
+                ? _c("div", { staticClass: "card flex flex-col mt-3" }, [
+                    _c(
+                      "h3",
+                      {
                         staticClass:
-                          "border border-grey-light rounded w-full py-2 px-3",
-                        attrs: {
-                          type: "email",
-                          name: "email",
-                          id: "email",
-                          required: "",
-                          placeholder: _vm.$t("app.email_address")
-                        },
-                        domProps: { value: _vm.inviteUserForm.email },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(
-                              _vm.inviteUserForm,
-                              "email",
-                              $event.target.value
-                            )
-                          }
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("span", {
-                        staticClass: "text-red-500 hidden",
-                        attrs: { id: "email-error" }
-                      })
-                    ]),
+                          "font-normal text-xl py-4 -ml-5 mb-3 border-l-4 border-blue-light pl-4"
+                      },
+                      [_vm._v(_vm._s(_vm.$t("app.invite_user")))]
+                    ),
                     _vm._v(" "),
                     _c(
-                      "button",
+                      "form",
                       {
-                        staticClass: "text-xs button",
-                        attrs: { type: "submit" }
+                        attrs: { method: "post", id: "invite-user" },
+                        on: {
+                          submit: function($event) {
+                            $event.preventDefault()
+                            return _vm.inviteUser($event)
+                          }
+                        }
                       },
-                      [_vm._v(_vm._s(_vm.$t("app.invite")))]
+                      [
+                        _c("div", { staticClass: "mb-3" }, [
+                          _c("label", {
+                            staticClass: "hidden",
+                            attrs: { for: "email" }
+                          }),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.inviteUserForm.email,
+                                expression: "inviteUserForm.email"
+                              }
+                            ],
+                            staticClass:
+                              "border border-grey-light rounded w-full py-2 px-3",
+                            attrs: {
+                              type: "email",
+                              name: "email",
+                              id: "email",
+                              required: "",
+                              placeholder: _vm.$t("app.email_address")
+                            },
+                            domProps: { value: _vm.inviteUserForm.email },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.inviteUserForm,
+                                  "email",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("span", {
+                            staticClass: "text-red-500 hidden",
+                            attrs: { id: "email-error" }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass: "text-xs button",
+                            attrs: { type: "submit" }
+                          },
+                          [_vm._v(_vm._s(_vm.$t("app.invite")))]
+                        )
+                      ]
                     )
-                  ]
-                )
-              ])
+                  ])
+                : _vm._e()
             ],
             1
           )
@@ -69324,6 +69324,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var notyf__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! notyf */ "./node_modules/notyf/notyf.es.js");
 /* harmony import */ var notyf_notyf_min_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! notyf/notyf.min.css */ "./node_modules/notyf/notyf.min.css");
 /* harmony import */ var notyf_notyf_min_css__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(notyf_notyf_min_css__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _policies_Gate__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./policies/Gate */ "./resources/js/policies/Gate.js");
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 
@@ -69333,7 +69334,10 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 
  // for React, Vue and Svelte
-// Create an instance of Notyf
+
+
+window.Gate = _policies_Gate__WEBPACK_IMPORTED_MODULE_7__["default"];
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.prototype.$Gate = new _policies_Gate__WEBPACK_IMPORTED_MODULE_7__["default"](); // Create an instance of Notyf
 
 var notyf = new notyf__WEBPACK_IMPORTED_MODULE_5__["Notyf"]({
   duration: 5000,
@@ -69363,7 +69367,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.mixin({
 });
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(_inertiajs_inertia_vue__WEBPACK_IMPORTED_MODULE_1__["InertiaApp"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(laravel_jetstream__WEBPACK_IMPORTED_MODULE_2__["InertiaForm"]);
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(portal_vue__WEBPACK_IMPORTED_MODULE_3___default.a);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(portal_vue__WEBPACK_IMPORTED_MODULE_3___default.a); //Vue.use(Gate);
+
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_i18n__WEBPACK_IMPORTED_MODULE_4__["default"]);
 var default_locale = document.getElementsByTagName('html')[0].getAttribute('lang');
 var i18n = new vue_i18n__WEBPACK_IMPORTED_MODULE_4__["default"]({
@@ -69425,6 +69430,266 @@ window.axios.defaults.headers.common['X-CSRF-TOKEN'] = document.head.querySelect
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
+
+/***/ }),
+
+/***/ "./resources/js/policies sync recursive Policy\\.js$":
+/*!************************************************!*\
+  !*** ./resources/js/policies sync Policy\.js$ ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var map = {
+	"./ProjectPolicy.js": "./resources/js/policies/ProjectPolicy.js"
+};
+
+
+function webpackContext(req) {
+	var id = webpackContextResolve(req);
+	return __webpack_require__(id);
+}
+function webpackContextResolve(req) {
+	if(!__webpack_require__.o(map, req)) {
+		var e = new Error("Cannot find module '" + req + "'");
+		e.code = 'MODULE_NOT_FOUND';
+		throw e;
+	}
+	return map[req];
+}
+webpackContext.keys = function webpackContextKeys() {
+	return Object.keys(map);
+};
+webpackContext.resolve = webpackContextResolve;
+module.exports = webpackContext;
+webpackContext.id = "./resources/js/policies sync recursive Policy\\.js$";
+
+/***/ }),
+
+/***/ "./resources/js/policies/Gate.js":
+/*!***************************************!*\
+  !*** ./resources/js/policies/Gate.js ***!
+  \***************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Gate; });
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Gate = /*#__PURE__*/function () {
+  /**
+   * Initialize a new gate instance.
+   *
+   * @param  {string|object}  user
+   * @return {void}
+   */
+  function Gate() {
+    var _this = this;
+
+    var user = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'user';
+
+    _classCallCheck(this, Gate);
+
+    this.policies = {};
+    this.user = _typeof(user) === 'object' ? user : window[user] || null;
+
+    var files = __webpack_require__("./resources/js/policies sync recursive Policy\\.js$");
+
+    files.keys().map(function (key) {
+      var name = key.split('/').pop().replace('Policy.js', '').toLowerCase();
+      _this.policies[name] = new (files(key)["default"])();
+    });
+  }
+  /**
+   * Check if the user has a general permission.
+   *
+   * @return {bool|void}
+   */
+
+
+  _createClass(Gate, [{
+    key: "before",
+    value: function before() {//
+    }
+    /**
+     * Determine wheter the user can perform the action on the model.
+     *
+     * @param  {string}  action
+     * @param  {object|string}  model
+     * @return {bool}
+     */
+
+  }, {
+    key: "allow",
+    value: function allow(action, model) {
+      if (this.before()) {
+        return true;
+      }
+
+      var type = _typeof(model) === 'object' ? model.model_name : model;
+
+      if (this.user && this.policies.hasOwnProperty(type) && typeof this.policies[type][action] === 'function') {
+        return this.policies[type][action](this.user, _typeof(model) === 'object' ? model : null);
+      }
+
+      return false;
+    }
+    /**
+     * Determine wheter the user can't perform the action on the model.
+     *
+     * @param  {string}  action
+     * @param  {object}  model
+     * @return {bool}
+     */
+
+  }, {
+    key: "deny",
+    value: function deny(action, model) {
+      return !this.allow(action, model);
+    }
+  }]);
+
+  return Gate;
+}();
+
+
+
+/***/ }),
+
+/***/ "./resources/js/policies/ProjectPolicy.js":
+/*!************************************************!*\
+  !*** ./resources/js/policies/ProjectPolicy.js ***!
+  \************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ProjectPolicy; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var ProjectPolicy = /*#__PURE__*/function () {
+  function ProjectPolicy() {
+    _classCallCheck(this, ProjectPolicy);
+  }
+
+  _createClass(ProjectPolicy, [{
+    key: "viewAny",
+
+    /**
+     * Determine whether the user can view any models.
+     *
+     * @param  {object}  user
+     * @return mixed
+     */
+    value: function viewAny(user) {//
+    }
+    /**
+     * Determine whether the user can view the model.
+     *
+     * @param  {object}  user
+     * @param  {object}  project
+     * @return {mixed}
+     */
+
+  }, {
+    key: "view",
+    value: function view(user, project) {//
+    }
+    /**
+     * Determine whether the user can create models.
+     *
+     * @param  {object}  user
+     * @return {mixed}
+     */
+
+  }, {
+    key: "create",
+    value: function create(user) {//
+    }
+    /**
+     * Determine whether the user can update the model.
+     *
+     * @param  {object}  user
+     * @param  {object}  project
+     * @return {boolean}
+     */
+
+  }, {
+    key: "update",
+    value: function update(user, project) {
+      //return $user->is($project->owner) || $project->members->contains($user);
+      return parseInt(project.owner_id) === parseInt(user.id) || project.members.filter(function (member) {
+        return parseInt(member.id) === parseInt(user.id);
+      }).length;
+    }
+    /**
+     * Determine whether the user can update the model.
+     *
+     * @param  {object}  user
+     * @param  {object}  project
+     * @return {boolean}
+     */
+
+  }, {
+    key: "manage",
+    value: function manage(user, project) {
+      return parseInt(project.owner_id) === parseInt(user.id);
+    }
+    /**
+     * Determine whether the user can restore the model.
+     *
+     * @param  {object}  user
+     * @param  {object}  project
+     * @return {mixed}
+     */
+
+  }, {
+    key: "restore",
+    value: function restore(user, project) {//
+    }
+    /**
+     * Determine whether the user can delete the model.
+     *
+     * @param  {object}  user
+     * @param  {object}  project
+     * @return {mixed}
+     */
+
+  }, {
+    key: "delete",
+    value: function _delete(user, project) {//
+    }
+    /**
+     * Determine whether the user can permanently delete the model.
+     *
+     * @param  {object}  user
+     * @param  {object}  project
+     * @return {mixed}
+     */
+
+  }, {
+    key: "forceDelete",
+    value: function forceDelete(user, project) {//
+    }
+  }]);
+
+  return ProjectPolicy;
+}();
+
+
 
 /***/ }),
 
