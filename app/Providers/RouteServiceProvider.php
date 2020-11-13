@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRedirectFilter;
+use Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRoutes;
+use Mcamara\LaravelLocalization\Middleware\LaravelLocalizationViewPath;
+use Mcamara\LaravelLocalization\Middleware\LocaleCookieRedirect;
+use Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -40,15 +45,45 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->routes(function () {
             Route::prefix(LaravelLocalization::setLocale())
-                ->middleware(['web'])
+                ->middleware([
+                    'web',
+                    //start Mcamara LaravelLocalization middlewares
+                    LocaleSessionRedirect::class,
+                    LaravelLocalizationRedirectFilter::class,
+                    LaravelLocalizationViewPath::class,
+                    //could remove these two middlewares
+                    LaravelLocalizationRoutes::class,
+                    LocaleCookieRedirect::class,
+                    //end Mcamara LaravelLocalization middlewares
+                ])
                 ->group(base_path('routes/web.php'));
 
             Route::prefix(LaravelLocalization::setLocale())
-                ->middleware(['web'])
+                ->middleware([
+                    'web',
+                    //start Mcamara LaravelLocalization middlewares
+                    LocaleSessionRedirect::class,
+                    LaravelLocalizationRedirectFilter::class,
+                    LaravelLocalizationViewPath::class,
+                    //could remove these two middlewares
+                    LaravelLocalizationRoutes::class,
+                    LocaleCookieRedirect::class,
+                    //end Mcamara LaravelLocalization middlewares
+                ])
                 ->group(base_path('routes/auth.php'));
 
             Route::prefix(LaravelLocalization::setLocale())
-                ->middleware(['web'])
+                ->middleware([
+                    'web',
+                    //start Mcamara LaravelLocalization middlewares
+                    LocaleSessionRedirect::class,
+                    LaravelLocalizationRedirectFilter::class,
+                    LaravelLocalizationViewPath::class,
+                    //could remove these two middlewares
+                    LaravelLocalizationRoutes::class,
+                    LocaleCookieRedirect::class,
+                    //end Mcamara LaravelLocalization middlewares
+                ])
                 ->group(base_path('routes/jetstream.php'));
 
             Route::prefix(LaravelLocalization::setLocale())
