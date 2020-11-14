@@ -54,7 +54,6 @@ class ProjectsController extends Controller
         //return redirect()->route('projects.show', ['project' => $project->id]);
     }
 
-
     /**
      * Display the specified resource.
      *
